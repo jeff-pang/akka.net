@@ -18,9 +18,9 @@ namespace Akka.Persistence.Fsm
     public abstract class PersistentFSM<TState, TData, TEvent> : PersistentFSMBase<TState, TData, TEvent>
     {
         /// <summary>
-        /// TBD
+        /// Override this handler to define the action on recovery completion
         /// </summary>
-        protected abstract void OnRecoveryCompleted();
+        protected virtual void OnRecoveryCompleted() { }
 
         /// <summary>
         /// TBD
