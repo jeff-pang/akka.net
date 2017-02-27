@@ -39,10 +39,14 @@ Target "RestorePackages" (fun _ ->
                    ++ "./**/Akka.Cluster.csproj"
                    ++ "./**/Akka.Cluster.Tools.csproj"
                    ++ "./**/Akka.Cluster.Sharding.csproj"
+                   ++ "./**/Akka.DistributedData.csproj"
                    ++ "./**/Akka.Persistence.csproj"
+                   ++ "./**/Akka.Streams.csproj"
+                   ++ "./**/Akka.Streams.TestKit.csproj"
+                   ++ "./**/Akka.Streams.TestKit.Tests.csproj"
+                   ++ "./**/Akka.Streams.Tests.csproj"
                    ++ "./**/Akka.TestKit.csproj"
                    ++ "./**/Akka.TestKit.Xunit2.csproj"
-                   ++ "./**/Akka.DistributedData.csproj"
                    ++ "./**/Akka.Tests.csproj"
 
     let runSingleProject project =
@@ -61,10 +65,14 @@ Target "Build" (fun _ ->
                    ++ "./**/Akka.Cluster.csproj"
                    ++ "./**/Akka.Cluster.Tools.csproj"
                    ++ "./**/Akka.Cluster.Sharding.csproj"
+                   ++ "./**/Akka.DistributedData.csproj"
                    ++ "./**/Akka.Persistence.csproj"
+                   ++ "./**/Akka.Streams.csproj"
+                   ++ "./**/Akka.Streams.TestKit.csproj"
+                   ++ "./**/Akka.Streams.TestKit.Tests.csproj"
+                   ++ "./**/Akka.Streams.Tests.csproj"
                    ++ "./**/Akka.TestKit.csproj"
                    ++ "./**/Akka.TestKit.Xunit2.csproj"
-                   ++ "./**/Akka.DistributedData.csproj"
                    ++ "./**/Akka.Tests.csproj"
 
     let runSingleProject project =
@@ -79,6 +87,7 @@ Target "Build" (fun _ ->
 
 Target "RunTests" (fun _ ->
     let projects = !! "./**/Akka.Tests.csproj"
+                   ++ "./**/Akka.Streams.TestKit.Tests.csproj"
 
     let runSingleProject project =
         DotNetCli.Test

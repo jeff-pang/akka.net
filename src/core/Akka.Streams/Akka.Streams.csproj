@@ -1,16 +1,18 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{6180A876-AE4A-41E2-A08F-84FDEA0C8A0E}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Akka.Streams</RootNamespace>
-    <AssemblyName>Akka.Streams</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
+    <AssemblyTitle>Akka.Streams</AssemblyTitle>
+    <Description>Reactive stream support for Akka.NET</Description>
+    <Copyright>Copyright © 2013-2017 Akka.NET Team</Copyright>
+    <VersionPrefix>1.5.0</VersionPrefix>
+    <VersionSuffix>beta</VersionSuffix>
+    <TargetFrameworks>net45;netstandard1.6</TargetFrameworks>
+    <PackageTags>akka;actors;actor model;Akka;concurrency;reactive;stream</PackageTags>
+    <PackageIconUrl>http://getakka.net/images/AkkaNetLogo.Normal.png</PackageIconUrl>
+    <PackageProjectUrl>https://github.com/akkadotnet/akka.net</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/akkadotnet/akka.net/blob/master/LICENSE</PackageLicenseUrl>
+    <NetStandardImplicitPackageVersion Condition=" '$(TargetFramework)' == 'netstandard1.6' ">1.6.1</NetStandardImplicitPackageVersion>
+    <PackageTargetFallback Condition=" '$(TargetFramework)' == 'netstandard1.6' ">$(PackageTargetFallback);portable-net45+win8</PackageTargetFallback>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -188,45 +190,33 @@
       <Name>Akka</Name>
     </ProjectReference>
   </ItemGroup>
+
   <ItemGroup>
-    <Folder Include="Linq\" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Akka.Streams.nuspec" />
-    <None Include="packages.config" />
     <EmbeddedResource Include="reference.conf" />
+    <ProjectReference Include="..\Akka\Akka.csproj" />
+    <PackageReference Include="Reactive.Streams" version="1.0.0-RC" />
   </ItemGroup>
-  <ItemGroup>
-    <Content Include="CodeGen\Dsl\GraphApply.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>GraphApply.cs</LastGenOutput>
-    </Content>
-    <Content Include="CodeGen\Dsl\UnzipWith.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>UnzipWith.cs</LastGenOutput>
-    </Content>
-    <Content Include="CodeGen\Dsl\ZipWith.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>ZipWith.cs</LastGenOutput>
-    </Content>
-    <Content Include="CodeGen\FanInShape.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>FanInShape.cs</LastGenOutput>
-    </Content>
-    <Content Include="CodeGen\FanOutShape.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>FanOutShape.cs</LastGenOutput>
-    </Content>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net45' ">
+    <Reference Include="System" />
+    <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
-  <ItemGroup>
-    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.6' ">
+    <PackageReference Include="Microsoft.NETCore.Portable.Compatibility" version="1.0.1" />
+    <PackageReference Include="System.Reflection.TypeExtensions" version="4.3.0" />
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'net45' ">
+    <DefineConstants>$(DefineConstants);SERIALIZATION;CLONEABLE;AKKAIO</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.6' ">
+    <DefineConstants>$(DefineConstants);CORECLR</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DefineConstants>$(DefineConstants);RELEASE</DefineConstants>
+  </PropertyGroup>
+
 </Project>
