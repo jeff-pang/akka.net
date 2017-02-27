@@ -36,6 +36,10 @@ Target "Clean" (fun _ ->
 Target "RestorePackages" (fun _ ->
     let projects = !! "./**/Akka.csproj"
                    ++ "./**/Akka.Remote.csproj"
+                   ++ "./**/Akka.Cluster.csproj"
+                   ++ "./**/Akka.Cluster.Tools.csproj"
+                   ++ "./**/Akka.Cluster.Sharding.csproj"
+                   ++ "./**/Akka.DistributedData.csproj"
 
     let runSingleProject project =
         DotNetCli.Restore
@@ -50,6 +54,10 @@ Target "RestorePackages" (fun _ ->
 Target "Build" (fun _ ->
     let projects = !! "./**/Akka.csproj"
                    ++ "./**/Akka.Remote.csproj"
+                   ++ "./**/Akka.Cluster.csproj"
+                   ++ "./**/Akka.Cluster.Tools.csproj"
+                   ++ "./**/Akka.Cluster.Sharding.csproj"
+                   ++ "./**/Akka.DistributedData.csproj"
 
     let runSingleProject project =
         DotNetCli.Build
