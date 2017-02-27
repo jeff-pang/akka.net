@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26206.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{69279534-1DBA-4115-BF8B-03F77FC8125E}"
 EndProject
@@ -492,12 +492,12 @@ Global
 		{81574240-BC31-4BE4-B447-ADF0D32F4246}.Release Mono|Any CPU.Build.0 = Release Mono|Any CPU
 		{81574240-BC31-4BE4-B447-ADF0D32F4246}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{81574240-BC31-4BE4-B447-ADF0D32F4246}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5DEDDF90-37F0-48D3-A0B0-A5CBD8A7E377}.Debug Mono|Any CPU.ActiveCfg = Debug Mono|Any CPU
-		{5DEDDF90-37F0-48D3-A0B0-A5CBD8A7E377}.Debug Mono|Any CPU.Build.0 = Debug Mono|Any CPU
+		{5DEDDF90-37F0-48D3-A0B0-A5CBD8A7E377}.Debug Mono|Any CPU.ActiveCfg = Debug|Any CPU
+		{5DEDDF90-37F0-48D3-A0B0-A5CBD8A7E377}.Debug Mono|Any CPU.Build.0 = Debug|Any CPU
 		{5DEDDF90-37F0-48D3-A0B0-A5CBD8A7E377}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{5DEDDF90-37F0-48D3-A0B0-A5CBD8A7E377}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5DEDDF90-37F0-48D3-A0B0-A5CBD8A7E377}.Release Mono|Any CPU.ActiveCfg = Release Mono|Any CPU
-		{5DEDDF90-37F0-48D3-A0B0-A5CBD8A7E377}.Release Mono|Any CPU.Build.0 = Release Mono|Any CPU
+		{5DEDDF90-37F0-48D3-A0B0-A5CBD8A7E377}.Release Mono|Any CPU.ActiveCfg = Release|Any CPU
+		{5DEDDF90-37F0-48D3-A0B0-A5CBD8A7E377}.Release Mono|Any CPU.Build.0 = Release|Any CPU
 		{5DEDDF90-37F0-48D3-A0B0-A5CBD8A7E377}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5DEDDF90-37F0-48D3-A0B0-A5CBD8A7E377}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5DEDDF90-37F0-48D3-A0B0-A5CBD8A7E377}.Release|Any CPU.Deploy.0 = Release|Any CPU
