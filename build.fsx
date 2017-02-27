@@ -39,6 +39,9 @@ Target "RestorePackages" (fun _ ->
                    ++ "./**/Akka.Cluster.csproj"
                    ++ "./**/Akka.Cluster.Tools.csproj"
                    ++ "./**/Akka.Cluster.Sharding.csproj"
+                   ++ "./**/Akka.Persistence.csproj"
+                   ++ "./**/Akka.TestKit.csproj"
+                   ++ "./**/Akka.TestKit.Xunit2.csproj"
                    ++ "./**/Akka.DistributedData.csproj"
 
     let runSingleProject project =
@@ -57,6 +60,9 @@ Target "Build" (fun _ ->
                    ++ "./**/Akka.Cluster.csproj"
                    ++ "./**/Akka.Cluster.Tools.csproj"
                    ++ "./**/Akka.Cluster.Sharding.csproj"
+                   ++ "./**/Akka.Persistence.csproj"
+                   ++ "./**/Akka.TestKit.csproj"
+                   ++ "./**/Akka.TestKit.Xunit2.csproj"
                    ++ "./**/Akka.DistributedData.csproj"
 
     let runSingleProject project =
