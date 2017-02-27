@@ -43,6 +43,7 @@ Target "RestorePackages" (fun _ ->
                    ++ "./**/Akka.TestKit.csproj"
                    ++ "./**/Akka.TestKit.Xunit2.csproj"
                    ++ "./**/Akka.DistributedData.csproj"
+                   ++ "./**/Akka.Tests.csproj"
 
     let runSingleProject project =
         DotNetCli.Restore
@@ -64,9 +65,23 @@ Target "Build" (fun _ ->
                    ++ "./**/Akka.TestKit.csproj"
                    ++ "./**/Akka.TestKit.Xunit2.csproj"
                    ++ "./**/Akka.DistributedData.csproj"
+                   ++ "./**/Akka.Tests.csproj"
 
     let runSingleProject project =
         DotNetCli.Build
+            (fun p -> 
+                { p with
+                    Project = project
+                    Configuration = configuration })
+
+    projects |> Seq.iter (runSingleProject)
+)
+
+Target "RunTests" (fun _ ->
+    let projects = !! "./**/Akka.Tests.csproj"
+
+    let runSingleProject project =
+        DotNetCli.Test
             (fun p -> 
                 { p with
                     Project = project
@@ -103,6 +118,9 @@ Target "All" DoNothing
 
 // build dependencies
 "Clean" ==> "RestorePackages" ==> "Build" ==> "BuildRelease"
+
+// tests dependencies
+"Clean" ==> "RestorePackages" ==> "Build" ==> "RunTests"
 
 // all
 "BuildRelease" ==> "All"

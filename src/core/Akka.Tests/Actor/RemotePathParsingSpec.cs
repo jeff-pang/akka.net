@@ -10,7 +10,9 @@ using System.Net.Sockets;
 using Akka.Actor;
 using Akka.TestKit;
 using FsCheck;
+#if !CORECLR
 using FsCheck.Xunit;
+#endif
 using static Akka.Util.RuntimeDetector;
 
 namespace Akka.Tests.Actor
@@ -71,6 +73,7 @@ namespace Akka.Tests.Actor
 
     }
 
+#if !CORECLR
     /// <summary>
     /// Used to verify that actor primitives like <see cref="Address"/> and <see cref="ActorPath"/> can properly
     /// handle each of the following scenarios: IPV4, IVP6, DNS
@@ -100,5 +103,5 @@ namespace Akka.Tests.Actor
             return actorPath.Equals(reparsedActorPath).Label($"Should be able to parse endpoint to ActorPath and back; expected {actorPath.ToSerializationFormat()} but was {reparsedActorPath.ToSerializationFormat()}");
         }
     }
+#endif
 }
-
