@@ -35,6 +35,7 @@ Target "Clean" (fun _ ->
 
 Target "RestorePackages" (fun _ ->
     let projects = !! "./**/Akka.csproj"
+                   ++ "./**/Akka.Remote.csproj"
 
     let runSingleProject project =
         DotNetCli.Restore
@@ -48,6 +49,7 @@ Target "RestorePackages" (fun _ ->
 
 Target "Build" (fun _ ->
     let projects = !! "./**/Akka.csproj"
+                   ++ "./**/Akka.Remote.csproj"
 
     let runSingleProject project =
         DotNetCli.Build
