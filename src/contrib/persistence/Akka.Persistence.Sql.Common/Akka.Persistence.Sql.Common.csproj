@@ -5,7 +5,8 @@
     <Description>Akka.NET Persistence ADO.NET middleware</Description>
     <Copyright>Copyright © 2013-2017 Akka.NET Team</Copyright>
     <VersionPrefix>1.5.0</VersionPrefix>
-    <TargetFrameworks>net45;netstandard1.6</TargetFrameworks>
+    <TargetFrameworks Condition=" '$(OS)' == 'Windows_NT' ">net45;netstandard1.6</TargetFrameworks>
+    <TargetFrameworks Condition=" '$(OS)' != 'Windows_NT' ">netstandard1.6</TargetFrameworks>
     <PackageTags>akka;actors;actor model;Akka;concurrency;persistence;eventsource;sql</PackageTags>
     <PackageIconUrl>http://getakka.net/images/AkkaNetLogo.Normal.png</PackageIconUrl>
     <PackageProjectUrl>https://github.com/akkadotnet/akka.net</PackageProjectUrl>

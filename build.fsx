@@ -34,65 +34,143 @@ Target "Clean" (fun _ ->
 )
 
 Target "RestorePackages" (fun _ ->
-    let projects = !! "./**/core/**/*.csproj"
-                   ++ "./**/core/**/*.fsproj"
-                   ++ "./**/contrib/cluster/**/*.csproj"
-                   ++ "./**/contrib/persistence/**/*.csproj"
-                   ++ "./**/contrib/testkits/**/*.csproj"
-                   -- "./**/*MultiNode*.csproj"
-                   -- "./**/Akka.NodeTestRunner.csproj"
-                   -- "./**/Akka.Streams.Tests.TCK.csproj"
+    if (isWindows) then
+        let projects = !! "./**/core/**/*.csproj"
+                    ++ "./**/core/**/*.fsproj"
+                    ++ "./**/contrib/cluster/**/*.csproj"
+                    ++ "./**/contrib/persistence/**/*.csproj"
+                    ++ "./**/contrib/**/Akka.TestKit.Xunit2.csproj"
+                    -- "./**/*MultiNode*.csproj"
+                    -- "./**/Akka.NodeTestRunner.csproj"
+                    -- "./**/Akka.Streams.Tests.TCK.csproj"
 
-    let runSingleProject project =
-        DotNetCli.Restore
-            (fun p -> 
-                { p with
-                    Project = project
-                    NoCache = false })
+        let runSingleProject project =
+            DotNetCli.Restore
+                (fun p -> 
+                    { p with
+                        Project = project
+                        NoCache = false })
 
-    projects |> Seq.iter (runSingleProject)
+        projects |> Seq.iter (runSingleProject)
+    else
+        let projects = !! "./**/core/**/*.csproj"
+                    ++ "./**/contrib/cluster/**/*.csproj"
+                    ++ "./**/contrib/persistence/**/*.csproj"
+                    ++ "./**/contrib/**/Akka.TestKit.Xunit2.csproj"
+                    -- "./**/*MultiNode*.csproj"
+                    -- "./**/Akka.NodeTestRunner.csproj"
+                    -- "./**/Akka.Streams.Tests.TCK.csproj"
+                    -- "./**/Akka.API.Tests.csproj"
+                    -- "./**/Akka.Cluster.TestKit.csproj"
+                    -- "./**/Akka.Remote.Tests.csproj"
+                    -- "./**/Akka.Remote.TestKit.csproj"
+                    -- "./**/Akka.Remote.TestKit.Tests.csproj"
+                    -- "./**/Akka.DistributedData.csproj"
+                    -- "./**/Akka.DistributedData.Tests.csproj"
+                    -- "./**/*.Performance.csproj"
+                    -- "./**/Akka.Persistence.Sqlite.csproj"
+                    -- "./**/Akka.Persistence.Sqlite.Tests.csproj"
+
+        let runSingleProject project =
+            DotNetCli.Restore
+                (fun p -> 
+                    { p with
+                        Project = project
+                        NoCache = false })
+
+        projects |> Seq.iter (runSingleProject)
 )
 
 Target "Build" (fun _ ->
-    let projects = !! "./**/core/**/*.csproj"
-                   ++ "./**/core/**/*.fsproj"
-                   ++ "./**/contrib/cluster/**/*.csproj"
-                   ++ "./**/contrib/persistence/**/*.csproj"
-                   ++ "./**/contrib/testkits/**/*.csproj"
-                   -- "./**/*MultiNode*.csproj"
-                   -- "./**/Akka.NodeTestRunner.csproj"
-                   -- "./**/Akka.Streams.Tests.TCK.csproj"
-                   -- "./**/Akka.FSharp.Tests.fsproj"
+    if (isWindows) then
+        let projects = !! "./**/core/**/*.csproj"
+                    ++ "./**/core/**/*.fsproj"
+                    ++ "./**/contrib/cluster/**/*.csproj"
+                    ++ "./**/contrib/persistence/**/*.csproj"
+                    ++ "./**/contrib/**/Akka.TestKit.Xunit2.csproj"
+                    -- "./**/*MultiNode*.csproj"
+                    -- "./**/Akka.NodeTestRunner.csproj"
+                    -- "./**/Akka.Streams.Tests.TCK.csproj"
+                    -- "./**/Akka.FSharp.Tests.fsproj"
 
-    let runSingleProject project =
-        DotNetCli.Build
-            (fun p -> 
-                { p with
-                    Project = project
-                    Configuration = configuration })
+        let runSingleProject project =
+            DotNetCli.Build
+                (fun p -> 
+                    { p with
+                        Project = project
+                        Configuration = configuration })
 
-    projects |> Seq.iter (runSingleProject)
+        projects |> Seq.iter (runSingleProject)
+    else
+        let projects = !! "./**/core/**/*.csproj"
+                       ++ "./**/contrib/cluster/**/*.csproj"
+                       ++ "./**/contrib/persistence/**/*.csproj"
+                       ++ "./**/contrib/**/Akka.TestKit.Xunit2.csproj"
+                       -- "./**/*MultiNode*.csproj"
+                       -- "./**/Akka.NodeTestRunner.csproj"
+                       -- "./**/Akka.Streams.Tests.TCK.csproj"
+                       -- "./**/Akka.API.Tests.csproj"
+                       -- "./**/Akka.API.Tests.csproj"
+                       -- "./**/Akka.Cluster.TestKit.csproj"
+                       -- "./**/Akka.Remote.Tests.csproj"
+                       -- "./**/Akka.Remote.TestKit.csproj"
+                       -- "./**/Akka.Remote.TestKit.Tests.csproj"
+                       -- "./**/Akka.DistributedData.csproj"
+                       -- "./**/Akka.DistributedData.Tests.csproj"
+                       -- "./**/*.Performance.csproj"
+                       -- "./**/Akka.Persistence.Sqlite.csproj"
+                       -- "./**/Akka.Persistence.Sqlite.Tests.csproj"
+
+        let runSingleProject project =
+            DotNetCli.Build
+                (fun p -> 
+                    { p with
+                        Project = project
+                        Configuration = configuration })
+
+        projects |> Seq.iter (runSingleProject)
 )
 
 Target "RunTests" (fun _ ->
-    let projects = !! "./**/core/*.Tests.csproj"
-                   ++ "./**/contrib/cluster/**/*.Tests.csproj"
-                   ++ "./**/contrib/persistence/**/*.Tests.csproj"
-                   ++ "./**/contrib/testkits/**/*.Tests.csproj"
-                   -- "./**/Akka.Persistence.Tests.csproj"
-                   -- "./**/Akka.Remote.TestKit.Tests.csproj"
-                   -- "./**/Akka.Remote.Tests.csproj"
-                   -- "./**/Akka.Streams.Tests.csproj"
-                   -- "./**/Akka.Persistence.Sqlite.Tests"
+    if (isWindows) then
+        let projects = !! "./**/core/*.Tests.csproj"
+                    ++ "./**/contrib/cluster/**/*.Tests.csproj"
+                    ++ "./**/contrib/persistence/**/*.Tests.csproj"
+                    ++ "./**/contrib/testkits/**/*.Tests.csproj"
+                    -- "./**/Akka.Persistence.Tests.csproj"
+                    -- "./**/Akka.Remote.TestKit.Tests.csproj"
+                    -- "./**/Akka.Remote.Tests.csproj"
+                    -- "./**/Akka.Streams.Tests.csproj"
+                    -- "./**/Akka.Persistence.Sqlite.Tests.csproj"
 
-    let runSingleProject project =
-        DotNetCli.Test
-            (fun p -> 
-                { p with
-                    Project = project
-                    Configuration = configuration })
+        let runSingleProject project =
+            DotNetCli.Test
+                (fun p -> 
+                    { p with
+                        Project = project
+                        Configuration = configuration })
 
-    projects |> Seq.iter (runSingleProject)
+        projects |> Seq.iter (runSingleProject)
+    else
+        let projects = !! "./**/core/*.Tests.csproj"
+                       ++ "./**/contrib/cluster/**/*.Tests.csproj"
+                       ++ "./**/contrib/persistence/**/*.Tests.csproj"
+                       ++ "./**/contrib/testkits/**/*.Tests.csproj"
+                       -- "./**/Akka.Persistence.Tests.csproj"
+                       -- "./**/Akka.Remote.TestKit.Tests.csproj"
+                       -- "./**/Akka.Remote.Tests.csproj"
+                       -- "./**/Akka.Streams.Tests.csproj"
+                       -- "./**/Akka.Persistence.Sqlite.Tests.csproj"
+                       -- "./**/Akka.DistributedData.Tests.csproj"
+
+        let runSingleProject project =
+            DotNetCli.Test
+                (fun p -> 
+                    { p with
+                        Project = project
+                        Configuration = configuration })
+
+        projects |> Seq.iter (runSingleProject)
 )
 
 //--------------------------------------------------------------------------------
