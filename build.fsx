@@ -60,6 +60,9 @@ Target "RestorePackages" (fun _ ->
                    ++ "./**/Akka.Streams.TestKit.Tests.csproj"
                    //++ "./**/Akka.Streams.Tests.csproj"
                    ++ "./**/Akka.TestKit.Tests.csproj"
+                   ++ "./**/Akka.FSharp.fsproj"
+                   ++ "./**/Akka.Persistence.FSharp.fsproj"
+                   ++ "./**/Akka.FSharp.Tests.fsproj"
 
     let runSingleProject project =
         DotNetCli.Restore
@@ -98,6 +101,9 @@ Target "Build" (fun _ ->
                    ++ "./**/Akka.Streams.TestKit.Tests.csproj"
                    //++ "./**/Akka.Streams.Tests.csproj"
                    ++ "./**/Akka.TestKit.Tests.csproj"
+                   ++ "./**/Akka.FSharp.fsproj"
+                   ++ "./**/Akka.Persistence.FSharp.fsproj"
+                   ++ "./**/Akka.FSharp.Tests.fsproj"
 
     let runSingleProject project =
         DotNetCli.Build
