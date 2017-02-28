@@ -35,19 +35,31 @@ Target "Clean" (fun _ ->
 
 Target "RestorePackages" (fun _ ->
     let projects = !! "./**/Akka.csproj"
-                   ++ "./**/Akka.Remote.csproj"
                    ++ "./**/Akka.Cluster.csproj"
+                   ++ "./**/Akka.Cluster.TestKit.csproj"
                    ++ "./**/Akka.Cluster.Tools.csproj"
                    ++ "./**/Akka.Cluster.Sharding.csproj"
                    ++ "./**/Akka.DistributedData.csproj"
                    ++ "./**/Akka.Persistence.csproj"
+                   ++ "./**/Akka.Persistence.Query.csproj"
+                   ++ "./**/Akka.Persistence.TestKit.csproj"
+                   ++ "./**/Akka.Remote.csproj"
+                   ++ "./**/Akka.Remote.TestKit.csproj"
                    ++ "./**/Akka.Streams.csproj"
                    ++ "./**/Akka.Streams.TestKit.csproj"
-                   ++ "./**/Akka.Streams.TestKit.Tests.csproj"
-                   ++ "./**/Akka.Streams.Tests.csproj"
                    ++ "./**/Akka.TestKit.csproj"
                    ++ "./**/Akka.TestKit.Xunit2.csproj"
+                   ++ "./**/Akka.Tests.Shared.Internals.csproj"
                    ++ "./**/Akka.Tests.csproj"
+                   //++ "./**/Akka.Cluster.Tests.csproj"
+                   ++ "./**/Akka.Persistence.Query.Tests.csproj"
+                   ++ "./**/Akka.Persistence.TestKit.Tests.csproj"
+                   ++ "./**/Akka.Persistence.Tests.csproj"
+                   ++ "./**/Akka.Remote.TestKit.Tests.csproj"
+                   //++ "./**/Akka.Remote.Tests.csproj"
+                   ++ "./**/Akka.Streams.TestKit.Tests.csproj"
+                   //++ "./**/Akka.Streams.Tests.csproj"
+                   ++ "./**/Akka.TestKit.Tests.csproj"
 
     let runSingleProject project =
         DotNetCli.Restore
@@ -61,19 +73,31 @@ Target "RestorePackages" (fun _ ->
 
 Target "Build" (fun _ ->
     let projects = !! "./**/Akka.csproj"
-                   ++ "./**/Akka.Remote.csproj"
                    ++ "./**/Akka.Cluster.csproj"
+                   ++ "./**/Akka.Cluster.TestKit.csproj"
                    ++ "./**/Akka.Cluster.Tools.csproj"
                    ++ "./**/Akka.Cluster.Sharding.csproj"
                    ++ "./**/Akka.DistributedData.csproj"
                    ++ "./**/Akka.Persistence.csproj"
+                   ++ "./**/Akka.Persistence.Query.csproj"
+                   ++ "./**/Akka.Persistence.TestKit.csproj"
+                   ++ "./**/Akka.Remote.csproj"
+                   ++ "./**/Akka.Remote.TestKit.csproj"
                    ++ "./**/Akka.Streams.csproj"
                    ++ "./**/Akka.Streams.TestKit.csproj"
-                   ++ "./**/Akka.Streams.TestKit.Tests.csproj"
-                   ++ "./**/Akka.Streams.Tests.csproj"
                    ++ "./**/Akka.TestKit.csproj"
                    ++ "./**/Akka.TestKit.Xunit2.csproj"
+                   ++ "./**/Akka.Tests.Shared.Internals.csproj"
                    ++ "./**/Akka.Tests.csproj"
+                   //++ "./**/Akka.Cluster.Tests.csproj"
+                   ++ "./**/Akka.Persistence.Query.Tests.csproj"
+                   ++ "./**/Akka.Persistence.TestKit.Tests.csproj"
+                   ++ "./**/Akka.Persistence.Tests.csproj"
+                   ++ "./**/Akka.Remote.TestKit.Tests.csproj"
+                   //++ "./**/Akka.Remote.Tests.csproj"
+                   ++ "./**/Akka.Streams.TestKit.Tests.csproj"
+                   //++ "./**/Akka.Streams.Tests.csproj"
+                   ++ "./**/Akka.TestKit.Tests.csproj"
 
     let runSingleProject project =
         DotNetCli.Build
@@ -87,7 +111,15 @@ Target "Build" (fun _ ->
 
 Target "RunTests" (fun _ ->
     let projects = !! "./**/Akka.Tests.csproj"
+                   //++ "./**/Akka.Cluster.Tests.csproj"
+                   ++ "./**/Akka.Persistence.Query.Tests.csproj"
+                   ++ "./**/Akka.Persistence.TestKit.Tests.csproj"
+                   ++ "./**/Akka.Persistence.Tests.csproj"
+                   ++ "./**/Akka.Remote.TestKit.Tests.csproj"
+                   //++ "./**/Akka.Remote.Tests.csproj"
                    ++ "./**/Akka.Streams.TestKit.Tests.csproj"
+                   //++ "./**/Akka.Streams.Tests.csproj"
+                   ++ "./**/Akka.TestKit.Tests.csproj"
 
     let runSingleProject project =
         DotNetCli.Test

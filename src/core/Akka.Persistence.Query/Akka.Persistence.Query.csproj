@@ -15,9 +15,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="persistence.conf" />
-    <ProjectReference Include="..\Akka\Akka.csproj" />
-    <PackageReference Include="Google.ProtocolBuffers" Version="2.4.1.555" />
+    <ProjectReference Include="..\Akka.Streams\Akka.Streams.csproj" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net45' ">
@@ -34,7 +32,7 @@
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.6' ">
-    <DefineConstants>$(DefineConstants);CORECLR</DefineConstants>
+    <DefineConstants>$(DefineConstants);SERIALIZATION</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
