@@ -1,20 +1,8 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{95E921AB-1F5A-4AF9-B7FE-284E317A97F4}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Akka.Remote.Tests</RootNamespace>
-    <AssemblyName>Akka.Remote.Tests</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
-    <RestorePackages>true</RestorePackages>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
-    <TargetFrameworkProfile />
+    <AssemblyTitle>Akka.Remote.Tests</AssemblyTitle>
+    <TargetFrameworks>net452</TargetFrameworks>
+    <PackageTargetFallback Condition=" '$(TargetFramework)' == 'netcoreapp1.0' ">$(PackageTargetFallback);portable-net45+win8</PackageTargetFallback>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -189,42 +177,27 @@
     <Compile Include="Transport\ThrottlerTransportAdapterSpec.cs" />
     <Compile Include="RemoteMetricsSpec.cs" />
     <Compile Include="UntrustedSpec.cs" />
-  </ItemGroup>
+ 
   <ItemGroup>
-    <ProjectReference Include="..\..\contrib\testkits\Akka.TestKit.Xunit2\Akka.TestKit.Xunit2.csproj">
-      <Project>{7dbd5c17-5e9d-40c4-9201-d092751532a7}</Project>
-      <Name>Akka.TestKit.Xunit2</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\contrib\transports\Akka.Remote.Transport.Helios\Akka.Remote.Transport.Helios.csproj">
-      <Project>{29feaabc-e326-450a-9008-b5fcecf0115f}</Project>
-      <Name>Akka.Remote.Transport.Helios</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Akka.Remote\Akka.Remote.csproj">
-      <Project>{EA4FF8FD-7C53-49C8-B9AA-02E458B3E6A7}</Project>
-      <Name>Akka.Remote</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Akka.Tests.Shared.Internals\Akka.Tests.Shared.Internals.csproj">
-      <Project>{E636D23C-3432-4AA9-9A5D-5F29D33D3399}</Project>
-      <Name>Akka.Tests.Shared.Internals</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Akka\Akka.csproj">
-      <Project>{5DEDDF90-37F0-48D3-A0B0-A5CBD8A7E377}</Project>
-      <Name>Akka</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Akka.TestKit\Akka.TestKit.csproj">
-      <Project>{0D3CBAD0-BBDB-43E5-AFC4-ED1D3ECDC224}</Project>
-      <Name>Akka.TestKit</Name>
-    </ProjectReference>
+    <ProjectReference Include="..\Akka.Remote\Akka.Remote.csproj" />
+    <ProjectReference Include="..\Akka.Tests.Shared.Internals\Akka.Tests.Shared.Internals.csproj" />
   </ItemGroup>
+
   <ItemGroup>
-    <None Include="app.config" />
-    <None Include="packages.config" />
-    <None Include="Resources\akka-validcert.pfx">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.0.0" />
+    <PackageReference Include="xunit" Version="2.2.0" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.2.0" />
+    <PackageReference Include="FsCheck" Version="2.6.2" />
+    <PackageReference Include="FluentAssertions" Version="4.14.0" />
+    <PackageReference Include="Helios" Version="2.1.3" />
   </ItemGroup>
-  <ItemGroup>
-    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net452' ">
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="Microsoft.CSharp" />
+    <PackageReference Include="FsCheck.Xunit"  Version="2.6.2" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="AsyncContext\about.txt" />
@@ -256,4 +229,12 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'net452' ">
+    <DefineConstants>$(DefineConstants);SERIALIZABLE</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DefineConstants>$(DefineConstants);RELEASE</DefineConstants>
+  </PropertyGroup>
 </Project>
