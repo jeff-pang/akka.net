@@ -34,64 +34,23 @@ Target "Clean" (fun _ ->
 )
 
 Target "RestorePackages" (fun _ ->
-    if (isWindows) then
-        let projects = !! "./**/core/**/*.csproj"
-                    ++ "./**/core/**/*.fsproj"
-                    ++ "./**/contrib/cluster/**/*.csproj"
-                    ++ "./**/contrib/persistence/**/*.csproj"
-                    ++ "./**/contrib/**/Akka.TestKit.Xunit2.csproj"
-                    -- "./**/*MultiNode*.csproj"
-                    -- "./**/Akka.NodeTestRunner.csproj"
-                    -- "./**/Akka.Streams.Tests.TCK.csproj"
-
-        let runSingleProject project =
-            DotNetCli.Restore
-                (fun p -> 
-                    { p with
-                        Project = project
-                        NoCache = false })
-
-        projects |> Seq.iter (runSingleProject)
-    else
-        let projects = !! "./**/core/**/*.csproj"
-                    ++ "./**/contrib/cluster/**/*.csproj"
-                    ++ "./**/contrib/persistence/**/*.csproj"
-                    ++ "./**/contrib/**/Akka.TestKit.Xunit2.csproj"
-                    -- "./**/*MultiNode*.csproj"
-                    -- "./**/Akka.NodeTestRunner.csproj"
-                    -- "./**/Akka.Streams.Tests.TCK.csproj"
-                    -- "./**/Akka.API.Tests.csproj"
-                    -- "./**/Akka.Cluster.TestKit.csproj"
-                    -- "./**/Akka.Remote.Tests.csproj"
-                    -- "./**/Akka.Remote.TestKit.csproj"
-                    -- "./**/Akka.Remote.TestKit.Tests.csproj"
-                    -- "./**/Akka.DistributedData.csproj"
-                    -- "./**/Akka.DistributedData.Tests.csproj"
-                    -- "./**/*.Performance.csproj"
-                    -- "./**/Akka.Persistence.Sqlite.csproj"
-                    -- "./**/Akka.Persistence.Sqlite.Tests.csproj"
-
-        let runSingleProject project =
-            DotNetCli.Restore
-                (fun p -> 
-                    { p with
-                        Project = project
-                        NoCache = false })
-
-        projects |> Seq.iter (runSingleProject)
+    DotNetCli.Restore
+        (fun p -> 
+            { p with
+                Project = "./src/Akka.sln"
+                NoCache = false })
 )
 
 Target "Build" (fun _ ->
     if (isWindows) then
         let projects = !! "./**/core/**/*.csproj"
-                    ++ "./**/core/**/*.fsproj"
-                    ++ "./**/contrib/cluster/**/*.csproj"
-                    ++ "./**/contrib/persistence/**/*.csproj"
-                    ++ "./**/contrib/**/Akka.TestKit.Xunit2.csproj"
-                    -- "./**/*MultiNode*.csproj"
-                    -- "./**/Akka.NodeTestRunner.csproj"
-                    -- "./**/Akka.Streams.Tests.TCK.csproj"
-                    -- "./**/Akka.FSharp.Tests.fsproj"
+                       ++ "./**/core/**/*.fsproj"
+                       ++ "./**/contrib/**/*.csproj"
+                       -- "./**/Akka.MultiNodeTestRunner.Shared.Tests.csproj"
+                       -- "./**/Akka.FSharp.Tests.fsproj"
+                       -- "./**/serializers/**/*Wire*.csproj"
+                       -- "./**/testkits/Akka.TestKit.Xunit.csproj"
+                       -- "./**/transports/**/*.csproj"
 
         let runSingleProject project =
             DotNetCli.Build
@@ -174,6 +133,51 @@ Target "RunTests" (fun _ ->
 )
 
 //--------------------------------------------------------------------------------
+// Nuget targets 
+//--------------------------------------------------------------------------------
+
+Target "CreateNuget" (fun _ ->
+    let versionSuffix = getBuildParamOrDefault "versionsuffix" ""
+
+    let projects = !! "src/**/Akka.csproj"
+                   ++ "src/**/Akka.Cluster.csproj"
+                   ++ "src/**/Akka.Cluster.TestKit.csproj"
+                   ++ "src/**/Akka.Cluster.Tools.csproj"
+                   ++ "src/**/Akka.Cluster.Sharding.csproj"
+                   ++ "src/**/Akka.DistributedData.csproj"
+                   ++ "src/**/Akka.Persistence.csproj"
+                   ++ "src/**/Akka.Persistence.Query.csproj"
+                   ++ "src/**/Akka.Persistence.TestKit.csproj"
+                   ++ "src/**/Akka.Persistence.Query.Sql.csproj"
+                   ++ "src/**/Akka.Persistence.Sql.Common.csproj"
+                   ++ "src/**/Akka.Remote.csproj"
+                   ++ "src/**/Akka.Remote.TestKit.csproj"
+                   ++ "src/**/Akka.Streams.csproj"
+                   ++ "src/**/Akka.Streams.TestKit.csproj"
+                   ++ "src/**/Akka.TestKit.csproj"
+                   ++ "src/**/Akka.TestKit.Xunit2.csproj"
+                   ++ "src/**/Akka.DI.Core.csproj"
+                   ++ "src/**/Akka.DI.TestKit.csproj"
+                   ++ "src/**/Akka.Serialization.Hyperion.csproj"
+                   ++ "src/**/Akka.Serialization.TestKit.csproj"
+                   ++ "src/**/Akka.FSharp.fsproj"
+
+    let runSingleProject project =
+        DotNetCli.Pack
+            (fun p -> 
+                { p with
+                    Project = project
+                    Configuration = configuration
+                    AdditionalArgs = ["--include-symbols"]
+                    VersionSuffix = versionSuffix
+                    OutputPath = outputNuGet })
+
+    projects |> Seq.iter (runSingleProject)
+)
+
+Target "PublishNuget" DoNothing
+
+//--------------------------------------------------------------------------------
 // Help 
 //--------------------------------------------------------------------------------
 
@@ -198,12 +202,18 @@ Target "Help" <| fun _ ->
 
 Target "BuildRelease" DoNothing
 Target "All" DoNothing
+Target "Nuget" DoNothing
 
 // build dependencies
 "Clean" ==> "RestorePackages" ==> "Build" ==> "BuildRelease"
 
 // tests dependencies
 "Clean" ==> "RestorePackages" ==> "Build" ==> "RunTests"
+
+// nuget dependencies
+"Clean" ==> "RestorePackages" ==> "Build" ==> "CreateNuget"
+"CreateNuget" ==> "PublishNuget"
+"PublishNuget" ==> "Nuget"
 
 // all
 "BuildRelease" ==> "All"
