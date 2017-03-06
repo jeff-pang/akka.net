@@ -92,8 +92,8 @@ Target "Build" (fun _ ->
 
 Target "RunTests" (fun _ ->
     if (isWindows) then
-        let projects = !! "./**/core/**/*.csproj"
-                       ++ "./**/contrib/**/*.csproj"
+        let projects = !! "./**/core/**/*.Tests.csproj"
+                       ++ "./**/contrib/**/*.Tests.csproj"
                        -- "./**/Akka.Remote.Tests.csproj"
                        -- "./**/Akka.Remote.TestKit.Tests.csproj"
                        -- "./**/Akka.Streams.Tests.csproj"
@@ -172,7 +172,21 @@ Target "CreateNuget" (fun _ ->
     projects |> Seq.iter (runSingleProject)
 )
 
-Target "PublishNuget" DoNothing
+Target "PublishNuget" (fun _ ->
+    let projects = !! "./build/nuget/*.nupkg" -- "./build/nuget/*.symbols.nupkg"
+    let apiKey = getBuildParamOrDefault "nugetkey" ""
+    let source = getBuildParamOrDefault "nugetpublishurl" ""
+    let symbolSource = getBuildParamOrDefault "symbolspublishurl" ""
+
+    let runSingleProject project =
+        DotNetCli.RunCommand
+            (fun p -> 
+                { p with 
+                    TimeOut = TimeSpan.FromMinutes 10. })
+            (sprintf "nuget push %s --api-key %s --source %s --symbol-source %s" project apiKey source symbolSource)
+
+    projects |> Seq.iter (runSingleProject)
+)
 
 //--------------------------------------------------------------------------------
 // Help 
@@ -191,6 +205,36 @@ Target "Help" <| fun _ ->
       ""
       " Other Targets"
       " * Help       Display this help" 
+      ""]
+
+Target "HelpNuget" <| fun _ ->
+    List.iter printfn [
+      "usage: "
+      "build Nuget [nugetkey=<key> [nugetpublishurl=<url>]] "
+      "            [symbolspublishurl=<url>] "
+      ""
+      "In order to publish a nuget package, keys must be specified."
+      "If a key is not specified the nuget packages will only be created on disk"
+      "After a build you can find them in build/nuget"
+      ""
+      "For pushing nuget packages to nuget.org and symbols to symbolsource.org"
+      "you need to specify nugetkey=<key>"
+      "   build Nuget nugetKey=<key for nuget.org>"
+      ""
+      "For pushing the ordinary nuget packages to another place than nuget.org specify the url"
+      "  nugetkey=<key>  nugetpublishurl=<url>  "
+      ""
+      "For pushing symbols packages specify:"
+      "  symbolskey=<key>  symbolspublishurl=<url> "
+      ""
+      "Examples:"
+      "  build Nuget                      Build nuget packages to the build/nuget folder"
+      ""
+      "  build Nuget versionsuffix=beta1  Build nuget packages with the custom version suffix"
+      ""
+      "  build Nuget nugetkey=123         Build and publish to nuget.org and symbolsource.org"
+      ""
+      "  build Nuget nugetprerelease=dev nugetkey=123 nugetpublishurl=http://abcsymbolspublishurl=http://xyz"
       ""]
 
 //--------------------------------------------------------------------------------
