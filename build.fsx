@@ -239,6 +239,8 @@ Target "HelpNuget" <| fun _ ->
 Target "BuildRelease" DoNothing
 Target "All" DoNothing
 Target "Nuget" DoNothing
+Target "MultiNodeTests" DoNothing
+Target "NBench" DoNothing
 
 // build dependencies
 "Clean" ==> "RestorePackages" ==> "Build" ==> "BuildRelease"
