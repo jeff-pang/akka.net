@@ -5,6 +5,7 @@
     <Description>Akka.NET Persistence journal and snapshot store backed by SQLite.</Description>
     <Copyright>Copyright © 2013-2017 Akka.NET Team</Copyright>
     <VersionPrefix>1.5.0</VersionPrefix>
+    <VersionSuffix>beta</VersionSuffix>
     <TargetFrameworks>net45</TargetFrameworks>
     <PackageTags>akka;actors;actor model;Akka;concurrency;persistence;eventsource;sql;sqlite</PackageTags>
     <PackageIconUrl>http://getakka.net/images/AkkaNetLogo.Normal.png</PackageIconUrl>
@@ -16,6 +17,10 @@
     <EmbeddedResource Include="sqlite.conf" />
     <ProjectReference Include="..\..\..\core\Akka.Persistence\Akka.Persistence.csproj" />
     <ProjectReference Include="..\Akka.Persistence.Sql.Common\Akka.Persistence.Sql.Common.csproj" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net45' ">
+    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.98.1" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net45' ">
@@ -35,7 +40,6 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="Microsoft.CSharp" />
-    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.104" />
   </ItemGroup>
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'net45' ">

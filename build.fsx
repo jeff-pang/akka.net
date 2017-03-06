@@ -49,7 +49,7 @@ Target "Build" (fun _ ->
                        -- "./**/Akka.MultiNodeTestRunner.Shared.Tests.csproj"
                        -- "./**/Akka.FSharp.Tests.fsproj"
                        -- "./**/serializers/**/*Wire*.csproj"
-                       -- "./**/testkits/Akka.TestKit.Xunit.csproj"
+                       -- "./**/Akka.TestKit.Xunit.csproj"
                        -- "./**/transports/**/*.csproj"
 
         let runSingleProject project =
@@ -92,15 +92,12 @@ Target "Build" (fun _ ->
 
 Target "RunTests" (fun _ ->
     if (isWindows) then
-        let projects = !! "./**/core/*.Tests.csproj"
-                    ++ "./**/contrib/cluster/**/*.Tests.csproj"
-                    ++ "./**/contrib/persistence/**/*.Tests.csproj"
-                    ++ "./**/contrib/testkits/**/*.Tests.csproj"
-                    -- "./**/Akka.Persistence.Tests.csproj"
-                    -- "./**/Akka.Remote.TestKit.Tests.csproj"
-                    -- "./**/Akka.Remote.Tests.csproj"
-                    -- "./**/Akka.Streams.Tests.csproj"
-                    -- "./**/Akka.Persistence.Sqlite.Tests.csproj"
+        let projects = !! "./**/core/**/*.csproj"
+                       ++ "./**/contrib/**/*.csproj"
+                       -- "./**/Akka.Remote.Tests.csproj"
+                       -- "./**/Akka.Remote.TestKit.Tests.csproj"
+                       -- "./**/Akka.Streams.Tests.csproj"
+                       -- "./**/Akka.Persistence.Sqlite.Tests.csproj"
 
         let runSingleProject project =
             DotNetCli.Test

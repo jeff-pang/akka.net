@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <AssemblyTitle>Akka.API.Tests</AssemblyTitle>
-    <TargetFrameworks>net451</TargetFrameworks>
+    <TargetFrameworks>net452</TargetFrameworks>
   </PropertyGroup>
 
   <ItemGroup>
