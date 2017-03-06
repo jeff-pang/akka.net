@@ -62,29 +62,31 @@ Target "Build" (fun _ ->
         projects |> Seq.iter (runSingleProject)
     else
         let projects = !! "./**/core/**/*.csproj"
-                       ++ "./**/contrib/cluster/**/*.csproj"
-                       ++ "./**/contrib/persistence/**/*.csproj"
-                       ++ "./**/contrib/**/Akka.TestKit.Xunit2.csproj"
+                       ++ "./**/contrib/**/*.csproj"
+                       -- "./**/*.Tests.csproj"
                        -- "./**/*MultiNode*.csproj"
-                       -- "./**/Akka.NodeTestRunner.csproj"
-                       -- "./**/Akka.Streams.Tests.TCK.csproj"
-                       -- "./**/Akka.API.Tests.csproj"
+                       -- "./**/*.Performance.csproj"
                        -- "./**/Akka.API.Tests.csproj"
                        -- "./**/Akka.Cluster.TestKit.csproj"
-                       -- "./**/Akka.Remote.Tests.csproj"
+                       -- "./**/Akka.NodeTestRunner.csproj"
                        -- "./**/Akka.Remote.TestKit.csproj"
-                       -- "./**/Akka.Remote.TestKit.Tests.csproj"
+                       -- "./**/Akka.Streams.Tests.TCK.csproj"
                        -- "./**/Akka.DistributedData.csproj"
-                       -- "./**/Akka.DistributedData.Tests.csproj"
-                       -- "./**/*.Performance.csproj"
+                       -- "./**/contrib/dependencyinjection/**/*.csproj"
                        -- "./**/Akka.Persistence.Sqlite.csproj"
-                       -- "./**/Akka.Persistence.Sqlite.Tests.csproj"
+                       -- "./**/Akka.Serialization.Hyperion.csproj"
+                       -- "./**/Akka.Serialization.TestKit.csproj"
+                       -- "./**/Akka.Persistence.Sqlite.csproj"
+                       -- "./**/serializers/**/*Wire*.csproj"
+                       -- "./**/Akka.TestKit.Xunit.csproj"
+                       -- "./**/transports/**/*.csproj"
 
         let runSingleProject project =
             DotNetCli.Build
                 (fun p -> 
                     { p with
                         Project = project
+                        Framework = "netstandard1.6"
                         Configuration = configuration })
 
         projects |> Seq.iter (runSingleProject)
@@ -108,22 +110,15 @@ Target "RunTests" (fun _ ->
 
         projects |> Seq.iter (runSingleProject)
     else
-        let projects = !! "./**/core/*.Tests.csproj"
-                       ++ "./**/contrib/cluster/**/*.Tests.csproj"
-                       ++ "./**/contrib/persistence/**/*.Tests.csproj"
-                       ++ "./**/contrib/testkits/**/*.Tests.csproj"
-                       -- "./**/Akka.Persistence.Tests.csproj"
-                       -- "./**/Akka.Remote.TestKit.Tests.csproj"
-                       -- "./**/Akka.Remote.Tests.csproj"
-                       -- "./**/Akka.Streams.Tests.csproj"
-                       -- "./**/Akka.Persistence.Sqlite.Tests.csproj"
-                       -- "./**/Akka.DistributedData.Tests.csproj"
+        let projects = !! "./**/core/**/Akka.Tests.csproj"
+                       ++ "./**/core/**/Akka.TestKit.Tests.csproj"
 
         let runSingleProject project =
             DotNetCli.Test
                 (fun p -> 
                     { p with
                         Project = project
+                        Framework = "netcoreapp1.0"
                         Configuration = configuration })
 
         projects |> Seq.iter (runSingleProject)
