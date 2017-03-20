@@ -7,6 +7,8 @@
 
 using System;
 using Akka.Actor;
+using Akka.Dispatch.SysMsg;
+using Akka.Util.Internal;
 using Google.Protobuf;
 
 namespace Akka.Serialization
@@ -60,6 +62,34 @@ namespace Akka.Serialization
             {
                 return PoisonPillMessageBuilder((PoisonPill)obj).ToByteArray();
             }
+            else if (obj is Watch)
+            {
+                return WatchMessageBuilder((Watch)obj).ToByteArray();
+            }
+            else if (obj is Unwatch)
+            {
+                return UnwatchMessageBuilder((Unwatch)obj).ToByteArray();
+            }
+            else if (obj is RemoteScope)
+            {
+                return null;
+            }
+            else if (obj is Supervise)
+            {
+                return null;
+            }
+            else if (obj is DeathWatchNotification)
+            {
+                return null;
+            }
+            else if (obj is Terminate)
+            {
+                return TerminateMessageBuilder((Terminate)obj).ToByteArray();
+            }
+            else if (obj is Kill)
+            {
+                return KillMessageBuilder((Kill)obj).ToByteArray();
+            }
 
             throw new ArgumentException($"Can't serialize object of type {obj.GetType()}");
         }
@@ -78,21 +108,49 @@ namespace Akka.Serialization
             {
                 return ActorRefFrom(bytes);
             }
-            if (type == typeof(ActorPath))
+            else if (type == typeof(ActorPath))
             {
                 return ActorPathFrom(bytes);
             }
-            if (type == typeof(Identify))
+            else if (type == typeof(Identify))
             {
                 return IdentifyFrom(bytes);
             }
-            if (type == typeof(ActorIdentity))
+            else if (type == typeof(ActorIdentity))
             {
                 return ActorIdentityFrom(bytes);
             }
-            if (type == typeof(PoisonPill))
+            else if (type == typeof(PoisonPill))
             {
                 return PoisonPillFrom(bytes);
+            }
+            else if (type == typeof(Watch))
+            {
+                return WatchFrom(bytes);
+            }
+            else if (type == typeof(Unwatch))
+            {
+                return UnwatchFrom(bytes);
+            }
+            else if (type == typeof(RemoteScope))
+            {
+                return null;
+            }
+            else if (type == typeof(Supervise))
+            {
+                return null;
+            }
+            else if (type == typeof(DeathWatchNotification))
+            {
+                return null;
+            }
+            else if (type == typeof(Terminate))
+            {
+                return TerminateFrom(bytes);
+            }
+            else if (type == typeof(Kill))
+            {
+                return KillFrom(bytes);
             }
 
             throw new ArgumentException(typeof(ProtoSerializer) + " cannot deserialize object of type " + type);
@@ -178,6 +236,36 @@ namespace Akka.Serialization
             return new Protobuf.Msg.PoisonPill();
         }
 
+        private Protobuf.Msg.Watch WatchMessageBuilder(Watch watch)
+        {
+            var message = new Protobuf.Msg.Watch();
+            message.Watchee = new Protobuf.Msg.ActorRef();
+            message.Watchee.Path = Serialization.SerializedActorPath(watch.Watchee);
+            message.Watcher = new Protobuf.Msg.ActorRef();
+            message.Watcher.Path = Serialization.SerializedActorPath(watch.Watcher);
+            return message;
+        }
+
+        private Protobuf.Msg.Unwatch UnwatchMessageBuilder(Unwatch watch)
+        {
+            var message = new Protobuf.Msg.Unwatch();
+            message.Watchee = new Protobuf.Msg.ActorRef();
+            message.Watchee.Path = Serialization.SerializedActorPath(watch.Watchee);
+            message.Watcher = new Protobuf.Msg.ActorRef();
+            message.Watcher.Path = Serialization.SerializedActorPath(watch.Watcher);
+            return message;
+        }
+
+        private Protobuf.Msg.Terminate TerminateMessageBuilder(Terminate terminate)
+        {
+            return new Protobuf.Msg.Terminate();
+        }
+
+        private Protobuf.Msg.Kill KillMessageBuilder(Kill kill)
+        {
+            return new Protobuf.Msg.Kill();
+        }
+
         //
         // FromBinary helpers
         //
@@ -230,6 +318,36 @@ namespace Akka.Serialization
         private PoisonPill PoisonPillFrom(byte[] bytes)
         {
             return PoisonPill.Instance;
+        }
+
+        private Watch WatchFrom(byte[] bytes)
+        {
+            var watchProto = Protobuf.Msg.Watch.Parser.ParseFrom(bytes);
+
+            var watchee = system.Provider.ResolveActorRef(watchProto.Watchee.Path);
+            var watcher = system.Provider.ResolveActorRef(watchProto.Watcher.Path);
+
+            return new Watch(watchee.AsInstanceOf<IInternalActorRef>(), watcher.AsInstanceOf<IInternalActorRef>());
+        }
+
+        private Unwatch UnwatchFrom(byte[] bytes)
+        {
+            var unwatchProto = Protobuf.Msg.Watch.Parser.ParseFrom(bytes);
+
+            var watchee = system.Provider.ResolveActorRef(unwatchProto.Watchee.Path);
+            var watcher = system.Provider.ResolveActorRef(unwatchProto.Watcher.Path);
+
+            return new Unwatch(watchee.AsInstanceOf<IInternalActorRef>(), watcher.AsInstanceOf<IInternalActorRef>());
+        }
+
+        private Terminate TerminateFrom(byte[] bytes)
+        {
+            return new Terminate();
+        }
+
+        private Kill KillFrom(byte[] bytes)
+        {
+            return Kill.Instance;
         }
     }
 }

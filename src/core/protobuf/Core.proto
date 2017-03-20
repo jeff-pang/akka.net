@@ -31,3 +31,39 @@ message ActorIdentity {
 }
 
 message PoisonPill { }
+
+message Watch { 
+  ActorRef watchee = 1;
+  ActorRef watcher = 2;
+}
+
+message Unwatch { 
+  ActorRef watchee = 1;
+  ActorRef watcher = 2;
+}
+
+message DeathWatchNotification { 
+  ActorRef ref = 1;
+  bool existenceConfirmed = 2;
+  bool addressTerminated = 3;
+}
+
+message Terminate { }
+
+message Kill { }
+
+message Supervise { 
+  ActorRef child = 1;
+  bool async = 2;
+}
+
+message Address {
+  string protocol = 1;
+  string system = 2;
+  string host = 3;
+  int32 port = 4;
+}
+
+message RemoteScope { 
+  Address address = 1;
+}

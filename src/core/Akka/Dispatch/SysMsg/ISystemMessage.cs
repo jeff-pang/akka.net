@@ -478,6 +478,27 @@ namespace Akka.Dispatch.SysMsg
         /// <value>The watcher.</value>
         public IInternalActorRef Watcher { get; private set; }
 
+        protected bool Equals(Watch other)
+        {
+            return Equals(Watchee, other.Watchee) && Equals(Watcher, other.Watcher);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((Watch)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                return ((Watchee != null ? Watchee.GetHashCode() : 0) * 397) ^ (Watcher != null ? Watcher.GetHashCode() : 0);
+            }
+        }
+
         /// <summary>
         /// TBD
         /// </summary>
@@ -515,6 +536,26 @@ namespace Akka.Dispatch.SysMsg
         /// </summary>
         /// <value>The watcher.</value>
         public IInternalActorRef Watcher { get; private set; }
+
+        private bool Equals(Unwatch other)
+        {
+            return Equals(Watchee, other.Watchee) && Equals(Watcher, other.Watcher);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            return obj is Unwatch && Equals((Unwatch)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                return ((Watchee != null ? Watchee.GetHashCode() : 0) * 397) ^ (Watcher != null ? Watcher.GetHashCode() : 0);
+            }
+        }
 
         /// <summary>
         /// TBD

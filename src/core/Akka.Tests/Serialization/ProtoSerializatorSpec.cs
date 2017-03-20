@@ -7,9 +7,11 @@
 
 using System;
 using Akka.Actor;
+using Akka.Dispatch.SysMsg;
 using Akka.Serialization;
 using Akka.TestKit;
 using Akka.TestKit.TestActors;
+using Akka.Util.Internal;
 using Xunit;
 using FluentAssertions;
 
@@ -17,6 +19,24 @@ namespace Akka.Tests.Serialization
 {
     public class ProtoSerializatorSpec : AkkaSpec
     {
+        #region actor
+        public class Watchee : UntypedActor
+        {
+            protected override void OnReceive(object message)
+            {
+                
+            }
+        }
+
+        public class Watcher : UntypedActor
+        {
+            protected override void OnReceive(object message)
+            {
+                
+            }
+        }
+        #endregion
+
         [Fact]
         public void Can_serialize_ActorRef()
         {
@@ -57,6 +77,26 @@ namespace Akka.Tests.Serialization
             var poisonPill = PoisonPill.Instance;
             Sys.Serialization.FindSerializerFor(poisonPill).Should().BeOfType<ProtoSerializer>();
             AssertEqual(poisonPill);
+        }
+
+        [Fact]
+        public void Can_serialize_Watch()
+        {
+            var watchee = ActorOf<Watchee>().AsInstanceOf<IInternalActorRef>();
+            var watcher = ActorOf<Watcher>().AsInstanceOf<IInternalActorRef>();
+            var watch = new Watch(watchee, watcher);
+            Sys.Serialization.FindSerializerFor(watch).Should().BeOfType<ProtoSerializer>();
+            AssertEqual(watch);
+        }
+
+        [Fact]
+        public void Can_serialize_Unwatch()
+        {
+            var watchee = ActorOf<Watchee>().AsInstanceOf<IInternalActorRef>();
+            var watcher = ActorOf<Watcher>().AsInstanceOf<IInternalActorRef>();
+            var unwatch = new Unwatch(watchee, watcher);
+            Sys.Serialization.FindSerializerFor(unwatch).Should().BeOfType<ProtoSerializer>();
+            AssertEqual(unwatch);
         }
 
         private void AssertEqual<T>(T message)

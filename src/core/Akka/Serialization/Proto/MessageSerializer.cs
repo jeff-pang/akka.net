@@ -29,8 +29,20 @@ namespace Akka.Protobuf.Msg {
             "LQoJbWVzc2FnZUlkGAEgASgLMhouQWtrYS5Qcm90b2J1Zi5Nc2cuUGF5bG9h",
             "ZCJsCg1BY3RvcklkZW50aXR5EjEKDWNvcnJlbGF0aW9uSWQYASABKAsyGi5B",
             "a2thLlByb3RvYnVmLk1zZy5QYXlsb2FkEigKA3JlZhgCIAEoCzIbLkFra2Eu",
-            "UHJvdG9idWYuTXNnLkFjdG9yUmVmIgwKClBvaXNvblBpbGxCAkgBYgZwcm90",
-            "bzM="));
+            "UHJvdG9idWYuTXNnLkFjdG9yUmVmIgwKClBvaXNvblBpbGwiYwoFV2F0Y2gS",
+            "LAoHd2F0Y2hlZRgBIAEoCzIbLkFra2EuUHJvdG9idWYuTXNnLkFjdG9yUmVm",
+            "EiwKB3dhdGNoZXIYAiABKAsyGy5Ba2thLlByb3RvYnVmLk1zZy5BY3RvclJl",
+            "ZiJlCgdVbndhdGNoEiwKB3dhdGNoZWUYASABKAsyGy5Ba2thLlByb3RvYnVm",
+            "Lk1zZy5BY3RvclJlZhIsCgd3YXRjaGVyGAIgASgLMhsuQWtrYS5Qcm90b2J1",
+            "Zi5Nc2cuQWN0b3JSZWYieQoWRGVhdGhXYXRjaE5vdGlmaWNhdGlvbhIoCgNy",
+            "ZWYYASABKAsyGy5Ba2thLlByb3RvYnVmLk1zZy5BY3RvclJlZhIaChJleGlz",
+            "dGVuY2VDb25maXJtZWQYAiABKAgSGQoRYWRkcmVzc1Rlcm1pbmF0ZWQYAyAB",
+            "KAgiCwoJVGVybWluYXRlIgYKBEtpbGwiRgoJU3VwZXJ2aXNlEioKBWNoaWxk",
+            "GAEgASgLMhsuQWtrYS5Qcm90b2J1Zi5Nc2cuQWN0b3JSZWYSDQoFYXN5bmMY",
+            "AiABKAgiRwoHQWRkcmVzcxIQCghwcm90b2NvbBgBIAEoCRIOCgZzeXN0ZW0Y",
+            "AiABKAkSDAoEaG9zdBgDIAEoCRIMCgRwb3J0GAQgASgFIjoKC1JlbW90ZVNj",
+            "b3BlEisKB2FkZHJlc3MYASABKAsyGi5Ba2thLlByb3RvYnVmLk1zZy5BZGRy",
+            "ZXNzQgJIAWIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
@@ -39,7 +51,15 @@ namespace Akka.Protobuf.Msg {
             new pbr::GeneratedClrTypeInfo(typeof(global::Akka.Protobuf.Msg.ActorRef), global::Akka.Protobuf.Msg.ActorRef.Parser, new[]{ "Path" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Akka.Protobuf.Msg.Identify), global::Akka.Protobuf.Msg.Identify.Parser, new[]{ "MessageId" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Akka.Protobuf.Msg.ActorIdentity), global::Akka.Protobuf.Msg.ActorIdentity.Parser, new[]{ "CorrelationId", "Ref" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Akka.Protobuf.Msg.PoisonPill), global::Akka.Protobuf.Msg.PoisonPill.Parser, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Akka.Protobuf.Msg.PoisonPill), global::Akka.Protobuf.Msg.PoisonPill.Parser, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Akka.Protobuf.Msg.Watch), global::Akka.Protobuf.Msg.Watch.Parser, new[]{ "Watchee", "Watcher" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Akka.Protobuf.Msg.Unwatch), global::Akka.Protobuf.Msg.Unwatch.Parser, new[]{ "Watchee", "Watcher" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Akka.Protobuf.Msg.DeathWatchNotification), global::Akka.Protobuf.Msg.DeathWatchNotification.Parser, new[]{ "Ref", "ExistenceConfirmed", "AddressTerminated" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Akka.Protobuf.Msg.Terminate), global::Akka.Protobuf.Msg.Terminate.Parser, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Akka.Protobuf.Msg.Kill), global::Akka.Protobuf.Msg.Kill.Parser, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Akka.Protobuf.Msg.Supervise), global::Akka.Protobuf.Msg.Supervise.Parser, new[]{ "Child", "Async" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Akka.Protobuf.Msg.Address), global::Akka.Protobuf.Msg.Address.Parser, new[]{ "Protocol", "System", "Host", "Port" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Akka.Protobuf.Msg.RemoteScope), global::Akka.Protobuf.Msg.RemoteScope.Parser, new[]{ "Address" }, null, null, null)
           }));
     }
     #endregion
@@ -816,6 +836,1152 @@ namespace Akka.Protobuf.Msg {
           default:
             input.SkipLastField();
             break;
+        }
+      }
+    }
+
+  }
+
+  public sealed partial class Watch : pb::IMessage<Watch> {
+    private static readonly pb::MessageParser<Watch> _parser = new pb::MessageParser<Watch>(() => new Watch());
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<Watch> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Akka.Protobuf.Msg.CoreReflection.Descriptor.MessageTypes[6]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public Watch() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public Watch(Watch other) : this() {
+      Watchee = other.watchee_ != null ? other.Watchee.Clone() : null;
+      Watcher = other.watcher_ != null ? other.Watcher.Clone() : null;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public Watch Clone() {
+      return new Watch(this);
+    }
+
+    /// <summary>Field number for the "watchee" field.</summary>
+    public const int WatcheeFieldNumber = 1;
+    private global::Akka.Protobuf.Msg.ActorRef watchee_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public global::Akka.Protobuf.Msg.ActorRef Watchee {
+      get { return watchee_; }
+      set {
+        watchee_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "watcher" field.</summary>
+    public const int WatcherFieldNumber = 2;
+    private global::Akka.Protobuf.Msg.ActorRef watcher_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public global::Akka.Protobuf.Msg.ActorRef Watcher {
+      get { return watcher_; }
+      set {
+        watcher_ = value;
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as Watch);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(Watch other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (!object.Equals(Watchee, other.Watchee)) return false;
+      if (!object.Equals(Watcher, other.Watcher)) return false;
+      return true;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (watchee_ != null) hash ^= Watchee.GetHashCode();
+      if (watcher_ != null) hash ^= Watcher.GetHashCode();
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+      if (watchee_ != null) {
+        output.WriteRawTag(10);
+        output.WriteMessage(Watchee);
+      }
+      if (watcher_ != null) {
+        output.WriteRawTag(18);
+        output.WriteMessage(Watcher);
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      if (watchee_ != null) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(Watchee);
+      }
+      if (watcher_ != null) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(Watcher);
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(Watch other) {
+      if (other == null) {
+        return;
+      }
+      if (other.watchee_ != null) {
+        if (watchee_ == null) {
+          watchee_ = new global::Akka.Protobuf.Msg.ActorRef();
+        }
+        Watchee.MergeFrom(other.Watchee);
+      }
+      if (other.watcher_ != null) {
+        if (watcher_ == null) {
+          watcher_ = new global::Akka.Protobuf.Msg.ActorRef();
+        }
+        Watcher.MergeFrom(other.Watcher);
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            input.SkipLastField();
+            break;
+          case 10: {
+            if (watchee_ == null) {
+              watchee_ = new global::Akka.Protobuf.Msg.ActorRef();
+            }
+            input.ReadMessage(watchee_);
+            break;
+          }
+          case 18: {
+            if (watcher_ == null) {
+              watcher_ = new global::Akka.Protobuf.Msg.ActorRef();
+            }
+            input.ReadMessage(watcher_);
+            break;
+          }
+        }
+      }
+    }
+
+  }
+
+  public sealed partial class Unwatch : pb::IMessage<Unwatch> {
+    private static readonly pb::MessageParser<Unwatch> _parser = new pb::MessageParser<Unwatch>(() => new Unwatch());
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<Unwatch> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Akka.Protobuf.Msg.CoreReflection.Descriptor.MessageTypes[7]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public Unwatch() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public Unwatch(Unwatch other) : this() {
+      Watchee = other.watchee_ != null ? other.Watchee.Clone() : null;
+      Watcher = other.watcher_ != null ? other.Watcher.Clone() : null;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public Unwatch Clone() {
+      return new Unwatch(this);
+    }
+
+    /// <summary>Field number for the "watchee" field.</summary>
+    public const int WatcheeFieldNumber = 1;
+    private global::Akka.Protobuf.Msg.ActorRef watchee_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public global::Akka.Protobuf.Msg.ActorRef Watchee {
+      get { return watchee_; }
+      set {
+        watchee_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "watcher" field.</summary>
+    public const int WatcherFieldNumber = 2;
+    private global::Akka.Protobuf.Msg.ActorRef watcher_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public global::Akka.Protobuf.Msg.ActorRef Watcher {
+      get { return watcher_; }
+      set {
+        watcher_ = value;
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as Unwatch);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(Unwatch other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (!object.Equals(Watchee, other.Watchee)) return false;
+      if (!object.Equals(Watcher, other.Watcher)) return false;
+      return true;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (watchee_ != null) hash ^= Watchee.GetHashCode();
+      if (watcher_ != null) hash ^= Watcher.GetHashCode();
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+      if (watchee_ != null) {
+        output.WriteRawTag(10);
+        output.WriteMessage(Watchee);
+      }
+      if (watcher_ != null) {
+        output.WriteRawTag(18);
+        output.WriteMessage(Watcher);
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      if (watchee_ != null) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(Watchee);
+      }
+      if (watcher_ != null) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(Watcher);
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(Unwatch other) {
+      if (other == null) {
+        return;
+      }
+      if (other.watchee_ != null) {
+        if (watchee_ == null) {
+          watchee_ = new global::Akka.Protobuf.Msg.ActorRef();
+        }
+        Watchee.MergeFrom(other.Watchee);
+      }
+      if (other.watcher_ != null) {
+        if (watcher_ == null) {
+          watcher_ = new global::Akka.Protobuf.Msg.ActorRef();
+        }
+        Watcher.MergeFrom(other.Watcher);
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            input.SkipLastField();
+            break;
+          case 10: {
+            if (watchee_ == null) {
+              watchee_ = new global::Akka.Protobuf.Msg.ActorRef();
+            }
+            input.ReadMessage(watchee_);
+            break;
+          }
+          case 18: {
+            if (watcher_ == null) {
+              watcher_ = new global::Akka.Protobuf.Msg.ActorRef();
+            }
+            input.ReadMessage(watcher_);
+            break;
+          }
+        }
+      }
+    }
+
+  }
+
+  public sealed partial class DeathWatchNotification : pb::IMessage<DeathWatchNotification> {
+    private static readonly pb::MessageParser<DeathWatchNotification> _parser = new pb::MessageParser<DeathWatchNotification>(() => new DeathWatchNotification());
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<DeathWatchNotification> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Akka.Protobuf.Msg.CoreReflection.Descriptor.MessageTypes[8]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public DeathWatchNotification() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public DeathWatchNotification(DeathWatchNotification other) : this() {
+      Ref = other.ref_ != null ? other.Ref.Clone() : null;
+      existenceConfirmed_ = other.existenceConfirmed_;
+      addressTerminated_ = other.addressTerminated_;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public DeathWatchNotification Clone() {
+      return new DeathWatchNotification(this);
+    }
+
+    /// <summary>Field number for the "ref" field.</summary>
+    public const int RefFieldNumber = 1;
+    private global::Akka.Protobuf.Msg.ActorRef ref_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public global::Akka.Protobuf.Msg.ActorRef Ref {
+      get { return ref_; }
+      set {
+        ref_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "existenceConfirmed" field.</summary>
+    public const int ExistenceConfirmedFieldNumber = 2;
+    private bool existenceConfirmed_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool ExistenceConfirmed {
+      get { return existenceConfirmed_; }
+      set {
+        existenceConfirmed_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "addressTerminated" field.</summary>
+    public const int AddressTerminatedFieldNumber = 3;
+    private bool addressTerminated_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool AddressTerminated {
+      get { return addressTerminated_; }
+      set {
+        addressTerminated_ = value;
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as DeathWatchNotification);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(DeathWatchNotification other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (!object.Equals(Ref, other.Ref)) return false;
+      if (ExistenceConfirmed != other.ExistenceConfirmed) return false;
+      if (AddressTerminated != other.AddressTerminated) return false;
+      return true;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (ref_ != null) hash ^= Ref.GetHashCode();
+      if (ExistenceConfirmed != false) hash ^= ExistenceConfirmed.GetHashCode();
+      if (AddressTerminated != false) hash ^= AddressTerminated.GetHashCode();
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+      if (ref_ != null) {
+        output.WriteRawTag(10);
+        output.WriteMessage(Ref);
+      }
+      if (ExistenceConfirmed != false) {
+        output.WriteRawTag(16);
+        output.WriteBool(ExistenceConfirmed);
+      }
+      if (AddressTerminated != false) {
+        output.WriteRawTag(24);
+        output.WriteBool(AddressTerminated);
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      if (ref_ != null) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(Ref);
+      }
+      if (ExistenceConfirmed != false) {
+        size += 1 + 1;
+      }
+      if (AddressTerminated != false) {
+        size += 1 + 1;
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(DeathWatchNotification other) {
+      if (other == null) {
+        return;
+      }
+      if (other.ref_ != null) {
+        if (ref_ == null) {
+          ref_ = new global::Akka.Protobuf.Msg.ActorRef();
+        }
+        Ref.MergeFrom(other.Ref);
+      }
+      if (other.ExistenceConfirmed != false) {
+        ExistenceConfirmed = other.ExistenceConfirmed;
+      }
+      if (other.AddressTerminated != false) {
+        AddressTerminated = other.AddressTerminated;
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            input.SkipLastField();
+            break;
+          case 10: {
+            if (ref_ == null) {
+              ref_ = new global::Akka.Protobuf.Msg.ActorRef();
+            }
+            input.ReadMessage(ref_);
+            break;
+          }
+          case 16: {
+            ExistenceConfirmed = input.ReadBool();
+            break;
+          }
+          case 24: {
+            AddressTerminated = input.ReadBool();
+            break;
+          }
+        }
+      }
+    }
+
+  }
+
+  public sealed partial class Terminate : pb::IMessage<Terminate> {
+    private static readonly pb::MessageParser<Terminate> _parser = new pb::MessageParser<Terminate>(() => new Terminate());
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<Terminate> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Akka.Protobuf.Msg.CoreReflection.Descriptor.MessageTypes[9]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public Terminate() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public Terminate(Terminate other) : this() {
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public Terminate Clone() {
+      return new Terminate(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as Terminate);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(Terminate other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      return true;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(Terminate other) {
+      if (other == null) {
+        return;
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            input.SkipLastField();
+            break;
+        }
+      }
+    }
+
+  }
+
+  public sealed partial class Kill : pb::IMessage<Kill> {
+    private static readonly pb::MessageParser<Kill> _parser = new pb::MessageParser<Kill>(() => new Kill());
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<Kill> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Akka.Protobuf.Msg.CoreReflection.Descriptor.MessageTypes[10]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public Kill() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public Kill(Kill other) : this() {
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public Kill Clone() {
+      return new Kill(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as Kill);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(Kill other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      return true;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(Kill other) {
+      if (other == null) {
+        return;
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            input.SkipLastField();
+            break;
+        }
+      }
+    }
+
+  }
+
+  public sealed partial class Supervise : pb::IMessage<Supervise> {
+    private static readonly pb::MessageParser<Supervise> _parser = new pb::MessageParser<Supervise>(() => new Supervise());
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<Supervise> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Akka.Protobuf.Msg.CoreReflection.Descriptor.MessageTypes[11]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public Supervise() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public Supervise(Supervise other) : this() {
+      Child = other.child_ != null ? other.Child.Clone() : null;
+      async_ = other.async_;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public Supervise Clone() {
+      return new Supervise(this);
+    }
+
+    /// <summary>Field number for the "child" field.</summary>
+    public const int ChildFieldNumber = 1;
+    private global::Akka.Protobuf.Msg.ActorRef child_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public global::Akka.Protobuf.Msg.ActorRef Child {
+      get { return child_; }
+      set {
+        child_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "async" field.</summary>
+    public const int AsyncFieldNumber = 2;
+    private bool async_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Async {
+      get { return async_; }
+      set {
+        async_ = value;
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as Supervise);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(Supervise other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (!object.Equals(Child, other.Child)) return false;
+      if (Async != other.Async) return false;
+      return true;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (child_ != null) hash ^= Child.GetHashCode();
+      if (Async != false) hash ^= Async.GetHashCode();
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+      if (child_ != null) {
+        output.WriteRawTag(10);
+        output.WriteMessage(Child);
+      }
+      if (Async != false) {
+        output.WriteRawTag(16);
+        output.WriteBool(Async);
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      if (child_ != null) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(Child);
+      }
+      if (Async != false) {
+        size += 1 + 1;
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(Supervise other) {
+      if (other == null) {
+        return;
+      }
+      if (other.child_ != null) {
+        if (child_ == null) {
+          child_ = new global::Akka.Protobuf.Msg.ActorRef();
+        }
+        Child.MergeFrom(other.Child);
+      }
+      if (other.Async != false) {
+        Async = other.Async;
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            input.SkipLastField();
+            break;
+          case 10: {
+            if (child_ == null) {
+              child_ = new global::Akka.Protobuf.Msg.ActorRef();
+            }
+            input.ReadMessage(child_);
+            break;
+          }
+          case 16: {
+            Async = input.ReadBool();
+            break;
+          }
+        }
+      }
+    }
+
+  }
+
+  public sealed partial class Address : pb::IMessage<Address> {
+    private static readonly pb::MessageParser<Address> _parser = new pb::MessageParser<Address>(() => new Address());
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<Address> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Akka.Protobuf.Msg.CoreReflection.Descriptor.MessageTypes[12]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public Address() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public Address(Address other) : this() {
+      protocol_ = other.protocol_;
+      system_ = other.system_;
+      host_ = other.host_;
+      port_ = other.port_;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public Address Clone() {
+      return new Address(this);
+    }
+
+    /// <summary>Field number for the "protocol" field.</summary>
+    public const int ProtocolFieldNumber = 1;
+    private string protocol_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string Protocol {
+      get { return protocol_; }
+      set {
+        protocol_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "system" field.</summary>
+    public const int SystemFieldNumber = 2;
+    private string system_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string System {
+      get { return system_; }
+      set {
+        system_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "host" field.</summary>
+    public const int HostFieldNumber = 3;
+    private string host_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string Host {
+      get { return host_; }
+      set {
+        host_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "port" field.</summary>
+    public const int PortFieldNumber = 4;
+    private int port_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int Port {
+      get { return port_; }
+      set {
+        port_ = value;
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as Address);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(Address other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (Protocol != other.Protocol) return false;
+      if (System != other.System) return false;
+      if (Host != other.Host) return false;
+      if (Port != other.Port) return false;
+      return true;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (Protocol.Length != 0) hash ^= Protocol.GetHashCode();
+      if (System.Length != 0) hash ^= System.GetHashCode();
+      if (Host.Length != 0) hash ^= Host.GetHashCode();
+      if (Port != 0) hash ^= Port.GetHashCode();
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+      if (Protocol.Length != 0) {
+        output.WriteRawTag(10);
+        output.WriteString(Protocol);
+      }
+      if (System.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteString(System);
+      }
+      if (Host.Length != 0) {
+        output.WriteRawTag(26);
+        output.WriteString(Host);
+      }
+      if (Port != 0) {
+        output.WriteRawTag(32);
+        output.WriteInt32(Port);
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      if (Protocol.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(Protocol);
+      }
+      if (System.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(System);
+      }
+      if (Host.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(Host);
+      }
+      if (Port != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(Port);
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(Address other) {
+      if (other == null) {
+        return;
+      }
+      if (other.Protocol.Length != 0) {
+        Protocol = other.Protocol;
+      }
+      if (other.System.Length != 0) {
+        System = other.System;
+      }
+      if (other.Host.Length != 0) {
+        Host = other.Host;
+      }
+      if (other.Port != 0) {
+        Port = other.Port;
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            input.SkipLastField();
+            break;
+          case 10: {
+            Protocol = input.ReadString();
+            break;
+          }
+          case 18: {
+            System = input.ReadString();
+            break;
+          }
+          case 26: {
+            Host = input.ReadString();
+            break;
+          }
+          case 32: {
+            Port = input.ReadInt32();
+            break;
+          }
+        }
+      }
+    }
+
+  }
+
+  public sealed partial class RemoteScope : pb::IMessage<RemoteScope> {
+    private static readonly pb::MessageParser<RemoteScope> _parser = new pb::MessageParser<RemoteScope>(() => new RemoteScope());
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<RemoteScope> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Akka.Protobuf.Msg.CoreReflection.Descriptor.MessageTypes[13]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public RemoteScope() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public RemoteScope(RemoteScope other) : this() {
+      Address = other.address_ != null ? other.Address.Clone() : null;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public RemoteScope Clone() {
+      return new RemoteScope(this);
+    }
+
+    /// <summary>Field number for the "address" field.</summary>
+    public const int AddressFieldNumber = 1;
+    private global::Akka.Protobuf.Msg.Address address_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public global::Akka.Protobuf.Msg.Address Address {
+      get { return address_; }
+      set {
+        address_ = value;
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as RemoteScope);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(RemoteScope other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (!object.Equals(Address, other.Address)) return false;
+      return true;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (address_ != null) hash ^= Address.GetHashCode();
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+      if (address_ != null) {
+        output.WriteRawTag(10);
+        output.WriteMessage(Address);
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      if (address_ != null) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(Address);
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(RemoteScope other) {
+      if (other == null) {
+        return;
+      }
+      if (other.address_ != null) {
+        if (address_ == null) {
+          address_ = new global::Akka.Protobuf.Msg.Address();
+        }
+        Address.MergeFrom(other.Address);
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            input.SkipLastField();
+            break;
+          case 10: {
+            if (address_ == null) {
+              address_ = new global::Akka.Protobuf.Msg.Address();
+            }
+            input.ReadMessage(address_);
+            break;
+          }
         }
       }
     }
