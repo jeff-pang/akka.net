@@ -1,0 +1,33 @@
+/**
+ * Copyright (C) 2009-2017 Typesafe Inc. <http://www.typesafe.com>
+ * Copyright (C) 2013-2017 Akka.NET project <https://github.com/akkadotnet/akka.net>
+ */
+
+syntax = "proto3";
+package Akka.Protobuf.Msg;
+option optimize_for = SPEED;
+
+message Payload {
+  bytes enclosedMessage = 1;
+  int32 serializerId = 2;
+  bytes messageManifest = 3;
+}
+
+message ActorPath {
+  string path = 1;
+}
+
+message ActorRef {
+  string path = 1;
+}
+
+message Identify {
+  Payload messageId = 1;
+}
+
+message ActorIdentity {
+  Payload correlationId = 1;
+  ActorRef ref = 2;
+}
+
+message PoisonPill { }

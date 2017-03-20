@@ -78,6 +78,23 @@ namespace Akka.Actor
         /// </summary>
         public object MessageId { get; }
 
+        private bool Equals(Identify other)
+        {
+            return Equals(MessageId, other.MessageId);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            return obj is Identify && Equals((Identify)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return (MessageId != null ? MessageId.GetHashCode() : 0);
+        }
+
         /// <summary>
         /// TBD
         /// </summary>
@@ -114,6 +131,26 @@ namespace Akka.Actor
         /// </summary>
         /// <remarks>Will be <c>null</c> if sent an <see cref="ActorSelection"/> that could not be resolved.</remarks>
         public IActorRef Subject { get; private set; }
+
+        private bool Equals(ActorIdentity other)
+        {
+            return Equals(MessageId, other.MessageId) && Equals(Subject, other.Subject);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            return obj is ActorIdentity && Equals((ActorIdentity)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                return ((MessageId != null ? MessageId.GetHashCode() : 0) * 397) ^ (Subject != null ? Subject.GetHashCode() : 0);
+            }
+        }
 
         /// <summary>
         /// TBD
