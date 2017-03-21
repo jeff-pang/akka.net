@@ -6,6 +6,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Runtime.CompilerServices;
 using Akka.Actor;
 using Akka.Dispatch.SysMsg;
 using Akka.Util.Internal;
@@ -26,7 +27,7 @@ namespace Akka.Serialization
         {
         }
 
-        public override int Identifier { get; } = -50;
+        public override int Identifier { get; } = 21;
 
         /// <summary>
         /// TBD
@@ -70,17 +71,21 @@ namespace Akka.Serialization
             {
                 return UnwatchMessageBuilder((Unwatch)obj).ToByteArray();
             }
+            else if (obj is Address)
+            {
+                return AddressMessageBuilder((Address)obj).ToByteArray();
+            }
             else if (obj is RemoteScope)
             {
-                return null;
+                return RemoteScopeMessageBuilder((RemoteScope)obj).ToByteArray();
             }
             else if (obj is Supervise)
             {
-                return null;
+                return SuperviseBuilder((Supervise)obj).ToByteArray();
             }
             else if (obj is DeathWatchNotification)
             {
-                return null;
+                return DeathWatchNotificationBuilder((DeathWatchNotification)obj).ToByteArray();
             }
             else if (obj is Terminate)
             {
@@ -132,17 +137,21 @@ namespace Akka.Serialization
             {
                 return UnwatchFrom(bytes);
             }
+            else if (type == typeof(Address))
+            {
+                return AddressFrom(bytes);
+            }
             else if (type == typeof(RemoteScope))
             {
-                return null;
+                return RemoteScopeFrom(bytes);
             }
             else if (type == typeof(Supervise))
             {
-                return null;
+                return SuperviseFrom(bytes);
             }
             else if (type == typeof(DeathWatchNotification))
             {
-                return null;
+                return DeathWatchNotificationFrom(bytes);
             }
             else if (type == typeof(Terminate))
             {
@@ -160,6 +169,7 @@ namespace Akka.Serialization
         // ToBinary helpers
         //
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private Protobuf.Msg.ActorRef ActorRefMessageBuilder(IActorRef actorRef)
         {
             var message = new Protobuf.Msg.ActorRef();
@@ -184,8 +194,9 @@ namespace Akka.Serialization
             message.MessageId = new Protobuf.Msg.Payload();
             var serializer = system.Serialization.FindSerializerFor(identify.MessageId);
 
-            if (serializer is SerializerWithStringManifest ser2)
+            if (serializer is SerializerWithStringManifest)
             {
+                var ser2 = (SerializerWithStringManifest)serializer;
                 var manifest = ser2.Manifest(identify.MessageId);
                 message.MessageId.MessageManifest = ByteString.CopyFromUtf8(manifest);
             }
@@ -206,14 +217,14 @@ namespace Akka.Serialization
         private Protobuf.Msg.ActorIdentity ActorIdentityMessageBuilder(ActorIdentity actorIdentity)
         {
             var message = new Protobuf.Msg.ActorIdentity();
-            message.Ref = new Protobuf.Msg.ActorRef();
-            message.Ref.Path = Serialization.SerializedActorPath(actorIdentity.Subject);
+            message.Ref = ActorRefMessageBuilder(actorIdentity.Subject);
             message.CorrelationId = new Protobuf.Msg.Payload();
 
             var serializer = system.Serialization.FindSerializerFor(actorIdentity.MessageId);
 
-            if (serializer is SerializerWithStringManifest ser2)
+            if (serializer is SerializerWithStringManifest)
             {
+                var ser2 = (SerializerWithStringManifest)serializer;
                 var manifest = ser2.Manifest(actorIdentity.MessageId);
                 message.CorrelationId.MessageManifest = ByteString.CopyFromUtf8(manifest);
             }
@@ -239,20 +250,51 @@ namespace Akka.Serialization
         private Protobuf.Msg.Watch WatchMessageBuilder(Watch watch)
         {
             var message = new Protobuf.Msg.Watch();
-            message.Watchee = new Protobuf.Msg.ActorRef();
-            message.Watchee.Path = Serialization.SerializedActorPath(watch.Watchee);
-            message.Watcher = new Protobuf.Msg.ActorRef();
-            message.Watcher.Path = Serialization.SerializedActorPath(watch.Watcher);
+            message.Watchee = ActorRefMessageBuilder(watch.Watchee);
+            message.Watcher = ActorRefMessageBuilder(watch.Watcher);
             return message;
         }
 
-        private Protobuf.Msg.Unwatch UnwatchMessageBuilder(Unwatch watch)
+        private Protobuf.Msg.Unwatch UnwatchMessageBuilder(Unwatch unwatch)
         {
             var message = new Protobuf.Msg.Unwatch();
-            message.Watchee = new Protobuf.Msg.ActorRef();
-            message.Watchee.Path = Serialization.SerializedActorPath(watch.Watchee);
-            message.Watcher = new Protobuf.Msg.ActorRef();
-            message.Watcher.Path = Serialization.SerializedActorPath(watch.Watcher);
+            message.Watchee = ActorRefMessageBuilder(unwatch.Watchee);
+            message.Watcher = ActorRefMessageBuilder(unwatch.Watcher);
+            return message;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private Protobuf.Msg.Address AddressMessageBuilder(Address address)
+        {
+            var message = new Protobuf.Msg.Address();
+            message.Protocol = address.Protocol;
+            message.System = address.System;
+            message.Host = address.Host;
+            message.Port = address.Port ?? 0;
+            return message;
+        }
+
+        private Protobuf.Msg.RemoteScope RemoteScopeMessageBuilder(RemoteScope remoteScope)
+        {
+            var message = new Protobuf.Msg.RemoteScope();
+            message.Address = AddressMessageBuilder(remoteScope.Address);
+            return message;
+        }
+
+        private Protobuf.Msg.Supervise SuperviseBuilder(Supervise supervise)
+        {
+            var message = new Protobuf.Msg.Supervise();
+            message.Child = ActorRefMessageBuilder(supervise.Child);
+            message.Async = supervise.Async;
+            return message;
+        }
+
+        private Protobuf.Msg.DeathWatchNotification DeathWatchNotificationBuilder(DeathWatchNotification deathWatchNotification)
+        {
+            var message = new Protobuf.Msg.DeathWatchNotification();
+            message.Ref = ActorRefMessageBuilder(deathWatchNotification.Actor);
+            message.AddressTerminated = deathWatchNotification.AddressTerminated;
+            message.ExistenceConfirmed = deathWatchNotification.ExistenceConfirmed;
             return message;
         }
 
@@ -338,6 +380,49 @@ namespace Akka.Serialization
             var watcher = system.Provider.ResolveActorRef(unwatchProto.Watcher.Path);
 
             return new Unwatch(watchee.AsInstanceOf<IInternalActorRef>(), watcher.AsInstanceOf<IInternalActorRef>());
+        }
+
+        private Address AddressFrom(byte[] bytes)
+        {
+            var addressProto = Protobuf.Msg.Address.Parser.ParseFrom(bytes);
+
+            return new Address(
+                addressProto.Protocol,
+                addressProto.System,
+                addressProto.Host,
+                addressProto.Port == 0 ? null : (int?)addressProto.Port);
+        }
+
+        private object RemoteScopeFrom(byte[] bytes)
+        {
+            var remoteScopeProto = Protobuf.Msg.RemoteScope.Parser.ParseFrom(bytes);
+
+            var address = new Address(
+                remoteScopeProto.Address.Protocol,
+                remoteScopeProto.Address.System,
+                remoteScopeProto.Address.Host,
+                remoteScopeProto.Address.Port == 0 ? null : (int?)remoteScopeProto.Address.Port);
+
+            return new RemoteScope(address);
+        }
+
+        private Supervise SuperviseFrom(byte[] bytes)
+        {
+            var superviseProto = Protobuf.Msg.Supervise.Parser.ParseFrom(bytes);
+
+            return new Supervise(
+                system.Provider.ResolveActorRef(superviseProto.Child.Path),
+                superviseProto.Async);
+        }
+
+        private DeathWatchNotification DeathWatchNotificationFrom(byte[] bytes)
+        {
+            var deathWatchNotificationProto = Protobuf.Msg.DeathWatchNotification.Parser.ParseFrom(bytes);
+
+            return new DeathWatchNotification(
+                system.Provider.ResolveActorRef(deathWatchNotificationProto.Ref.Path),
+                deathWatchNotificationProto.ExistenceConfirmed,
+                deathWatchNotificationProto.AddressTerminated);
         }
 
         private Terminate TerminateFrom(byte[] bytes)

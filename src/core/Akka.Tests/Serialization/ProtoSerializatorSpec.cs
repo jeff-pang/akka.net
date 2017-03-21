@@ -41,7 +41,6 @@ namespace Akka.Tests.Serialization
         public void Can_serialize_ActorRef()
         {
             var actorRef = ActorOf<BlackHoleActor>();
-            Sys.Serialization.FindSerializerFor(actorRef).Should().BeOfType<ProtoSerializer>();
             AssertEqual(actorRef);
         }
 
@@ -50,7 +49,6 @@ namespace Akka.Tests.Serialization
         {
             var uri = "akka.tcp://sys@localhost:9000/user/actor";
             var actorPath = ActorPath.Parse(uri);
-            Sys.Serialization.FindSerializerFor(actorPath).Should().BeOfType<ProtoSerializer>();
             AssertEqual(actorPath);
         }
 
@@ -58,7 +56,6 @@ namespace Akka.Tests.Serialization
         public void Can_serialize_Identify()
         {
             var identify = new Identify("message");
-            Sys.Serialization.FindSerializerFor(identify).Should().BeOfType<ProtoSerializer>();
             AssertEqual(identify);
         }
 
@@ -67,7 +64,6 @@ namespace Akka.Tests.Serialization
         {
             var actorRef = ActorOf<BlackHoleActor>();
             var actorIdentity = new ActorIdentity("message", actorRef);
-            Sys.Serialization.FindSerializerFor(actorIdentity).Should().BeOfType<ProtoSerializer>();
             AssertEqual(actorIdentity);
         }
 
@@ -75,7 +71,6 @@ namespace Akka.Tests.Serialization
         public void Can_serialize_PoisonPill()
         {
             var poisonPill = PoisonPill.Instance;
-            Sys.Serialization.FindSerializerFor(poisonPill).Should().BeOfType<ProtoSerializer>();
             AssertEqual(poisonPill);
         }
 
@@ -85,7 +80,6 @@ namespace Akka.Tests.Serialization
             var watchee = ActorOf<Watchee>().AsInstanceOf<IInternalActorRef>();
             var watcher = ActorOf<Watcher>().AsInstanceOf<IInternalActorRef>();
             var watch = new Watch(watchee, watcher);
-            Sys.Serialization.FindSerializerFor(watch).Should().BeOfType<ProtoSerializer>();
             AssertEqual(watch);
         }
 
@@ -95,18 +89,79 @@ namespace Akka.Tests.Serialization
             var watchee = ActorOf<Watchee>().AsInstanceOf<IInternalActorRef>();
             var watcher = ActorOf<Watcher>().AsInstanceOf<IInternalActorRef>();
             var unwatch = new Unwatch(watchee, watcher);
-            Sys.Serialization.FindSerializerFor(unwatch).Should().BeOfType<ProtoSerializer>();
             AssertEqual(unwatch);
+        }
+
+        [Fact]
+        public void Can_serialize_Address()
+        {
+            var address = new Address("akka.tcp", "TestSys", "localhost", 23423);
+            AssertEqual(address);
+        }
+
+        [Fact]
+        public void Can_serialize_Address_without_port()
+        {
+            var address = new Address("akka.tcp", "TestSys", "localhost");
+            AssertEqual(address);
+        }
+
+        [Fact]
+        public void Can_serialize_RemoteScope()
+        {
+            var address = new Address("akka.tcp", "TestSys", "localhost", 23423);
+            var remoteScope = new RemoteScope(address);
+            AssertEqual(remoteScope);
+        }
+
+        [Fact]
+        public void Can_serialize_Supervise()
+        {
+            var actorRef = ActorOf<BlackHoleActor>();
+            var supervise = new Supervise(actorRef, true);
+            Supervise deserialized = AssertAndReturn(supervise);
+            deserialized.Child.Should().Be(actorRef);
+            deserialized.Async.Should().Be(supervise.Async);
+        }
+
+        [Fact]
+        public void Can_serialize_DeadwatchNotification()
+        {
+            var actorRef = ActorOf<BlackHoleActor>();
+            var deadwatchNotification = new DeathWatchNotification(actorRef, true, false);
+            DeathWatchNotification deserialized = AssertAndReturn(deadwatchNotification);
+            deserialized.Actor.Should().Be(actorRef);
+            deserialized.AddressTerminated.Should().Be(deadwatchNotification.AddressTerminated);
+            deserialized.ExistenceConfirmed.Should().Be(deadwatchNotification.ExistenceConfirmed);
+        }
+
+        [Fact]
+        public void Can_serialize_Terminate()
+        {
+            var terminate = new Terminate();
+            AssertAndReturn(terminate).Should().BeOfType<Terminate>();
+        }
+
+        [Fact]
+        public void Can_serialize_Kill()
+        {
+            var kill = Kill.Instance;
+            AssertEqual(kill);
+        }
+
+        private T AssertAndReturn<T>(T message)
+        {
+            var serializer = Sys.Serialization.FindSerializerFor(message);
+            serializer.Should().BeOfType<ProtoSerializer>();
+            var serialized = serializer.ToBinary(message);
+            var result = serializer.FromBinary(serialized, typeof(T));
+            return (T)result;
         }
 
         private void AssertEqual<T>(T message)
         {
-            var serializer = Sys.Serialization.FindSerializerFor(message);
-            var serialized = serializer.ToBinary(message);
-            var result = serializer.FromBinary(serialized, typeof(T));
-            var deserialized = (T)result;
+            var deserialized = AssertAndReturn(message);
             Assert.Equal(message, deserialized);
         }
     }
 }
-
