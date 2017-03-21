@@ -6,8 +6,12 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using Akka.Actor;
+using Akka.Configuration;
+using Akka.Dispatch;
 using Akka.Dispatch.SysMsg;
+using Akka.Routing;
 using Akka.Serialization;
 using Akka.TestKit;
 using Akka.TestKit.TestActors;
@@ -93,38 +97,6 @@ namespace Akka.Tests.Serialization
         }
 
         [Fact]
-        public void Can_serialize_Address()
-        {
-            var address = new Address("akka.tcp", "TestSys", "localhost", 23423);
-            AssertEqual(address);
-        }
-
-        [Fact]
-        public void Can_serialize_Address_without_port()
-        {
-            var address = new Address("akka.tcp", "TestSys", "localhost");
-            AssertEqual(address);
-        }
-
-        [Fact]
-        public void Can_serialize_RemoteScope()
-        {
-            var address = new Address("akka.tcp", "TestSys", "localhost", 23423);
-            var remoteScope = new RemoteScope(address);
-            AssertEqual(remoteScope);
-        }
-
-        [Fact]
-        public void Can_serialize_Supervise()
-        {
-            var actorRef = ActorOf<BlackHoleActor>();
-            var supervise = new Supervise(actorRef, true);
-            Supervise deserialized = AssertAndReturn(supervise);
-            deserialized.Child.Should().Be(actorRef);
-            deserialized.Async.Should().Be(supervise.Async);
-        }
-
-        [Fact]
         public void Can_serialize_DeadwatchNotification()
         {
             var actorRef = ActorOf<BlackHoleActor>();
@@ -140,6 +112,207 @@ namespace Akka.Tests.Serialization
         {
             var terminate = new Terminate();
             AssertAndReturn(terminate).Should().BeOfType<Terminate>();
+        }
+
+        [Fact]
+        public void Can_serialize_Supervise()
+        {
+            var actorRef = ActorOf<BlackHoleActor>();
+            var supervise = new Supervise(actorRef, true);
+            Supervise deserialized = AssertAndReturn(supervise);
+            deserialized.Child.Should().Be(actorRef);
+            deserialized.Async.Should().Be(supervise.Async);
+        }
+
+        [Fact]
+        public void Can_serialize_Address()
+        {
+            var address = new Address("akka.tcp", "TestSys", "localhost", 23423);
+            AssertEqual(address);
+        }
+
+        [Fact]
+        public void Can_serialize_Address_without_port()
+        {
+            var address = new Address("akka.tcp", "TestSys", "localhost");
+            AssertEqual(address);
+        }
+
+        [Fact(Skip = "Not implemented yet")]
+        public void Can_serialize_RemoteScope()
+        {
+            var address = new Address("akka.tcp", "TestSys", "localhost", 23423);
+            var remoteScope = new RemoteScope(address);
+            AssertEqual(remoteScope);
+        }
+
+        [Fact(Skip = "Not implemented yet")]
+        public void Can_serialize_Config()
+        {
+            var message = ConfigurationFactory.Default();
+            var serializer = Sys.Serialization.FindSerializerFor(message);
+            serializer.Should().BeOfType<ProtoSerializer>();
+            var serialized = serializer.ToBinary(message);
+            var deserialized = (Config)serializer.FromBinary(serialized, typeof(Config));
+
+            var config1 = message.ToString();
+            var config2 = deserialized.ToString();
+
+            Assert.Equal(config1, config2);
+        }
+
+        [Fact(Skip = "Not implemented yet")]
+        public void Can_serialize_Decider()
+        {
+            var decider = Decider.From(
+                Directive.Restart,
+                Directive.Stop.When<ArgumentException>(),
+                Directive.Stop.When<NullReferenceException>());
+
+            var deserialized = AssertAndReturn(decider);
+            deserialized.DefaultDirective.Should().Be(decider.DefaultDirective);
+            deserialized.Pairs.Should().BeEquivalentTo(decider.Pairs);
+        }
+
+        [Fact(Skip = "Not implemented yet")]
+        public void Can_serialize_OneForOneStrategy()
+        {
+            var decider = Decider.From(
+                Directive.Restart,
+                Directive.Stop.When<ArgumentException>(),
+                Directive.Stop.When<NullReferenceException>());
+
+            var message = new OneForOneStrategy(5, 10, decider, true);
+            AssertEqual(message);
+        }
+
+        [Fact(Skip = "Not implemented yet")]
+        public void Can_serialize_AllForOneStrategy()
+        {
+            var decider = Decider.From(
+                Directive.Restart,
+                Directive.Stop.When<ArgumentException>(),
+                Directive.Stop.When<NullReferenceException>());
+
+            var message = new AllForOneStrategy(5, 10, decider, true);
+            AssertEqual(message);
+        }
+
+        [Fact(Skip = "Not implemented yet")]
+        public void Can_serialize_RoundRobinPool()
+        {
+            var decider = Decider.From(
+                Directive.Restart,
+                Directive.Stop.When<ArgumentException>(),
+                Directive.Stop.When<NullReferenceException>());
+
+            var supervisor = new OneForOneStrategy(decider);
+
+            var message = new RoundRobinPool(10, new DefaultResizer(0, 1), supervisor, "abc");
+            AssertEqual(message);
+        }
+
+        [Fact]
+        public void Can_serialize_RoundRobinGroup()
+        {
+            var message = new RoundRobinGroup("abc", Dispatchers.DefaultDispatcherId);
+            AssertEqual(message);
+        }
+
+        [Fact(Skip = "Not implemented yet")]
+        public void Can_serialize_RandomPool()
+        {
+            var decider = Decider.From(
+                Directive.Restart,
+                Directive.Stop.When<ArgumentException>(),
+                Directive.Stop.When<NullReferenceException>());
+
+            var supervisor = new OneForOneStrategy(decider);
+
+            var message = new RandomPool(10, new DefaultResizer(0, 1), supervisor, "abc");
+            AssertEqual(message);
+        }
+
+        [Fact(Skip = "Not implemented yet")]
+        public void Can_serialize_RandomGroup()
+        {
+            var message = new RandomGroup("abc", Dispatchers.DefaultDispatcherId);
+            AssertEqual(message);
+        }
+
+        [Fact(Skip = "Not implemented yet")]
+        public void Can_serialize_ConsistentHashPool()
+        {
+            var decider = Decider.From(
+                Directive.Restart,
+                Directive.Stop.When<ArgumentException>(),
+                Directive.Stop.When<NullReferenceException>());
+
+            var supervisor = new OneForOneStrategy(decider);
+
+            var message = new ConsistentHashingPool(10, new DefaultResizer(0, 2), supervisor, Dispatchers.DefaultDispatcherId, false, 1, null);
+            AssertEqual(message);
+        }
+
+        [Fact(Skip = "Not implemented yet")]
+        public void Can_serialize_ConsistentHashingGroup()
+        {
+            var message = new ConsistentHashingGroup("abc", Dispatchers.DefaultDispatcherId);
+            AssertEqual(message);
+        }
+
+        [Fact(Skip = "Not implemented yet")]
+        public void Can_serialize_TailChoppingPool()
+        {
+            var decider = Decider.From(
+                Directive.Restart,
+                Directive.Stop.When<ArgumentException>(),
+                Directive.Stop.When<NullReferenceException>());
+
+            var supervisor = new OneForOneStrategy(decider);
+            var message = new TailChoppingPool(10, null, supervisor, "abc", TimeSpan.FromSeconds(10), TimeSpan.FromSeconds(2));
+            AssertEqual(message);
+        }
+
+        [Fact(Skip = "Not implemented yet")]
+        public void Can_serialize_TailChoppingGroup()
+        {
+            var message = new TailChoppingGroup(new List<string> { "abc" }, TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(2), Dispatchers.DefaultDispatcherId);
+            AssertEqual(message);
+        }
+
+        [Fact(Skip = "Not implemented yet")]
+        public void Can_serialize_ScatterGatherFirstCompletedPool()
+        {
+            var decider = Decider.From(
+                Directive.Restart,
+                Directive.Stop.When<ArgumentException>(),
+                Directive.Stop.When<NullReferenceException>());
+
+            var supervisor = new OneForOneStrategy(decider);
+            var message = new ScatterGatherFirstCompletedPool(10, null, TimeSpan.MaxValue, supervisor, "abc");
+            AssertEqual(message);
+        }
+
+        [Fact(Skip = "Not implemented yet")]
+        public void Can_serialize_ScatterGatherFirstCompletedGroup()
+        {
+            var message = new ScatterGatherFirstCompletedGroup(new List<string> {"abc"}, TimeSpan.FromSeconds(1), Dispatchers.DefaultDispatcherId);
+            AssertEqual(message);
+        }
+
+        [Fact(Skip = "Not implemented yet")]
+        public void Can_serialize_SmallestMailboxPool()
+        {
+            var decider = Decider.From(
+                Directive.Restart,
+                Directive.Stop.When<ArgumentException>(),
+                Directive.Stop.When<NullReferenceException>());
+
+            var supervisor = new OneForOneStrategy(decider);
+
+            var message = new SmallestMailboxPool(10, null, supervisor, "abc");
+            AssertEqual(message);
         }
 
         [Fact]

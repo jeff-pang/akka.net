@@ -279,7 +279,7 @@
     <Compile Include="IO\TcpOutgoingConnection.cs" />
     <Compile Include="NotUsed.cs" />
     <Compile Include="Serialization\ProtoSerializer.cs" />
-    <Compile Include="Serialization\Proto\MessageSerializer.cs" />
+    <Compile Include="Serialization\Proto\CoreMessages.cs" />
     <Compile Include="Util\ByteIterator.cs" />
     <Compile Include="Util\ByteString.cs" />
     <Compile Include="Util\ContinuousEnumerator.cs" />

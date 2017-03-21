@@ -6,11 +6,15 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using Akka.Actor;
-using Akka.Dispatch.SysMsg;
+using Akka.Configuration;
+using Akka.Util;
 using Akka.Util.Internal;
 using Google.Protobuf;
+using Akka.Dispatch.SysMsg;
+using Akka.Routing;
 
 namespace Akka.Serialization
 {
@@ -95,6 +99,18 @@ namespace Akka.Serialization
             {
                 return KillMessageBuilder((Kill)obj).ToByteArray();
             }
+            else if (obj is Config)
+            {
+                return ConfigMessageBuilder((Config)obj).ToByteArray();
+            }
+            else if (obj is RoundRobinPool)
+            {
+                return RoundRobinPoolMessageBuilder((RoundRobinPool)obj).ToByteArray();
+            }
+            else if (obj is RoundRobinGroup)
+            {
+                return RoundRobinGroupMessageBuilder((RoundRobinGroup)obj).ToByteArray();
+            }
 
             throw new ArgumentException($"Can't serialize object of type {obj.GetType()}");
         }
@@ -141,7 +157,7 @@ namespace Akka.Serialization
             {
                 return AddressFrom(bytes);
             }
-            else if (type == typeof(RemoteScope))
+            else if (type == typeof(RemoteScope) || type == typeof(Scope))
             {
                 return RemoteScopeFrom(bytes);
             }
@@ -160,6 +176,18 @@ namespace Akka.Serialization
             else if (type == typeof(Kill))
             {
                 return KillFrom(bytes);
+            }
+            else if (type == typeof(Config))
+            {
+                return ConfigFrom(bytes);
+            }
+            else if (type == typeof(RoundRobinPool))
+            {
+                return RoundRobinPoolFrom(bytes);
+            }
+            else if (type == typeof(RoundRobinGroup))
+            {
+                return RoundRobinGroupFrom(bytes);
             }
 
             throw new ArgumentException(typeof(ProtoSerializer) + " cannot deserialize object of type " + type);
@@ -308,6 +336,49 @@ namespace Akka.Serialization
             return new Protobuf.Msg.Kill();
         }
 
+        private Protobuf.Msg.Config ConfigMessageBuilder(Config config)
+        {
+            var message = new Protobuf.Msg.Config();
+            message.Config_ = config.ToString(true);
+            return message;
+        }
+
+        private Protobuf.Msg.Decider DeciderMessageBuilder(DeployableDecider decider)
+        {
+            var message = new Protobuf.Msg.Decider();
+            message.DefaultDirective = decider.DefaultDirective.ToString();
+            foreach (var pair in decider.Pairs)
+            {
+                message.Pairs.Add(pair.Key.TypeQualifiedName(), pair.Value.ToString());
+            }
+
+            return message;
+        }
+
+        private Protobuf.Msg.RoundRobinPool RoundRobinPoolMessageBuilder(RoundRobinPool roundRobinPool)
+        {
+            var message = new Protobuf.Msg.RoundRobinPool();
+            message.NumberOfInstances = roundRobinPool.NrOfInstances;
+            message.UsePoolDispatcher = roundRobinPool.UsePoolDispatcher;
+            // message.Resizer = new Protobuf.Msg.Resizer(); // TODO: fix serializer
+            // message.SupervisorStrategy = new Protobuf.Msg.SupervisorStrategy(); // TODO: fix serializer
+            message.RouterDispatcher = roundRobinPool.RouterDispatcher;
+
+            return message;
+        }
+
+        private Protobuf.Msg.RoundRobinGroup RoundRobinGroupMessageBuilder(RoundRobinGroup roundRobinGroup)
+        {
+            var message = new Protobuf.Msg.RoundRobinGroup();
+            message.RouterDispatcher = roundRobinGroup.RouterDispatcher;
+            foreach (var path in roundRobinGroup.Paths)
+            {
+                message.Paths.Add(path);
+            }
+
+            return message;
+        }
+
         //
         // FromBinary helpers
         //
@@ -433,6 +504,56 @@ namespace Akka.Serialization
         private Kill KillFrom(byte[] bytes)
         {
             return Kill.Instance;
+        }
+
+        private Config ConfigFrom(byte[] bytes)
+        {
+            var configProto = Protobuf.Msg.Config.Parser.ParseFrom(bytes);
+
+            return ConfigurationFactory.ParseString(configProto.Config_);
+        }
+
+        private DeployableDecider DeciderFrom(byte[] bytes)
+        {
+            var deployableDeciderProto = Protobuf.Msg.Decider.Parser.ParseFrom(bytes);
+
+            Directive defaultDirective;
+            Enum.TryParse(deployableDeciderProto.DefaultDirective, out defaultDirective);
+
+            var pairs = new List<KeyValuePair<Type, Directive>>();
+            foreach (var pair in deployableDeciderProto.Pairs)
+            {
+                Directive pairDirective;
+                Enum.TryParse(deployableDeciderProto.DefaultDirective, out pairDirective);
+                pairs.Add(new KeyValuePair<Type, Directive>(Type.GetType(pair.Key), pairDirective));
+            }
+
+            return new DeployableDecider(defaultDirective, pairs);
+        }
+
+        private RoundRobinPool RoundRobinPoolFrom(byte[] bytes)
+        {
+            var roundRobinPoolProto = Protobuf.Msg.RoundRobinPool.Parser.ParseFrom(bytes);
+
+            return new RoundRobinPool(
+                roundRobinPoolProto.NumberOfInstances,
+                null,
+                null,
+                roundRobinPoolProto.RouterDispatcher,
+                roundRobinPoolProto.UsePoolDispatcher);
+        }
+
+        private RoundRobinGroup RoundRobinGroupFrom(byte[] bytes)
+        {
+            var roundRobinGroupProto = Protobuf.Msg.RoundRobinGroup.Parser.ParseFrom(bytes);
+
+            var paths = new List<string>(roundRobinGroupProto.Paths.Count);
+            foreach (var path in roundRobinGroupProto.Paths)
+            {
+                paths.Add(path);
+            }
+
+            return new RoundRobinGroup(paths, roundRobinGroupProto.RouterDispatcher);
         }
     }
 }

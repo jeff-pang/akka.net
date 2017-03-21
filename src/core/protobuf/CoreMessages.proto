@@ -67,3 +67,34 @@ message Address {
 message RemoteScope { 
   Address address = 1;
 }
+
+message Config {
+  string config = 1;
+}
+
+message Decider {
+  string defaultDirective = 1;
+  map<string, string> pairs = 2;
+}
+
+message SupervisorStrategy {
+  int32 maxNumberOfRetries = 1;
+  int32 withinTimeMilliseconds = 2;
+  Decider decider = 3;
+  bool loggingEnabled = 4;
+}
+
+message Resizer { }
+
+message RoundRobinPool {
+  int32 numberOfInstances = 1;
+  bool usePoolDispatcher = 2;
+  Resizer resizer = 3;
+  SupervisorStrategy supervisorStrategy = 4;
+  string routerDispatcher = 5;
+}
+
+message RoundRobinGroup {
+  repeated string paths = 1;
+  string routerDispatcher = 2;
+}
