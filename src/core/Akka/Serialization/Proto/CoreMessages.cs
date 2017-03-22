@@ -45,17 +45,21 @@ namespace Akka.Protobuf.Msg {
             "TXNnLkFkZHJlc3MiGAoGQ29uZmlnEg4KBmNvbmZpZxgBIAEoCSKHAQoHRGVj",
             "aWRlchIYChBkZWZhdWx0RGlyZWN0aXZlGAEgASgJEjQKBXBhaXJzGAIgAygL",
             "MiUuQWtrYS5Qcm90b2J1Zi5Nc2cuRGVjaWRlci5QYWlyc0VudHJ5GiwKClBh",
-            "aXJzRW50cnkSCwoDa2V5GAEgASgJEg0KBXZhbHVlGAIgASgJOgI4ASKVAQoS",
+            "aXJzRW50cnkSCwoDa2V5GAEgASgJEg0KBXZhbHVlGAIgASgJOgI4ASKTAQoS",
             "U3VwZXJ2aXNvclN0cmF0ZWd5EhoKEm1heE51bWJlck9mUmV0cmllcxgBIAEo",
             "BRIeChZ3aXRoaW5UaW1lTWlsbGlzZWNvbmRzGAIgASgFEisKB2RlY2lkZXIY",
-            "AyABKAsyGi5Ba2thLlByb3RvYnVmLk1zZy5EZWNpZGVyEhYKDmxvZ2dpbmdF",
-            "bmFibGVkGAQgASgIIgkKB1Jlc2l6ZXIi0AEKDlJvdW5kUm9iaW5Qb29sEhkK",
-            "EW51bWJlck9mSW5zdGFuY2VzGAEgASgFEhkKEXVzZVBvb2xEaXNwYXRjaGVy",
-            "GAIgASgIEisKB3Jlc2l6ZXIYAyABKAsyGi5Ba2thLlByb3RvYnVmLk1zZy5S",
-            "ZXNpemVyEkEKEnN1cGVydmlzb3JTdHJhdGVneRgEIAEoCzIlLkFra2EuUHJv",
-            "dG9idWYuTXNnLlN1cGVydmlzb3JTdHJhdGVneRIYChByb3V0ZXJEaXNwYXRj",
-            "aGVyGAUgASgJIjoKD1JvdW5kUm9iaW5Hcm91cBINCgVwYXRocxgBIAMoCRIY",
-            "ChByb3V0ZXJEaXNwYXRjaGVyGAIgASgJQgJIAWIGcHJvdG8z"));
+            "AyABKAsyGi5Ba2thLlByb3RvYnVmLk1zZy5EZWNpZGVyEhQKDHN0cmF0ZWd5",
+            "VHlwZRgEIAEoCSKgAQoHUmVzaXplchINCgVsb3dlchgBIAEoBRINCgV1cHBl",
+            "chgCIAEoBRIZChFwcmVzc3VyZVRocmVzaG9sZBgDIAEoBRISCgpyYW1wdXBS",
+            "YXRlGAQgASgBEhgKEGJhY2tvZmZUaHJlc2hvbGQYBSABKAESEwoLYmFja29m",
+            "ZlJhdGUYBiABKAESGQoRbWVzc2FnZXNQZXJSZXNpemUYByABKAUi0AEKDlJv",
+            "dW5kUm9iaW5Qb29sEhkKEW51bWJlck9mSW5zdGFuY2VzGAEgASgFEhkKEXVz",
+            "ZVBvb2xEaXNwYXRjaGVyGAIgASgIEisKB3Jlc2l6ZXIYAyABKAsyGi5Ba2th",
+            "LlByb3RvYnVmLk1zZy5SZXNpemVyEkEKEnN1cGVydmlzb3JTdHJhdGVneRgE",
+            "IAEoCzIlLkFra2EuUHJvdG9idWYuTXNnLlN1cGVydmlzb3JTdHJhdGVneRIY",
+            "ChByb3V0ZXJEaXNwYXRjaGVyGAUgASgJIjoKD1JvdW5kUm9iaW5Hcm91cBIN",
+            "CgVwYXRocxgBIAMoCRIYChByb3V0ZXJEaXNwYXRjaGVyGAIgASgJQgJIAWIG",
+            "cHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
@@ -75,8 +79,8 @@ namespace Akka.Protobuf.Msg {
             new pbr::GeneratedClrTypeInfo(typeof(global::Akka.Protobuf.Msg.RemoteScope), global::Akka.Protobuf.Msg.RemoteScope.Parser, new[]{ "Address" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Akka.Protobuf.Msg.Config), global::Akka.Protobuf.Msg.Config.Parser, new[]{ "Config_" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Akka.Protobuf.Msg.Decider), global::Akka.Protobuf.Msg.Decider.Parser, new[]{ "DefaultDirective", "Pairs" }, null, null, new pbr::GeneratedClrTypeInfo[] { null, }),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Akka.Protobuf.Msg.SupervisorStrategy), global::Akka.Protobuf.Msg.SupervisorStrategy.Parser, new[]{ "MaxNumberOfRetries", "WithinTimeMilliseconds", "Decider", "LoggingEnabled" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Akka.Protobuf.Msg.Resizer), global::Akka.Protobuf.Msg.Resizer.Parser, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Akka.Protobuf.Msg.SupervisorStrategy), global::Akka.Protobuf.Msg.SupervisorStrategy.Parser, new[]{ "MaxNumberOfRetries", "WithinTimeMilliseconds", "Decider", "StrategyType" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Akka.Protobuf.Msg.Resizer), global::Akka.Protobuf.Msg.Resizer.Parser, new[]{ "Lower", "Upper", "PressureThreshold", "RampupRate", "BackoffThreshold", "BackoffRate", "MessagesPerResize" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Akka.Protobuf.Msg.RoundRobinPool), global::Akka.Protobuf.Msg.RoundRobinPool.Parser, new[]{ "NumberOfInstances", "UsePoolDispatcher", "Resizer", "SupervisorStrategy", "RouterDispatcher" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Akka.Protobuf.Msg.RoundRobinGroup), global::Akka.Protobuf.Msg.RoundRobinGroup.Parser, new[]{ "Paths", "RouterDispatcher" }, null, null, null)
           }));
@@ -2288,7 +2292,7 @@ namespace Akka.Protobuf.Msg {
       maxNumberOfRetries_ = other.maxNumberOfRetries_;
       withinTimeMilliseconds_ = other.withinTimeMilliseconds_;
       Decider = other.decider_ != null ? other.Decider.Clone() : null;
-      loggingEnabled_ = other.loggingEnabled_;
+      strategyType_ = other.strategyType_;
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2329,14 +2333,14 @@ namespace Akka.Protobuf.Msg {
       }
     }
 
-    /// <summary>Field number for the "loggingEnabled" field.</summary>
-    public const int LoggingEnabledFieldNumber = 4;
-    private bool loggingEnabled_;
+    /// <summary>Field number for the "strategyType" field.</summary>
+    public const int StrategyTypeFieldNumber = 4;
+    private string strategyType_ = "";
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public bool LoggingEnabled {
-      get { return loggingEnabled_; }
+    public string StrategyType {
+      get { return strategyType_; }
       set {
-        loggingEnabled_ = value;
+        strategyType_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
       }
     }
 
@@ -2356,7 +2360,7 @@ namespace Akka.Protobuf.Msg {
       if (MaxNumberOfRetries != other.MaxNumberOfRetries) return false;
       if (WithinTimeMilliseconds != other.WithinTimeMilliseconds) return false;
       if (!object.Equals(Decider, other.Decider)) return false;
-      if (LoggingEnabled != other.LoggingEnabled) return false;
+      if (StrategyType != other.StrategyType) return false;
       return true;
     }
 
@@ -2366,7 +2370,7 @@ namespace Akka.Protobuf.Msg {
       if (MaxNumberOfRetries != 0) hash ^= MaxNumberOfRetries.GetHashCode();
       if (WithinTimeMilliseconds != 0) hash ^= WithinTimeMilliseconds.GetHashCode();
       if (decider_ != null) hash ^= Decider.GetHashCode();
-      if (LoggingEnabled != false) hash ^= LoggingEnabled.GetHashCode();
+      if (StrategyType.Length != 0) hash ^= StrategyType.GetHashCode();
       return hash;
     }
 
@@ -2389,9 +2393,9 @@ namespace Akka.Protobuf.Msg {
         output.WriteRawTag(26);
         output.WriteMessage(Decider);
       }
-      if (LoggingEnabled != false) {
-        output.WriteRawTag(32);
-        output.WriteBool(LoggingEnabled);
+      if (StrategyType.Length != 0) {
+        output.WriteRawTag(34);
+        output.WriteString(StrategyType);
       }
     }
 
@@ -2407,8 +2411,8 @@ namespace Akka.Protobuf.Msg {
       if (decider_ != null) {
         size += 1 + pb::CodedOutputStream.ComputeMessageSize(Decider);
       }
-      if (LoggingEnabled != false) {
-        size += 1 + 1;
+      if (StrategyType.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(StrategyType);
       }
       return size;
     }
@@ -2430,8 +2434,8 @@ namespace Akka.Protobuf.Msg {
         }
         Decider.MergeFrom(other.Decider);
       }
-      if (other.LoggingEnabled != false) {
-        LoggingEnabled = other.LoggingEnabled;
+      if (other.StrategyType.Length != 0) {
+        StrategyType = other.StrategyType;
       }
     }
 
@@ -2458,8 +2462,8 @@ namespace Akka.Protobuf.Msg {
             input.ReadMessage(decider_);
             break;
           }
-          case 32: {
-            LoggingEnabled = input.ReadBool();
+          case 34: {
+            StrategyType = input.ReadString();
             break;
           }
         }
@@ -2492,11 +2496,95 @@ namespace Akka.Protobuf.Msg {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public Resizer(Resizer other) : this() {
+      lower_ = other.lower_;
+      upper_ = other.upper_;
+      pressureThreshold_ = other.pressureThreshold_;
+      rampupRate_ = other.rampupRate_;
+      backoffThreshold_ = other.backoffThreshold_;
+      backoffRate_ = other.backoffRate_;
+      messagesPerResize_ = other.messagesPerResize_;
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public Resizer Clone() {
       return new Resizer(this);
+    }
+
+    /// <summary>Field number for the "lower" field.</summary>
+    public const int LowerFieldNumber = 1;
+    private int lower_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int Lower {
+      get { return lower_; }
+      set {
+        lower_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "upper" field.</summary>
+    public const int UpperFieldNumber = 2;
+    private int upper_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int Upper {
+      get { return upper_; }
+      set {
+        upper_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "pressureThreshold" field.</summary>
+    public const int PressureThresholdFieldNumber = 3;
+    private int pressureThreshold_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int PressureThreshold {
+      get { return pressureThreshold_; }
+      set {
+        pressureThreshold_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "rampupRate" field.</summary>
+    public const int RampupRateFieldNumber = 4;
+    private double rampupRate_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public double RampupRate {
+      get { return rampupRate_; }
+      set {
+        rampupRate_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "backoffThreshold" field.</summary>
+    public const int BackoffThresholdFieldNumber = 5;
+    private double backoffThreshold_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public double BackoffThreshold {
+      get { return backoffThreshold_; }
+      set {
+        backoffThreshold_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "backoffRate" field.</summary>
+    public const int BackoffRateFieldNumber = 6;
+    private double backoffRate_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public double BackoffRate {
+      get { return backoffRate_; }
+      set {
+        backoffRate_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "messagesPerResize" field.</summary>
+    public const int MessagesPerResizeFieldNumber = 7;
+    private int messagesPerResize_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int MessagesPerResize {
+      get { return messagesPerResize_; }
+      set {
+        messagesPerResize_ = value;
+      }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2512,12 +2600,26 @@ namespace Akka.Protobuf.Msg {
       if (ReferenceEquals(other, this)) {
         return true;
       }
+      if (Lower != other.Lower) return false;
+      if (Upper != other.Upper) return false;
+      if (PressureThreshold != other.PressureThreshold) return false;
+      if (RampupRate != other.RampupRate) return false;
+      if (BackoffThreshold != other.BackoffThreshold) return false;
+      if (BackoffRate != other.BackoffRate) return false;
+      if (MessagesPerResize != other.MessagesPerResize) return false;
       return true;
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override int GetHashCode() {
       int hash = 1;
+      if (Lower != 0) hash ^= Lower.GetHashCode();
+      if (Upper != 0) hash ^= Upper.GetHashCode();
+      if (PressureThreshold != 0) hash ^= PressureThreshold.GetHashCode();
+      if (RampupRate != 0D) hash ^= RampupRate.GetHashCode();
+      if (BackoffThreshold != 0D) hash ^= BackoffThreshold.GetHashCode();
+      if (BackoffRate != 0D) hash ^= BackoffRate.GetHashCode();
+      if (MessagesPerResize != 0) hash ^= MessagesPerResize.GetHashCode();
       return hash;
     }
 
@@ -2528,11 +2630,60 @@ namespace Akka.Protobuf.Msg {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public void WriteTo(pb::CodedOutputStream output) {
+      if (Lower != 0) {
+        output.WriteRawTag(8);
+        output.WriteInt32(Lower);
+      }
+      if (Upper != 0) {
+        output.WriteRawTag(16);
+        output.WriteInt32(Upper);
+      }
+      if (PressureThreshold != 0) {
+        output.WriteRawTag(24);
+        output.WriteInt32(PressureThreshold);
+      }
+      if (RampupRate != 0D) {
+        output.WriteRawTag(33);
+        output.WriteDouble(RampupRate);
+      }
+      if (BackoffThreshold != 0D) {
+        output.WriteRawTag(41);
+        output.WriteDouble(BackoffThreshold);
+      }
+      if (BackoffRate != 0D) {
+        output.WriteRawTag(49);
+        output.WriteDouble(BackoffRate);
+      }
+      if (MessagesPerResize != 0) {
+        output.WriteRawTag(56);
+        output.WriteInt32(MessagesPerResize);
+      }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public int CalculateSize() {
       int size = 0;
+      if (Lower != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(Lower);
+      }
+      if (Upper != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(Upper);
+      }
+      if (PressureThreshold != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(PressureThreshold);
+      }
+      if (RampupRate != 0D) {
+        size += 1 + 8;
+      }
+      if (BackoffThreshold != 0D) {
+        size += 1 + 8;
+      }
+      if (BackoffRate != 0D) {
+        size += 1 + 8;
+      }
+      if (MessagesPerResize != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(MessagesPerResize);
+      }
       return size;
     }
 
@@ -2540,6 +2691,27 @@ namespace Akka.Protobuf.Msg {
     public void MergeFrom(Resizer other) {
       if (other == null) {
         return;
+      }
+      if (other.Lower != 0) {
+        Lower = other.Lower;
+      }
+      if (other.Upper != 0) {
+        Upper = other.Upper;
+      }
+      if (other.PressureThreshold != 0) {
+        PressureThreshold = other.PressureThreshold;
+      }
+      if (other.RampupRate != 0D) {
+        RampupRate = other.RampupRate;
+      }
+      if (other.BackoffThreshold != 0D) {
+        BackoffThreshold = other.BackoffThreshold;
+      }
+      if (other.BackoffRate != 0D) {
+        BackoffRate = other.BackoffRate;
+      }
+      if (other.MessagesPerResize != 0) {
+        MessagesPerResize = other.MessagesPerResize;
       }
     }
 
@@ -2551,6 +2723,34 @@ namespace Akka.Protobuf.Msg {
           default:
             input.SkipLastField();
             break;
+          case 8: {
+            Lower = input.ReadInt32();
+            break;
+          }
+          case 16: {
+            Upper = input.ReadInt32();
+            break;
+          }
+          case 24: {
+            PressureThreshold = input.ReadInt32();
+            break;
+          }
+          case 33: {
+            RampupRate = input.ReadDouble();
+            break;
+          }
+          case 41: {
+            BackoffThreshold = input.ReadDouble();
+            break;
+          }
+          case 49: {
+            BackoffRate = input.ReadDouble();
+            break;
+          }
+          case 56: {
+            MessagesPerResize = input.ReadInt32();
+            break;
+          }
         }
       }
     }

@@ -81,10 +81,18 @@ message SupervisorStrategy {
   int32 maxNumberOfRetries = 1;
   int32 withinTimeMilliseconds = 2;
   Decider decider = 3;
-  bool loggingEnabled = 4;
+  string strategyType = 4;
 }
 
-message Resizer { }
+message Resizer { 
+  int32 lower = 1;
+  int32 upper = 2;
+  int32 pressureThreshold = 3;
+  double rampupRate = 4;
+  double backoffThreshold = 5;
+  double backoffRate = 6;
+  int32 messagesPerResize = 7;
+}
 
 message RoundRobinPool {
   int32 numberOfInstances = 1;

@@ -41,14 +41,14 @@ namespace Akka.Tests.Serialization
         }
         #endregion
 
-        [Fact]
+        [Fact(Skip = "Not implemented yet")]
         public void Can_serialize_ActorRef()
         {
             var actorRef = ActorOf<BlackHoleActor>();
             AssertEqual(actorRef);
         }
 
-        [Fact]
+        [Fact(Skip = "Not implemented yet")]
         public void Can_serialize_ActorPath()
         {
             var uri = "akka.tcp://sys@localhost:9000/user/actor";
@@ -161,20 +161,7 @@ namespace Akka.Tests.Serialization
             Assert.Equal(config1, config2);
         }
 
-        [Fact(Skip = "Not implemented yet")]
-        public void Can_serialize_Decider()
-        {
-            var decider = Decider.From(
-                Directive.Restart,
-                Directive.Stop.When<ArgumentException>(),
-                Directive.Stop.When<NullReferenceException>());
-
-            var deserialized = AssertAndReturn(decider);
-            deserialized.DefaultDirective.Should().Be(decider.DefaultDirective);
-            deserialized.Pairs.Should().BeEquivalentTo(decider.Pairs);
-        }
-
-        [Fact(Skip = "Not implemented yet")]
+        [Fact]
         public void Can_serialize_OneForOneStrategy()
         {
             var decider = Decider.From(
@@ -186,7 +173,7 @@ namespace Akka.Tests.Serialization
             AssertEqual(message);
         }
 
-        [Fact(Skip = "Not implemented yet")]
+        [Fact]
         public void Can_serialize_AllForOneStrategy()
         {
             var decider = Decider.From(
@@ -198,7 +185,7 @@ namespace Akka.Tests.Serialization
             AssertEqual(message);
         }
 
-        [Fact(Skip = "Not implemented yet")]
+        [Fact]
         public void Can_serialize_RoundRobinPool()
         {
             var decider = Decider.From(

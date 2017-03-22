@@ -8,6 +8,7 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using System.Runtime.Serialization;
 using Akka.Actor;
 using Akka.Configuration;
 using Akka.Util;
@@ -103,6 +104,10 @@ namespace Akka.Serialization
             {
                 return ConfigMessageBuilder((Config)obj).ToByteArray();
             }
+            else if (obj is SupervisorStrategy)
+            {
+                return SupervisorStrategyMessageBuilder((SupervisorStrategy)obj).ToByteArray();
+            }
             else if (obj is RoundRobinPool)
             {
                 return RoundRobinPoolMessageBuilder((RoundRobinPool)obj).ToByteArray();
@@ -127,19 +132,19 @@ namespace Akka.Serialization
         {
             if (type == typeof(IActorRef))
             {
-                return ActorRefFrom(bytes);
+                return ActorRefFrom(Protobuf.Msg.ActorRef.Parser.ParseFrom(bytes));
             }
             else if (type == typeof(ActorPath))
             {
-                return ActorPathFrom(bytes);
+                return ActorPathFrom(Protobuf.Msg.ActorPath.Parser.ParseFrom(bytes));
             }
             else if (type == typeof(Identify))
             {
-                return IdentifyFrom(bytes);
+                return IdentifyFrom(Protobuf.Msg.Identify.Parser.ParseFrom(bytes));
             }
             else if (type == typeof(ActorIdentity))
             {
-                return ActorIdentityFrom(bytes);
+                return ActorIdentityFrom(Protobuf.Msg.ActorIdentity.Parser.ParseFrom(bytes));
             }
             else if (type == typeof(PoisonPill))
             {
@@ -147,27 +152,27 @@ namespace Akka.Serialization
             }
             else if (type == typeof(Watch))
             {
-                return WatchFrom(bytes);
+                return WatchFrom(Protobuf.Msg.Watch.Parser.ParseFrom(bytes));
             }
             else if (type == typeof(Unwatch))
             {
-                return UnwatchFrom(bytes);
+                return UnwatchFrom(Protobuf.Msg.Watch.Parser.ParseFrom(bytes));
             }
             else if (type == typeof(Address))
             {
-                return AddressFrom(bytes);
+                return AddressFrom(Protobuf.Msg.Address.Parser.ParseFrom(bytes));
             }
             else if (type == typeof(RemoteScope) || type == typeof(Scope))
             {
-                return RemoteScopeFrom(bytes);
+                return RemoteScopeFrom(Protobuf.Msg.RemoteScope.Parser.ParseFrom(bytes));
             }
             else if (type == typeof(Supervise))
             {
-                return SuperviseFrom(bytes);
+                return SuperviseFrom(Protobuf.Msg.Supervise.Parser.ParseFrom(bytes));
             }
             else if (type == typeof(DeathWatchNotification))
             {
-                return DeathWatchNotificationFrom(bytes);
+                return DeathWatchNotificationFrom(system, Protobuf.Msg.DeathWatchNotification.Parser.ParseFrom(bytes));
             }
             else if (type == typeof(Terminate))
             {
@@ -179,15 +184,19 @@ namespace Akka.Serialization
             }
             else if (type == typeof(Config))
             {
-                return ConfigFrom(bytes);
+                return ConfigFrom(Protobuf.Msg.Config.Parser.ParseFrom(bytes));
+            }
+            else if (type == typeof(SupervisorStrategy) || type == typeof(AllForOneStrategy) || type == typeof(OneForOneStrategy))
+            {
+                return SupervisorStrategyFrom(Protobuf.Msg.SupervisorStrategy.Parser.ParseFrom(bytes));
             }
             else if (type == typeof(RoundRobinPool))
             {
-                return RoundRobinPoolFrom(bytes);
+                return RoundRobinPoolFrom(Protobuf.Msg.RoundRobinPool.Parser.ParseFrom(bytes));
             }
             else if (type == typeof(RoundRobinGroup))
             {
-                return RoundRobinGroupFrom(bytes);
+                return RoundRobinGroupFrom(Protobuf.Msg.RoundRobinGroup.Parser.ParseFrom(bytes));
             }
 
             throw new ArgumentException(typeof(ProtoSerializer) + " cannot deserialize object of type " + type);
@@ -197,7 +206,6 @@ namespace Akka.Serialization
         // ToBinary helpers
         //
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private Protobuf.Msg.ActorRef ActorRefMessageBuilder(IActorRef actorRef)
         {
             var message = new Protobuf.Msg.ActorRef();
@@ -291,7 +299,6 @@ namespace Akka.Serialization
             return message;
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private Protobuf.Msg.Address AddressMessageBuilder(Address address)
         {
             var message = new Protobuf.Msg.Address();
@@ -326,24 +333,24 @@ namespace Akka.Serialization
             return message;
         }
 
-        private Protobuf.Msg.Terminate TerminateMessageBuilder(Terminate terminate)
+        internal static Protobuf.Msg.Terminate TerminateMessageBuilder(Terminate terminate)
         {
             return new Protobuf.Msg.Terminate();
         }
 
-        private Protobuf.Msg.Kill KillMessageBuilder(Kill kill)
+        internal static Protobuf.Msg.Kill KillMessageBuilder(Kill kill)
         {
             return new Protobuf.Msg.Kill();
         }
 
-        private Protobuf.Msg.Config ConfigMessageBuilder(Config config)
+        internal static Protobuf.Msg.Config ConfigMessageBuilder(Config config)
         {
             var message = new Protobuf.Msg.Config();
             message.Config_ = config.ToString(true);
             return message;
         }
 
-        private Protobuf.Msg.Decider DeciderMessageBuilder(DeployableDecider decider)
+        internal static Protobuf.Msg.Decider DeciderMessageBuilder(DeployableDecider decider)
         {
             var message = new Protobuf.Msg.Decider();
             message.DefaultDirective = decider.DefaultDirective.ToString();
@@ -355,19 +362,67 @@ namespace Akka.Serialization
             return message;
         }
 
-        private Protobuf.Msg.RoundRobinPool RoundRobinPoolMessageBuilder(RoundRobinPool roundRobinPool)
+        internal static Protobuf.Msg.SupervisorStrategy SupervisorStrategyMessageBuilder(SupervisorStrategy supervisorStrategy)
+        {
+            if (supervisorStrategy.Decider is LocalOnlyDecider)
+                throw new SerializationException("LocalOnlyDecider is not supported"); 
+
+            var message = new Protobuf.Msg.SupervisorStrategy();
+
+            if (supervisorStrategy is AllForOneStrategy)
+            {
+                var allForOneStrategy = (AllForOneStrategy)supervisorStrategy;
+                message.MaxNumberOfRetries = allForOneStrategy.MaxNumberOfRetries;
+                message.WithinTimeMilliseconds = allForOneStrategy.WithinTimeRangeMilliseconds;
+                message.Decider = DeciderMessageBuilder(allForOneStrategy.Decider as DeployableDecider);
+            }
+            else
+            {
+                var oneForOneStrategy = (OneForOneStrategy)supervisorStrategy;
+                message.MaxNumberOfRetries = oneForOneStrategy.MaxNumberOfRetries;
+                message.WithinTimeMilliseconds = oneForOneStrategy.WithinTimeRangeMilliseconds;
+                message.Decider = DeciderMessageBuilder(oneForOneStrategy.Decider as DeployableDecider);
+            }
+
+            message.StrategyType = supervisorStrategy.GetType().TypeQualifiedName();
+
+            return message;
+        }
+
+        internal static Protobuf.Msg.Resizer ResizerMessageBuilder(Resizer resizer)
+        {
+            var defaultResizer = resizer as DefaultResizer;
+
+            if (defaultResizer != null)
+            {
+                var message = new Protobuf.Msg.Resizer();
+                message.Lower = defaultResizer.LowerBound;
+                message.Upper = defaultResizer.UpperBound;
+                message.PressureThreshold = defaultResizer.PressureThreshold;
+                message.RampupRate = defaultResizer.RampupRate;
+                message.BackoffThreshold = defaultResizer.BackoffThreshold;
+                message.BackoffRate = defaultResizer.BackoffRate;
+                message.MessagesPerResize = defaultResizer.MessagesPerResize;
+
+                return message;
+            }
+
+            throw new SerializationException("DefaultResizer only supported");
+        }
+
+        internal static Protobuf.Msg.RoundRobinPool RoundRobinPoolMessageBuilder(RoundRobinPool roundRobinPool)
         {
             var message = new Protobuf.Msg.RoundRobinPool();
             message.NumberOfInstances = roundRobinPool.NrOfInstances;
             message.UsePoolDispatcher = roundRobinPool.UsePoolDispatcher;
-            // message.Resizer = new Protobuf.Msg.Resizer(); // TODO: fix serializer
-            // message.SupervisorStrategy = new Protobuf.Msg.SupervisorStrategy(); // TODO: fix serializer
+            message.Resizer = ResizerMessageBuilder(roundRobinPool.Resizer);
+            message.SupervisorStrategy = SupervisorStrategyMessageBuilder(roundRobinPool.SupervisorStrategy);
             message.RouterDispatcher = roundRobinPool.RouterDispatcher;
 
             return message;
         }
 
-        private Protobuf.Msg.RoundRobinGroup RoundRobinGroupMessageBuilder(RoundRobinGroup roundRobinGroup)
+        internal static Protobuf.Msg.RoundRobinGroup RoundRobinGroupMessageBuilder(RoundRobinGroup roundRobinGroup)
         {
             var message = new Protobuf.Msg.RoundRobinGroup();
             message.RouterDispatcher = roundRobinGroup.RouterDispatcher;
@@ -383,17 +438,13 @@ namespace Akka.Serialization
         // FromBinary helpers
         //
 
-        private IActorRef ActorRefFrom(byte[] bytes)
+        private IActorRef ActorRefFrom(Protobuf.Msg.ActorRef actorRefProto)
         {
-            var actorRefProto = Protobuf.Msg.ActorRef.Parser.ParseFrom(bytes);
-
             return system.Provider.ResolveActorRef(actorRefProto.Path);
         }
 
-        private ActorPath ActorPathFrom(byte[] bytes)
+        internal static ActorPath ActorPathFrom(Protobuf.Msg.ActorPath actorPathProto)
         {
-            var actorPathProto = Protobuf.Msg.ActorPath.Parser.ParseFrom(bytes);
-
             ActorPath actorPath;
             if (ActorPath.TryParse(actorPathProto.Path, out actorPath))
             {
@@ -403,10 +454,8 @@ namespace Akka.Serialization
             return null;
         }
 
-        private Identify IdentifyFrom(byte[] bytes)
+        private Identify IdentifyFrom(Protobuf.Msg.Identify identifyProto)
         {
-            var identifyProto = Protobuf.Msg.Identify.Parser.ParseFrom(bytes);
-
             var messageId = system.Serialization.Deserialize(
                 identifyProto.MessageId.EnclosedMessage.ToByteArray(),
                 identifyProto.MessageId.SerializerId,
@@ -415,10 +464,8 @@ namespace Akka.Serialization
             return new Identify(messageId);
         }
 
-        private ActorIdentity ActorIdentityFrom(byte[] bytes)
+        private ActorIdentity ActorIdentityFrom(Protobuf.Msg.ActorIdentity actorIdentityProto)
         {
-            var actorIdentityProto = Protobuf.Msg.ActorIdentity.Parser.ParseFrom(bytes);
-
             var actorRef = system.Provider.ResolveActorRef(actorIdentityProto.Ref.Path);
             var messageId = system.Serialization.Deserialize(
                 actorIdentityProto.CorrelationId.EnclosedMessage.ToByteArray(),
@@ -428,35 +475,29 @@ namespace Akka.Serialization
             return new ActorIdentity(messageId, actorRef);
         }
 
-        private PoisonPill PoisonPillFrom(byte[] bytes)
+        internal static PoisonPill PoisonPillFrom(byte[] bytes)
         {
             return PoisonPill.Instance;
         }
 
-        private Watch WatchFrom(byte[] bytes)
+        private Watch WatchFrom(Protobuf.Msg.Watch watchProto)
         {
-            var watchProto = Protobuf.Msg.Watch.Parser.ParseFrom(bytes);
-
             var watchee = system.Provider.ResolveActorRef(watchProto.Watchee.Path);
             var watcher = system.Provider.ResolveActorRef(watchProto.Watcher.Path);
 
             return new Watch(watchee.AsInstanceOf<IInternalActorRef>(), watcher.AsInstanceOf<IInternalActorRef>());
         }
 
-        private Unwatch UnwatchFrom(byte[] bytes)
+        private Unwatch UnwatchFrom(Protobuf.Msg.Watch unwatchProto)
         {
-            var unwatchProto = Protobuf.Msg.Watch.Parser.ParseFrom(bytes);
-
             var watchee = system.Provider.ResolveActorRef(unwatchProto.Watchee.Path);
             var watcher = system.Provider.ResolveActorRef(unwatchProto.Watcher.Path);
 
             return new Unwatch(watchee.AsInstanceOf<IInternalActorRef>(), watcher.AsInstanceOf<IInternalActorRef>());
         }
 
-        private Address AddressFrom(byte[] bytes)
+        internal static Address AddressFrom(Protobuf.Msg.Address addressProto)
         {
-            var addressProto = Protobuf.Msg.Address.Parser.ParseFrom(bytes);
-
             return new Address(
                 addressProto.Protocol,
                 addressProto.System,
@@ -464,59 +505,43 @@ namespace Akka.Serialization
                 addressProto.Port == 0 ? null : (int?)addressProto.Port);
         }
 
-        private object RemoteScopeFrom(byte[] bytes)
+        internal static object RemoteScopeFrom(Protobuf.Msg.RemoteScope remoteScopeProto)
         {
-            var remoteScopeProto = Protobuf.Msg.RemoteScope.Parser.ParseFrom(bytes);
-
-            var address = new Address(
-                remoteScopeProto.Address.Protocol,
-                remoteScopeProto.Address.System,
-                remoteScopeProto.Address.Host,
-                remoteScopeProto.Address.Port == 0 ? null : (int?)remoteScopeProto.Address.Port);
-
-            return new RemoteScope(address);
+            return new RemoteScope(AddressFrom(remoteScopeProto.Address));
         }
 
-        private Supervise SuperviseFrom(byte[] bytes)
+        private Supervise SuperviseFrom(Protobuf.Msg.Supervise superviseProto)
         {
-            var superviseProto = Protobuf.Msg.Supervise.Parser.ParseFrom(bytes);
-
             return new Supervise(
                 system.Provider.ResolveActorRef(superviseProto.Child.Path),
                 superviseProto.Async);
         }
 
-        private DeathWatchNotification DeathWatchNotificationFrom(byte[] bytes)
+        internal static DeathWatchNotification DeathWatchNotificationFrom(ExtendedActorSystem sys, Protobuf.Msg.DeathWatchNotification deathWatchNotificationProto)
         {
-            var deathWatchNotificationProto = Protobuf.Msg.DeathWatchNotification.Parser.ParseFrom(bytes);
-
             return new DeathWatchNotification(
-                system.Provider.ResolveActorRef(deathWatchNotificationProto.Ref.Path),
+                sys.Provider.ResolveActorRef(deathWatchNotificationProto.Ref.Path),
                 deathWatchNotificationProto.ExistenceConfirmed,
                 deathWatchNotificationProto.AddressTerminated);
         }
 
-        private Terminate TerminateFrom(byte[] bytes)
+        internal static Terminate TerminateFrom(byte[] bytes)
         {
             return new Terminate();
         }
 
-        private Kill KillFrom(byte[] bytes)
+        internal static Kill KillFrom(byte[] bytes)
         {
             return Kill.Instance;
         }
 
-        private Config ConfigFrom(byte[] bytes)
+        internal static Config ConfigFrom(Protobuf.Msg.Config configProto)
         {
-            var configProto = Protobuf.Msg.Config.Parser.ParseFrom(bytes);
-
             return ConfigurationFactory.ParseString(configProto.Config_);
         }
 
-        private DeployableDecider DeciderFrom(byte[] bytes)
+        internal static DeployableDecider DeciderFrom(Protobuf.Msg.Decider deployableDeciderProto)
         {
-            var deployableDeciderProto = Protobuf.Msg.Decider.Parser.ParseFrom(bytes);
-
             Directive defaultDirective;
             Enum.TryParse(deployableDeciderProto.DefaultDirective, out defaultDirective);
 
@@ -524,29 +549,57 @@ namespace Akka.Serialization
             foreach (var pair in deployableDeciderProto.Pairs)
             {
                 Directive pairDirective;
-                Enum.TryParse(deployableDeciderProto.DefaultDirective, out pairDirective);
+                Enum.TryParse(pair.Value, out pairDirective);
                 pairs.Add(new KeyValuePair<Type, Directive>(Type.GetType(pair.Key), pairDirective));
             }
 
             return new DeployableDecider(defaultDirective, pairs);
         }
 
-        private RoundRobinPool RoundRobinPoolFrom(byte[] bytes)
+        internal static SupervisorStrategy SupervisorStrategyFrom(Protobuf.Msg.SupervisorStrategy supervisorStrategyProto)
         {
-            var roundRobinPoolProto = Protobuf.Msg.RoundRobinPool.Parser.ParseFrom(bytes);
+            Type strategyType = Type.GetType(supervisorStrategyProto.StrategyType);
 
+            if (strategyType == typeof(AllForOneStrategy))
+            {
+                return new AllForOneStrategy(
+                    supervisorStrategyProto.MaxNumberOfRetries,
+                    supervisorStrategyProto.WithinTimeMilliseconds,
+                    DeciderFrom(supervisorStrategyProto.Decider));
+            }
+            else
+            {
+                return new OneForOneStrategy(
+                    supervisorStrategyProto.MaxNumberOfRetries,
+                    supervisorStrategyProto.WithinTimeMilliseconds,
+                    DeciderFrom(supervisorStrategyProto.Decider));
+            }
+        }
+
+        internal static Resizer ResizerFrom(Protobuf.Msg.Resizer resizer)
+        {
+            return new DefaultResizer(
+                resizer.Lower,
+                resizer.Upper,
+                resizer.PressureThreshold,
+                resizer.RampupRate,
+                resizer.BackoffThreshold,
+                resizer.BackoffRate,
+                resizer.MessagesPerResize);
+        }
+
+        internal static RoundRobinPool RoundRobinPoolFrom(Protobuf.Msg.RoundRobinPool roundRobinPoolProto)
+        {
             return new RoundRobinPool(
                 roundRobinPoolProto.NumberOfInstances,
-                null,
-                null,
+                ResizerFrom(roundRobinPoolProto.Resizer),
+                SupervisorStrategyFrom(roundRobinPoolProto.SupervisorStrategy),
                 roundRobinPoolProto.RouterDispatcher,
                 roundRobinPoolProto.UsePoolDispatcher);
         }
 
-        private RoundRobinGroup RoundRobinGroupFrom(byte[] bytes)
+        internal static RoundRobinGroup RoundRobinGroupFrom(Protobuf.Msg.RoundRobinGroup roundRobinGroupProto)
         {
-            var roundRobinGroupProto = Protobuf.Msg.RoundRobinGroup.Parser.ParseFrom(bytes);
-
             var paths = new List<string>(roundRobinGroupProto.Paths.Count);
             foreach (var path in roundRobinGroupProto.Paths)
             {
