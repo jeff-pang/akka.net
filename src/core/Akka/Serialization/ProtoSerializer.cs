@@ -227,26 +227,7 @@ namespace Akka.Serialization
         private Protobuf.Msg.Identify IdentifyMessageBuilder(Identify identify)
         {
             var message = new Protobuf.Msg.Identify();
-            message.MessageId = new Protobuf.Msg.Payload();
-            var serializer = system.Serialization.FindSerializerFor(identify.MessageId);
-
-            if (serializer is SerializerWithStringManifest)
-            {
-                var ser2 = (SerializerWithStringManifest)serializer;
-                var manifest = ser2.Manifest(identify.MessageId);
-                message.MessageId.MessageManifest = ByteString.CopyFromUtf8(manifest);
-            }
-            else
-            {
-                if (serializer.IncludeManifest)
-                {
-                    message.MessageId.MessageManifest = ByteString.CopyFromUtf8(TypeQualifiedNameForManifest(identify.MessageId.GetType()));
-                }
-            }
-
-            message.MessageId.EnclosedMessage = ByteString.CopyFrom(serializer.ToBinary(identify.MessageId));
-            message.MessageId.SerializerId = serializer.Identifier;
-
+            message.MessageId = PayloadToProto(identify.MessageId);
             return message;
         }
 
@@ -254,27 +235,7 @@ namespace Akka.Serialization
         {
             var message = new Protobuf.Msg.ActorIdentity();
             message.Ref = ActorRefMessageBuilder(actorIdentity.Subject);
-            message.CorrelationId = new Protobuf.Msg.Payload();
-
-            var serializer = system.Serialization.FindSerializerFor(actorIdentity.MessageId);
-
-            if (serializer is SerializerWithStringManifest)
-            {
-                var ser2 = (SerializerWithStringManifest)serializer;
-                var manifest = ser2.Manifest(actorIdentity.MessageId);
-                message.CorrelationId.MessageManifest = ByteString.CopyFromUtf8(manifest);
-            }
-            else
-            {
-                if (serializer.IncludeManifest)
-                {
-                    message.CorrelationId.MessageManifest = ByteString.CopyFromUtf8(TypeQualifiedNameForManifest(actorIdentity.MessageId.GetType()));
-                }
-            }
-
-            message.CorrelationId.EnclosedMessage = ByteString.CopyFrom(serializer.ToBinary(actorIdentity.MessageId));
-            message.CorrelationId.SerializerId = serializer.Identifier;
-
+            message.CorrelationId = PayloadToProto(actorIdentity.MessageId);
             return message;
         }
 
@@ -299,7 +260,7 @@ namespace Akka.Serialization
             return message;
         }
 
-        private Protobuf.Msg.Address AddressMessageBuilder(Address address)
+        internal static Protobuf.Msg.Address AddressMessageBuilder(Address address)
         {
             var message = new Protobuf.Msg.Address();
             message.Protocol = address.Protocol;
@@ -607,6 +568,41 @@ namespace Akka.Serialization
             }
 
             return new RoundRobinGroup(paths, roundRobinGroupProto.RouterDispatcher);
+        }
+
+        //
+        // Private helpers
+        //
+
+        private Protobuf.Msg.Payload PayloadToProto(object message)
+        {
+            var serializer = system.Serialization.FindSerializerFor(message);
+
+            var protoPayload = new Protobuf.Msg.Payload();
+
+            var serializerWithManifest = serializer as SerializerWithStringManifest;
+            if (serializerWithManifest != null)
+            {
+                var manifest = serializerWithManifest.Manifest(message);
+                protoPayload.MessageManifest = ByteString.CopyFromUtf8(manifest);
+            }
+            else if (serializer.IncludeManifest)
+            {
+                protoPayload.MessageManifest = ByteString.CopyFromUtf8(message.GetType().TypeQualifiedName());
+            }
+
+            protoPayload.EnclosedMessage = ByteString.CopyFrom(serializer.ToBinary(message));
+            protoPayload.SerializerId = serializer.Identifier;
+
+            return protoPayload;
+        }
+
+        private object PayloadFrom(Protobuf.Msg.Payload payload)
+        {
+            return system.Serialization.Deserialize(
+                payload.EnclosedMessage.ToByteArray(),
+                payload.SerializerId,
+                payload.MessageManifest.ToStringUtf8());
         }
     }
 }
