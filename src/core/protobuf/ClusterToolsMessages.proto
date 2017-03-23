@@ -1,0 +1,46 @@
+/**
+ * Copyright (C) 2009-2017 Typesafe Inc. <http://www.typesafe.com>
+ * Copyright (C) 2013-2017 Akka.NET project <https://github.com/akkadotnet/akka.net>
+ */
+
+syntax = "proto3";
+package Akka.Cluster.Tools.Protobuf.Msg;
+option optimize_for = SPEED;
+
+/**
+ * Distributed PubSub messages.
+ */
+
+message Status {
+  message Version {
+    Address address = 1;
+    int64 timestamp = 2;
+  }
+  repeated Version versions = 1;
+  bool replyToStatus = 2;
+}
+
+message Delta {
+  message ValueHolder {
+    int64 version = 1;
+    string ref = 2; 
+  }
+  message Bucket {
+    Address owner = 1;
+    int64 version = 2;
+	map<string, ValueHolder> content = 3;
+  }
+  repeated Bucket buckets = 1;
+}
+
+
+/****************************************
+ * Common Datatypes and Messages
+ ****************************************/
+ 
+message Address {
+  string system = 1;
+  string hostname = 2;
+  int32 port = 3;
+  string protocol = 4;
+}
