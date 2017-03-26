@@ -21,13 +21,6 @@
     <PackageReference Include="Google.ProtocolBuffers" Version="2.4.1.555" />
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net45' ">
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-  </ItemGroup>
-
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.6' ">
     <PackageReference Include="Microsoft.NETCore.Portable.Compatibility" version="1.0.1" />
   </ItemGroup>

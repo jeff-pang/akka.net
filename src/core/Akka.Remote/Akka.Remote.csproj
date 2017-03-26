@@ -5,7 +5,7 @@
     <Description>Remote actor support for Akka.NET</Description>
     <Copyright>Copyright © 2013-2017 Akka.NET Team</Copyright>
     <VersionPrefix>1.5.0</VersionPrefix>
-    <TargetFrameworks>net451;netstandard1.6</TargetFrameworks>
+    <TargetFrameworks>net45;netstandard1.6</TargetFrameworks>
     <PackageTags>akka;actors;actor model;Akka;concurrency;network</PackageTags>
     <PackageIconUrl>http://getakka.net/images/AkkaNetLogo.Normal.png</PackageIconUrl>
     <PackageProjectUrl>https://github.com/akkadotnet/akka.net</PackageProjectUrl>
@@ -20,24 +20,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="DotNetty.Buffers" version="0.4.2" />
-    <PackageReference Include="DotNetty.Codecs" version="0.4.2" />
-    <PackageReference Include="DotNetty.Common" version="0.4.2" />
-    <PackageReference Include="DotNetty.Handlers" version="0.4.2" />
-    <PackageReference Include="DotNetty.Transport" version="0.4.2" />
+    <PackageReference Include="DotNetty.Handlers" version="0.4.3" />
     <PackageReference Include="Google.ProtocolBuffers" Version="2.4.1.555" />
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net451' ">
-    <Reference Include="System" />
-    <Reference Include="Microsoft.CSharp" />
-  </ItemGroup>
-
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.6' ">
-  <PackageReference Include="Microsoft.NETCore.Portable.Compatibility" version="1.0.1" />
+    <PackageReference Include="Microsoft.NETCore.Portable.Compatibility" version="1.0.1" />
   </ItemGroup>
 
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'net451' ">
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'net45' ">
     <DefineConstants>$(DefineConstants);SERIALIZATION;AKKAIO</DefineConstants>
   </PropertyGroup>
 

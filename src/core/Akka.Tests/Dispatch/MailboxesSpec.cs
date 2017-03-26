@@ -18,8 +18,8 @@ using Akka.TestKit;
 using Akka.TestKit.TestActors;
 using Akka.Tests.Actor;
 using Akka.Util.Internal;
+#if FSCHECK
 using FsCheck;
-#if !CORECLR
 using FsCheck.Xunit;
 #endif
 using Xunit;
@@ -80,7 +80,7 @@ int-prio-mailbox {
 ";
         }
 
-#if !CORECLR
+#if FSCHECK
         [Property]
         public Property UnboundedPriorityQueue_should_sort_items_in_expected_order(int[] integers, PositiveInt capacity)
         {
