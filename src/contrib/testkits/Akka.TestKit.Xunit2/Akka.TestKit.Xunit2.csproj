@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <AssemblyTitle>Akka.TestKit.Xunit2</AssemblyTitle>
-    <Description>TestKit for writing tests for Akka.NET using xUnit 2.0.</Description>
+    <Description>TestKit for writing tests for Akka.NET using xUnit.</Description>
     <Copyright>Copyright © 2013-2017 Akka.NET Team</Copyright>
     <VersionPrefix>1.5.0</VersionPrefix>
     <Authors>Akka.NET Team</Authors>
