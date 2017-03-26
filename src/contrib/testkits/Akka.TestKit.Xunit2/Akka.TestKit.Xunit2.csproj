@@ -18,9 +18,6 @@
     <ProjectReference Include="..\..\..\core\Akka.TestKit\Akka.TestKit.csproj" />
     <PackageReference Include="xunit" Version="2.2.0" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="Akka.TestKit.Xunit2.nuspec" />
-    <None Include="packages.config" />
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net45' ">
     <Reference Include="System" />

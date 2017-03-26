@@ -44,7 +44,6 @@ Target "RestorePackages" (fun _ ->
 Target "Build" (fun _ ->
     if (isWindows) then
         let projects = !! "./**/core/**/*.csproj"
-                       ++ "./**/core/**/*.fsproj"
                        ++ "./**/contrib/**/*.csproj"
                        -- "./**/Akka.MultiNodeTestRunner.Shared.Tests.csproj"
                        -- "./**/Akka.FSharp.Tests.fsproj"
