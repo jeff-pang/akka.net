@@ -925,9 +925,9 @@ namespace Akka.Persistence
         /// <summary>
         /// TBD
         /// </summary>
-        /// <param name="persistenceId">TBD</param>
-        /// <param name="criteria">TBD</param>
-        /// <param name="toSequenceNr">TBD</param>
+        /// <param name="persistenceId">Persistent actor identifier.</param>
+        /// <param name="criteria">Criteria for selecting snapshot, from which the recovery should start.</param>
+        /// <param name="toSequenceNr">Upper, inclusive sequence number bound for recovery.</param>
         public LoadSnapshot(string persistenceId, SnapshotSelectionCriteria criteria, long toSequenceNr)
         {
             PersistenceId = persistenceId;
@@ -938,17 +938,17 @@ namespace Akka.Persistence
         /// <summary>
         /// Persistent actor identifier.
         /// </summary>
-        public readonly string PersistenceId;
+        public string PersistenceId { get; }
 
         /// <summary>
         /// Criteria for selecting snapshot, from which the recovery should start.
         /// </summary>
-        public readonly SnapshotSelectionCriteria Criteria;
+        public SnapshotSelectionCriteria Criteria { get; }
 
         /// <summary>
         /// Upper, inclusive sequence number bound for recovery.
         /// </summary>
-        public readonly long ToSequenceNr;
+        public long ToSequenceNr { get; }
 
         /// <summary>
         /// Determines whether the specified <see cref="LoadSnapshot" />, is equal to this instance.
@@ -1017,8 +1017,8 @@ namespace Akka.Persistence
         /// <summary>
         /// TBD
         /// </summary>
-        /// <param name="snapshot">TBD</param>
-        /// <param name="toSequenceNr">TBD</param>
+        /// <param name="snapshot">Loaded snapshot or null if none provided.</param>
+        /// <param name="toSequenceNr">Upper sequence number bound (inclusive) for recovery.</param>
         public LoadSnapshotResult(SelectedSnapshot snapshot, long toSequenceNr)
         {
             Snapshot = snapshot;
@@ -1028,11 +1028,12 @@ namespace Akka.Persistence
         /// <summary>
         /// Loaded snapshot or null if none provided.
         /// </summary>
-        public readonly SelectedSnapshot Snapshot;
+        public SelectedSnapshot Snapshot { get; }
+
         /// <summary>
-        /// TBD
+        /// Upper sequence number bound (inclusive) for recovery.
         /// </summary>
-        public readonly long ToSequenceNr;
+        public long ToSequenceNr { get; }
 
         /// <summary>
         /// Determines whether the specified <see cref="LoadSnapshotResult" />, is equal to this instance.
@@ -1088,6 +1089,8 @@ namespace Akka.Persistence
         }
     }
 
+    // TODO: LoadSnapshotFailed
+
     /// <summary>
     /// Instructs a snapshot store to save a snapshot.
     /// </summary>
@@ -1097,8 +1100,8 @@ namespace Akka.Persistence
         /// <summary>
         /// TBD
         /// </summary>
-        /// <param name="metadata">TBD</param>
-        /// <param name="snapshot">TBD</param>
+        /// <param name="metadata">Snapshot metadata.</param>
+        /// <param name="snapshot">Snapshot.</param>
         /// <exception cref="ArgumentNullException">TBD</exception>
         public SaveSnapshot(SnapshotMetadata metadata, object snapshot)
         {
@@ -1110,13 +1113,14 @@ namespace Akka.Persistence
         }
 
         /// <summary>
-        /// TBD
+        /// Snapshot metadata.
         /// </summary>
-        public readonly SnapshotMetadata Metadata;
+        public SnapshotMetadata Metadata { get; }
+
         /// <summary>
-        /// TBD
+        /// Snapshot.
         /// </summary>
-        public readonly object Snapshot;
+        public object Snapshot { get; }
 
         /// <summary>
         /// Determines whether the specified <see cref="SaveSnapshot" />, is equal to this instance.
@@ -1180,7 +1184,7 @@ namespace Akka.Persistence
         /// <summary>
         /// TBD
         /// </summary>
-        /// <param name="metadata">TBD</param>
+        /// <param name="metadata">Snapshot metadata.</param>
         /// <exception cref="ArgumentNullException">TBD</exception>
         public DeleteSnapshot(SnapshotMetadata metadata)
         {
@@ -1191,9 +1195,9 @@ namespace Akka.Persistence
         }
 
         /// <summary>
-        /// TBD
+        /// Snapshot metadata.
         /// </summary>
-        public readonly SnapshotMetadata Metadata;
+        public SnapshotMetadata Metadata { get; }
 
         /// <summary>
         /// Determines whether the specified <see cref="DeleteSnapshot" />, is equal to this instance.
@@ -1254,8 +1258,8 @@ namespace Akka.Persistence
         /// <summary>
         /// TBD
         /// </summary>
-        /// <param name="persistenceId">TBD</param>
-        /// <param name="criteria">TBD</param>
+        /// <param name="persistenceId">Persistent actor id.</param>
+        /// <param name="criteria">Criteria for selecting snapshots to be deleted.</param>
         public DeleteSnapshots(string persistenceId, SnapshotSelectionCriteria criteria)
         {
             PersistenceId = persistenceId;
@@ -1263,13 +1267,14 @@ namespace Akka.Persistence
         }
 
         /// <summary>
-        /// TBD
+        /// Persistent actor id.
         /// </summary>
-        public readonly string PersistenceId;
+        public string PersistenceId { get; }
+
         /// <summary>
-        /// TBD
+        /// Criteria for selecting snapshots to be deleted.
         /// </summary>
-        public readonly SnapshotSelectionCriteria Criteria;
+        public SnapshotSelectionCriteria Criteria { get; }
 
         /// <summary>
         /// Determines whether the specified <see cref="DeleteSnapshots" />, is equal to this instance.
@@ -1324,7 +1329,4 @@ namespace Akka.Persistence
             return $"DeleteSnapshots<pid: {PersistenceId}, criteria: {Criteria}>";
         }
     }
-
-    #endregion
 }
-
