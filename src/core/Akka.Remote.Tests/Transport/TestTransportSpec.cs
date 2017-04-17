@@ -11,7 +11,7 @@ using Akka.Actor;
 using Akka.Remote.Transport;
 using Akka.TestKit;
 using Akka.Util.Internal;
-using Google.ProtocolBuffers;
+using Google.Protobuf;
 using Xunit;
 
 namespace Akka.Remote.Tests.Transport{
@@ -153,13 +153,14 @@ namespace Akka.Remote.Tests.Transport{
             ExpectMsgPf(DefaultTimeout, "Expect InboundPayload from A", o =>
             {
                 var payload = o as InboundPayload;
-                if (payload != null && payload.Payload.Equals(akkaPDU)) return akkaPDU;
+                if (payload != null && payload.Payload == akkaPDU)
+                    return akkaPDU;
                 return null;
             });
 
             var writeAttempt = (registry.LogSnapshot().Single(x => x is WriteAttempt)).AsInstanceOf<WriteAttempt>();
             Assert.True(writeAttempt.Sender.Equals(addressA) && writeAttempt.Recipient.Equals(addressB)
-                && writeAttempt.Payload.Equals(akkaPDU));
+                && writeAttempt.Payload == akkaPDU);
         }
 
         [Fact]

@@ -13,7 +13,7 @@ using System.IO.Compression;
 using System.Linq;
 using Akka.Actor;
 using Akka.Serialization;
-using Google.ProtocolBuffers;
+using Google.Protobuf;
 using Contacts = Akka.Cluster.Client.Serializers.Proto.Contacts;
 
 namespace Akka.Cluster.Tools.Client.Serialization
@@ -107,7 +107,7 @@ namespace Akka.Cluster.Tools.Client.Serialization
             throw new ArgumentException($"Can't serialize object of type [{o.GetType()}] in [{GetType()}]");
         }
 
-        private byte[] Compress(IMessageLite message)
+        private byte[] Compress(IMessage message)
         {
             using (var bos = new MemoryStream(BufferSize))
             using (var gzipStream = new GZipStream(bos, CompressionMode.Compress))
@@ -136,15 +136,15 @@ namespace Akka.Cluster.Tools.Client.Serialization
 
         private Contacts ContactsToProto(ClusterReceptionist.Contacts message)
         {
-            return Contacts.CreateBuilder()
-                .AddRangeContactPoints(message.ContactPoints)
-                .Build();
+            var contact = new Contacts();
+            contact.ContactPoints.AddRange(message.ContactPoints);
+            return contact;
         }
 
         private ClusterReceptionist.Contacts ContactsFromBinary(byte[] binary)
         {
-            var proto = Contacts.ParseFrom(Decompress(binary));
-            return new ClusterReceptionist.Contacts(proto.ContactPointsList.ToImmutableList());
+            var proto = Contacts.Parser.ParseFrom(Decompress(binary));
+            return new ClusterReceptionist.Contacts(proto.ContactPoints.ToImmutableList());
         }
     }
 }

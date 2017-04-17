@@ -21,7 +21,8 @@
 
   <ItemGroup>
     <PackageReference Include="DotNetty.Handlers" version="0.4.3" />
-    <PackageReference Include="Google.ProtocolBuffers" Version="2.4.1.555" />
+    <PackageReference Include="Google.Protobuf" Version="3.2.0" />
+    <PackageReference Include="Google.Protobuf.Tools" Version="3.2.0" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.6' ">
@@ -29,7 +30,7 @@
   </ItemGroup>
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'net45' ">
-    <DefineConstants>$(DefineConstants);SERIALIZATION;AKKAIO</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;SERIALIZATION;AKKAIO;NET45,NETCORE</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.6' ">

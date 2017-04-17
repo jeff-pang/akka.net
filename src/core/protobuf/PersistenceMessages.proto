@@ -2,28 +2,30 @@
  * Copyright (C) 2009-2015 Lightbend Inc. <http://www.lightbend.com>
  */
 
+syntax = "proto3";
+//option csharp_namespace = Akka.Persistence.Serialization.Proto";
 option java_package = "akka.persistence.serialization";
 option optimize_for = SPEED;
 
 message PersistentMessage {
-  optional PersistentPayload payload = 1;
-  optional int64 sequenceNr = 2;
-  optional string persistenceId = 3;
-  optional bool deleted = 4; // not used in new records from 2.4
-  // optional int32 redeliveries = 6; // Removed in 2.4
+  PersistentPayload payload = 1;
+  int64 sequenceNr = 2;
+  string persistenceId = 3;
+  bool deleted = 4; // not used in new records from 2.4
+  // int32 redeliveries = 6; // Removed in 2.4
   // repeated string confirms = 7; // Removed in 2.4
-  // optional bool confirmable = 8;  // Removed in 2.4
-  // optional DeliveredMessage confirmMessage = 9; // Removed in 2.4
-  // optional string confirmTarget = 10; // Removed in 2.4
-  optional string sender = 11; // not stored in journal, needed for remote serialization
-  optional string manifest = 12;
-  optional string writerUuid = 13;
+  // bool confirmable = 8;  // Removed in 2.4
+  // DeliveredMessage confirmMessage = 9; // Removed in 2.4
+  // string confirmTarget = 10; // Removed in 2.4
+  string sender = 11; // not stored in journal, needed for remote serialization
+  string manifest = 12;
+  string writerUuid = 13;
 }
 
 message PersistentPayload {
-  required int32 serializerId = 1;
-  required bytes payload = 2;
-  optional bytes payloadManifest = 3;
+  int32 serializerId = 1;
+  bytes payload = 2;
+  bytes payloadManifest = 3;
 }
 
 message AtomicWrite {
@@ -32,16 +34,16 @@ message AtomicWrite {
 
 message AtLeastOnceDeliverySnapshot {
   message UnconfirmedDelivery {
-    required int64 deliveryId = 1;
-    required string destination = 2;
-    required PersistentPayload payload = 3;
+    int64 deliveryId = 1;
+    string destination = 2;
+    PersistentPayload payload = 3;
   }
 
-  required int64 currentDeliveryId = 1;
+  int64 currentDeliveryId = 1;
   repeated UnconfirmedDelivery unconfirmedDeliveries = 2;
 }
 
 message PersistentStateChangeEvent {
-  required string stateIdentifier = 1;
-  optional string timeout = 2;
+  string stateIdentifier = 1;
+  string timeout = 2;
 }

@@ -8,7 +8,7 @@
 using System.Collections.Generic;
 using Helios.Buffers;
 using Helios.Net;
-using Google.ProtocolBuffers;
+using Google.Protobuf;
 using Helios.Channels;
 using Helios.Codecs;
 using Helios.Logging;
@@ -25,7 +25,7 @@ namespace Akka.Remote.TestKit.Proto
         protected override void Encode(IChannelHandlerContext context, object message, List<object> output)
         {
             _logger.Debug("Encoding {0}", message);
-            var messageLite = message as IMessageLite;
+            var messageLite = message as IMessage;
             if (messageLite != null)
             {
                 var bytes = messageLite.ToByteArray();
@@ -35,18 +35,7 @@ namespace Akka.Remote.TestKit.Proto
                 output.Add(buffer);
                 return;
             }
-
-            var builderLite = message as IBuilderLite;
-            if (builderLite != null)
-            {
-                var bytes = builderLite.WeakBuild().ToByteArray();
-                var buffer = context.Allocator.Buffer(bytes.Length);
-                buffer.WriteBytes(bytes);
-                _logger.Debug("Encoded {0}", buffer);
-                output.Add(buffer);
-                return;
-            }
-
+            
             // if the message is neither
             _logger.Debug("Encoded {0}", message);
             output.Add(message);

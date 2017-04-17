@@ -17,8 +17,9 @@
 
   <ItemGroup>
     <EmbeddedResource Include="persistence.conf" />
+    <PackageReference Include="Google.Protobuf" Version="3.2.0" />
+    <PackageReference Include="Google.Protobuf.Tools" Version="3.2.0" />
     <ProjectReference Include="..\Akka\Akka.csproj" />
-    <PackageReference Include="Google.ProtocolBuffers" Version="2.4.1.555" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.6' ">

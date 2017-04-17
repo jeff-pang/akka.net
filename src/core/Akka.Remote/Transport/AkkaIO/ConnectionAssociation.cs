@@ -8,7 +8,12 @@
 using System.Threading.Tasks;
 using Akka.Actor;
 using Akka.IO;
-using ByteString = Google.ProtocolBuffers.ByteString;
+
+#if NETCORE
+using ByteString = Google.Protobuf.ByteString;
+#else
+using ByteString = Google.ProtocolBuffer.BteString;
+#endif
 
 namespace Akka.Remote.Transport.AkkaIO
 {
@@ -136,7 +141,11 @@ namespace Akka.Remote.Transport.AkkaIO
             if (message is ByteString)
             {
                 var bs = message as ByteString;
+            #if NETCORE
+                var buffer = bs.ToByteArray();
+            #else
                 var buffer = ByteString.Unsafe.GetBuffer(bs);
+            #endif
                 var builder = new ByteStringBuilder();
                 builder.PutInt(buffer.Length, ByteOrder.BigEndian);
                 builder.PutBytes(buffer);

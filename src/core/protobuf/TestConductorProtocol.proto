@@ -1,24 +1,26 @@
 /**
  * Copyright (C) 2009-2014 Lightbend Inc. <http://www.lightbend.com>
  */
-
+syntax = "proto3";
+option csharp_namespace = "TCP";
 option java_package = "akka.remote.testconductor";
 option optimize_for = SPEED;
 
 message Wrapper {
-  optional Hello hello = 1;
-  optional EnterBarrier barrier = 2;
-  optional InjectFailure failure = 3;
-  optional string done = 4;
-  optional AddressRequest addr = 5;
+  Hello hello = 1;
+  EnterBarrier barrier = 2;
+  InjectFailure failure = 3;
+  string done = 4;
+  AddressRequest addr = 5;
 }
 
 message Hello {
-  required string name = 1;
-  required Address address = 2;
+  string name = 1;
+  Address address = 2;
 }
 
 enum BarrierOp {
+  BarrierOp_RESERVED = 0;
   Enter = 1;
   Fail = 2;
   Succeeded = 3;
@@ -26,24 +28,25 @@ enum BarrierOp {
 }
 
 message EnterBarrier {
-  required string name = 1;
-  required BarrierOp op = 2;
-  optional int64 timeout = 3;
+  string name = 1;
+  BarrierOp op = 2;
+  int64 timeout = 3;
 }
 
 message AddressRequest {
-  required string node = 1;
-  optional Address addr = 2;
+  string node = 1;
+  Address addr = 2;
 }
 
 message Address {
-  required string protocol = 1;
-  required string system = 2;
-  required string host = 3;
-  required int32 port = 4;
+  string protocol = 1;
+  string system = 2;
+  string host = 3;
+  int32 port = 4;
 }
 
 enum FailType {
+  FailType_RESERVED = 0;
   Throttle = 1;
   Disconnect = 2;
   Abort = 3;
@@ -53,15 +56,16 @@ enum FailType {
 }
 
 enum Direction {
+  Direction_RESERVED = 0;
   Send = 1;
   Receive = 2;
   Both = 3;
 }
 
 message InjectFailure {
-  required FailType failure = 1;
-  optional Direction direction = 2;
-  optional Address address = 3;
-  optional float rateMBit = 6;
-  optional int32 exitValue = 7;
+  FailType failure = 1;
+  Direction direction = 2;
+  Address address = 3;
+  float rateMBit = 6;
+  int32 exitValue = 7;
 }

@@ -12,7 +12,7 @@ using Akka.Actor;
 using Akka.Event;
 using Akka.Util;
 using Akka.Util.Internal;
-using Google.ProtocolBuffers;
+using Google.Protobuf;
 using System.Runtime.Serialization;
 
 namespace Akka.Remote.Transport
@@ -462,7 +462,7 @@ namespace Akka.Remote.Transport
             }
         }
 
-#endregion
+        #endregion
     }
 }
 

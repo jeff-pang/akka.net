@@ -1,0 +1,658 @@
+﻿[assembly: System.Runtime.CompilerServices.InternalsVisibleToAttribute("Akka.Cluster.Tools.Tests")]
+[assembly: System.Runtime.CompilerServices.InternalsVisibleToAttribute("Akka.Cluster.Tools.Tests.MultiNode")]
+[assembly: System.Runtime.InteropServices.ComVisibleAttribute(false)]
+[assembly: System.Runtime.InteropServices.GuidAttribute("5cf8a8be-b634-473f-bb01-eba878746bd4")]
+[assembly: System.Runtime.Versioning.TargetFrameworkAttribute(".NETFramework,Version=v4.5.1", FrameworkDisplayName=".NET Framework 4.5.1")]
+namespace Akka.Cluster.Client.Serializers.Proto
+{
+    public class static ClusterClientMessagesReflection
+    {
+        public static Google.Protobuf.Reflection.FileDescriptor Descriptor { get; }
+    }
+    public sealed class Contacts : Google.Protobuf.IDeepCloneable<Akka.Cluster.Client.Serializers.Proto.Contacts>, Google.Protobuf.IMessage, Google.Protobuf.IMessage<Akka.Cluster.Client.Serializers.Proto.Contacts>, System.IEquatable<Akka.Cluster.Client.Serializers.Proto.Contacts>
+    {
+        public const int ContactPointsFieldNumber = 1;
+        public Contacts() { }
+        public Contacts(Akka.Cluster.Client.Serializers.Proto.Contacts other) { }
+        public Google.Protobuf.Collections.RepeatedField<string> ContactPoints { get; }
+        public static Google.Protobuf.Reflection.MessageDescriptor Descriptor { get; }
+        public static Google.Protobuf.MessageParser<Akka.Cluster.Client.Serializers.Proto.Contacts> Parser { get; }
+        public int CalculateSize() { }
+        public Akka.Cluster.Client.Serializers.Proto.Contacts Clone() { }
+        public override bool Equals(object other) { }
+        public bool Equals(Akka.Cluster.Client.Serializers.Proto.Contacts other) { }
+        public override int GetHashCode() { }
+        public void MergeFrom(Akka.Cluster.Client.Serializers.Proto.Contacts other) { }
+        public void MergeFrom(Google.Protobuf.CodedInputStream input) { }
+        public override string ToString() { }
+        public void WriteTo(Google.Protobuf.CodedOutputStream output) { }
+    }
+}
+namespace Akka.Cluster.PubSub.Serializers.Proto
+{
+    public sealed class Address : Google.Protobuf.IDeepCloneable<Akka.Cluster.PubSub.Serializers.Proto.Address>, Google.Protobuf.IMessage, Google.Protobuf.IMessage<Akka.Cluster.PubSub.Serializers.Proto.Address>, System.IEquatable<Akka.Cluster.PubSub.Serializers.Proto.Address>
+    {
+        public const int HostnameFieldNumber = 2;
+        public const int PortFieldNumber = 3;
+        public const int ProtocolFieldNumber = 4;
+        public const int SystemFieldNumber = 1;
+        public Address() { }
+        public Address(Akka.Cluster.PubSub.Serializers.Proto.Address other) { }
+        public static Google.Protobuf.Reflection.MessageDescriptor Descriptor { get; }
+        public string Hostname { get; set; }
+        public static Google.Protobuf.MessageParser<Akka.Cluster.PubSub.Serializers.Proto.Address> Parser { get; }
+        public uint Port { get; set; }
+        public string Protocol { get; set; }
+        public string System { get; set; }
+        public int CalculateSize() { }
+        public Akka.Cluster.PubSub.Serializers.Proto.Address Clone() { }
+        public override bool Equals(object other) { }
+        public bool Equals(Akka.Cluster.PubSub.Serializers.Proto.Address other) { }
+        public override int GetHashCode() { }
+        public void MergeFrom(Akka.Cluster.PubSub.Serializers.Proto.Address other) { }
+        public void MergeFrom(Google.Protobuf.CodedInputStream input) { }
+        public override string ToString() { }
+        public void WriteTo(Google.Protobuf.CodedOutputStream output) { }
+    }
+    public sealed class Delta : Google.Protobuf.IDeepCloneable<Akka.Cluster.PubSub.Serializers.Proto.Delta>, Google.Protobuf.IMessage, Google.Protobuf.IMessage<Akka.Cluster.PubSub.Serializers.Proto.Delta>, System.IEquatable<Akka.Cluster.PubSub.Serializers.Proto.Delta>
+    {
+        public const int BucketsFieldNumber = 1;
+        public Delta() { }
+        public Delta(Akka.Cluster.PubSub.Serializers.Proto.Delta other) { }
+        public Google.Protobuf.Collections.RepeatedField<Akka.Cluster.PubSub.Serializers.Proto.Delta.Types.Bucket> Buckets { get; }
+        public static Google.Protobuf.Reflection.MessageDescriptor Descriptor { get; }
+        public static Google.Protobuf.MessageParser<Akka.Cluster.PubSub.Serializers.Proto.Delta> Parser { get; }
+        public int CalculateSize() { }
+        public Akka.Cluster.PubSub.Serializers.Proto.Delta Clone() { }
+        public override bool Equals(object other) { }
+        public bool Equals(Akka.Cluster.PubSub.Serializers.Proto.Delta other) { }
+        public override int GetHashCode() { }
+        public void MergeFrom(Akka.Cluster.PubSub.Serializers.Proto.Delta other) { }
+        public void MergeFrom(Google.Protobuf.CodedInputStream input) { }
+        public override string ToString() { }
+        public void WriteTo(Google.Protobuf.CodedOutputStream output) { }
+        public class static Types
+        {
+            public sealed class Bucket : Google.Protobuf.IDeepCloneable<Akka.Cluster.PubSub.Serializers.Proto.Delta.Types.Bucket>, Google.Protobuf.IMessage, Google.Protobuf.IMessage<Akka.Cluster.PubSub.Serializers.Proto.Delta.Types.Bucket>, System.IEquatable<Akka.Cluster.PubSub.Serializers.Proto.Delta.Types.Bucket>
+            {
+                public const int ContentFieldNumber = 3;
+                public const int OwnerFieldNumber = 1;
+                public const int VersionFieldNumber = 2;
+                public Bucket() { }
+                public Bucket(Akka.Cluster.PubSub.Serializers.Proto.Delta.Types.Bucket other) { }
+                public Google.Protobuf.Collections.RepeatedField<Akka.Cluster.PubSub.Serializers.Proto.Delta.Types.Entry> Content { get; }
+                public static Google.Protobuf.Reflection.MessageDescriptor Descriptor { get; }
+                public Akka.Cluster.PubSub.Serializers.Proto.Address Owner { get; set; }
+                public static Google.Protobuf.MessageParser<Akka.Cluster.PubSub.Serializers.Proto.Delta.Types.Bucket> Parser { get; }
+                public long Version { get; set; }
+                public int CalculateSize() { }
+                public Akka.Cluster.PubSub.Serializers.Proto.Delta.Types.Bucket Clone() { }
+                public override bool Equals(object other) { }
+                public bool Equals(Akka.Cluster.PubSub.Serializers.Proto.Delta.Types.Bucket other) { }
+                public override int GetHashCode() { }
+                public void MergeFrom(Akka.Cluster.PubSub.Serializers.Proto.Delta.Types.Bucket other) { }
+                public void MergeFrom(Google.Protobuf.CodedInputStream input) { }
+                public override string ToString() { }
+                public void WriteTo(Google.Protobuf.CodedOutputStream output) { }
+            }
+            public sealed class Entry : Google.Protobuf.IDeepCloneable<Akka.Cluster.PubSub.Serializers.Proto.Delta.Types.Entry>, Google.Protobuf.IMessage, Google.Protobuf.IMessage<Akka.Cluster.PubSub.Serializers.Proto.Delta.Types.Entry>, System.IEquatable<Akka.Cluster.PubSub.Serializers.Proto.Delta.Types.Entry>
+            {
+                public const int KeyFieldNumber = 1;
+                public const int RefFieldNumber = 3;
+                public const int VersionFieldNumber = 2;
+                public Entry() { }
+                public Entry(Akka.Cluster.PubSub.Serializers.Proto.Delta.Types.Entry other) { }
+                public static Google.Protobuf.Reflection.MessageDescriptor Descriptor { get; }
+                public string Key { get; set; }
+                public static Google.Protobuf.MessageParser<Akka.Cluster.PubSub.Serializers.Proto.Delta.Types.Entry> Parser { get; }
+                public string Ref { get; set; }
+                public long Version { get; set; }
+                public int CalculateSize() { }
+                public Akka.Cluster.PubSub.Serializers.Proto.Delta.Types.Entry Clone() { }
+                public override bool Equals(object other) { }
+                public bool Equals(Akka.Cluster.PubSub.Serializers.Proto.Delta.Types.Entry other) { }
+                public override int GetHashCode() { }
+                public void MergeFrom(Akka.Cluster.PubSub.Serializers.Proto.Delta.Types.Entry other) { }
+                public void MergeFrom(Google.Protobuf.CodedInputStream input) { }
+                public override string ToString() { }
+                public void WriteTo(Google.Protobuf.CodedOutputStream output) { }
+            }
+        }
+    }
+    public class static DistributedPubSubMessagesReflection
+    {
+        public static Google.Protobuf.Reflection.FileDescriptor Descriptor { get; }
+    }
+    public sealed class Payload : Google.Protobuf.IDeepCloneable<Akka.Cluster.PubSub.Serializers.Proto.Payload>, Google.Protobuf.IMessage, Google.Protobuf.IMessage<Akka.Cluster.PubSub.Serializers.Proto.Payload>, System.IEquatable<Akka.Cluster.PubSub.Serializers.Proto.Payload>
+    {
+        public const int EnclosedMessageFieldNumber = 1;
+        public const int MessageManifestFieldNumber = 4;
+        public const int SerializerIdFieldNumber = 2;
+        public Payload() { }
+        public Payload(Akka.Cluster.PubSub.Serializers.Proto.Payload other) { }
+        public static Google.Protobuf.Reflection.MessageDescriptor Descriptor { get; }
+        public Google.Protobuf.ByteString EnclosedMessage { get; set; }
+        public Google.Protobuf.ByteString MessageManifest { get; set; }
+        public static Google.Protobuf.MessageParser<Akka.Cluster.PubSub.Serializers.Proto.Payload> Parser { get; }
+        public int SerializerId { get; set; }
+        public int CalculateSize() { }
+        public Akka.Cluster.PubSub.Serializers.Proto.Payload Clone() { }
+        public override bool Equals(object other) { }
+        public bool Equals(Akka.Cluster.PubSub.Serializers.Proto.Payload other) { }
+        public override int GetHashCode() { }
+        public void MergeFrom(Akka.Cluster.PubSub.Serializers.Proto.Payload other) { }
+        public void MergeFrom(Google.Protobuf.CodedInputStream input) { }
+        public override string ToString() { }
+        public void WriteTo(Google.Protobuf.CodedOutputStream output) { }
+    }
+    public sealed class Publish : Google.Protobuf.IDeepCloneable<Akka.Cluster.PubSub.Serializers.Proto.Publish>, Google.Protobuf.IMessage, Google.Protobuf.IMessage<Akka.Cluster.PubSub.Serializers.Proto.Publish>, System.IEquatable<Akka.Cluster.PubSub.Serializers.Proto.Publish>
+    {
+        public const int PayloadFieldNumber = 3;
+        public const int TopicFieldNumber = 1;
+        public Publish() { }
+        public Publish(Akka.Cluster.PubSub.Serializers.Proto.Publish other) { }
+        public static Google.Protobuf.Reflection.MessageDescriptor Descriptor { get; }
+        public static Google.Protobuf.MessageParser<Akka.Cluster.PubSub.Serializers.Proto.Publish> Parser { get; }
+        public Akka.Cluster.PubSub.Serializers.Proto.Payload Payload { get; set; }
+        public string Topic { get; set; }
+        public int CalculateSize() { }
+        public Akka.Cluster.PubSub.Serializers.Proto.Publish Clone() { }
+        public override bool Equals(object other) { }
+        public bool Equals(Akka.Cluster.PubSub.Serializers.Proto.Publish other) { }
+        public override int GetHashCode() { }
+        public void MergeFrom(Akka.Cluster.PubSub.Serializers.Proto.Publish other) { }
+        public void MergeFrom(Google.Protobuf.CodedInputStream input) { }
+        public override string ToString() { }
+        public void WriteTo(Google.Protobuf.CodedOutputStream output) { }
+    }
+    public sealed class Send : Google.Protobuf.IDeepCloneable<Akka.Cluster.PubSub.Serializers.Proto.Send>, Google.Protobuf.IMessage, Google.Protobuf.IMessage<Akka.Cluster.PubSub.Serializers.Proto.Send>, System.IEquatable<Akka.Cluster.PubSub.Serializers.Proto.Send>
+    {
+        public const int LocalAffinityFieldNumber = 2;
+        public const int PathFieldNumber = 1;
+        public const int PayloadFieldNumber = 3;
+        public Send() { }
+        public Send(Akka.Cluster.PubSub.Serializers.Proto.Send other) { }
+        public static Google.Protobuf.Reflection.MessageDescriptor Descriptor { get; }
+        public bool LocalAffinity { get; set; }
+        public static Google.Protobuf.MessageParser<Akka.Cluster.PubSub.Serializers.Proto.Send> Parser { get; }
+        public string Path { get; set; }
+        public Akka.Cluster.PubSub.Serializers.Proto.Payload Payload { get; set; }
+        public int CalculateSize() { }
+        public Akka.Cluster.PubSub.Serializers.Proto.Send Clone() { }
+        public override bool Equals(object other) { }
+        public bool Equals(Akka.Cluster.PubSub.Serializers.Proto.Send other) { }
+        public override int GetHashCode() { }
+        public void MergeFrom(Akka.Cluster.PubSub.Serializers.Proto.Send other) { }
+        public void MergeFrom(Google.Protobuf.CodedInputStream input) { }
+        public override string ToString() { }
+        public void WriteTo(Google.Protobuf.CodedOutputStream output) { }
+    }
+    public sealed class SendToAll : Google.Protobuf.IDeepCloneable<Akka.Cluster.PubSub.Serializers.Proto.SendToAll>, Google.Protobuf.IMessage, Google.Protobuf.IMessage<Akka.Cluster.PubSub.Serializers.Proto.SendToAll>, System.IEquatable<Akka.Cluster.PubSub.Serializers.Proto.SendToAll>
+    {
+        public const int AllButSelfFieldNumber = 2;
+        public const int PathFieldNumber = 1;
+        public const int PayloadFieldNumber = 3;
+        public SendToAll() { }
+        public SendToAll(Akka.Cluster.PubSub.Serializers.Proto.SendToAll other) { }
+        public bool AllButSelf { get; set; }
+        public static Google.Protobuf.Reflection.MessageDescriptor Descriptor { get; }
+        public static Google.Protobuf.MessageParser<Akka.Cluster.PubSub.Serializers.Proto.SendToAll> Parser { get; }
+        public string Path { get; set; }
+        public Akka.Cluster.PubSub.Serializers.Proto.Payload Payload { get; set; }
+        public int CalculateSize() { }
+        public Akka.Cluster.PubSub.Serializers.Proto.SendToAll Clone() { }
+        public override bool Equals(object other) { }
+        public bool Equals(Akka.Cluster.PubSub.Serializers.Proto.SendToAll other) { }
+        public override int GetHashCode() { }
+        public void MergeFrom(Akka.Cluster.PubSub.Serializers.Proto.SendToAll other) { }
+        public void MergeFrom(Google.Protobuf.CodedInputStream input) { }
+        public override string ToString() { }
+        public void WriteTo(Google.Protobuf.CodedOutputStream output) { }
+    }
+    public sealed class Status : Google.Protobuf.IDeepCloneable<Akka.Cluster.PubSub.Serializers.Proto.Status>, Google.Protobuf.IMessage, Google.Protobuf.IMessage<Akka.Cluster.PubSub.Serializers.Proto.Status>, System.IEquatable<Akka.Cluster.PubSub.Serializers.Proto.Status>
+    {
+        public const int ReplyToStatusFieldNumber = 2;
+        public const int VersionsFieldNumber = 1;
+        public Status() { }
+        public Status(Akka.Cluster.PubSub.Serializers.Proto.Status other) { }
+        public static Google.Protobuf.Reflection.MessageDescriptor Descriptor { get; }
+        public static Google.Protobuf.MessageParser<Akka.Cluster.PubSub.Serializers.Proto.Status> Parser { get; }
+        public bool ReplyToStatus { get; set; }
+        public Google.Protobuf.Collections.RepeatedField<Akka.Cluster.PubSub.Serializers.Proto.Status.Types.Version> Versions { get; }
+        public int CalculateSize() { }
+        public Akka.Cluster.PubSub.Serializers.Proto.Status Clone() { }
+        public override bool Equals(object other) { }
+        public bool Equals(Akka.Cluster.PubSub.Serializers.Proto.Status other) { }
+        public override int GetHashCode() { }
+        public void MergeFrom(Akka.Cluster.PubSub.Serializers.Proto.Status other) { }
+        public void MergeFrom(Google.Protobuf.CodedInputStream input) { }
+        public override string ToString() { }
+        public void WriteTo(Google.Protobuf.CodedOutputStream output) { }
+        public class static Types
+        {
+            public sealed class Version : Google.Protobuf.IDeepCloneable<Akka.Cluster.PubSub.Serializers.Proto.Status.Types.Version>, Google.Protobuf.IMessage, Google.Protobuf.IMessage<Akka.Cluster.PubSub.Serializers.Proto.Status.Types.Version>, System.IEquatable<Akka.Cluster.PubSub.Serializers.Proto.Status.Types.Version>
+            {
+                public const int AddressFieldNumber = 1;
+                public const int TimestampFieldNumber = 2;
+                public Version() { }
+                public Version(Akka.Cluster.PubSub.Serializers.Proto.Status.Types.Version other) { }
+                public Akka.Cluster.PubSub.Serializers.Proto.Address Address { get; set; }
+                public static Google.Protobuf.Reflection.MessageDescriptor Descriptor { get; }
+                public static Google.Protobuf.MessageParser<Akka.Cluster.PubSub.Serializers.Proto.Status.Types.Version> Parser { get; }
+                public long Timestamp { get; set; }
+                public int CalculateSize() { }
+                public Akka.Cluster.PubSub.Serializers.Proto.Status.Types.Version Clone() { }
+                public override bool Equals(object other) { }
+                public bool Equals(Akka.Cluster.PubSub.Serializers.Proto.Status.Types.Version other) { }
+                public override int GetHashCode() { }
+                public void MergeFrom(Akka.Cluster.PubSub.Serializers.Proto.Status.Types.Version other) { }
+                public void MergeFrom(Google.Protobuf.CodedInputStream input) { }
+                public override string ToString() { }
+                public void WriteTo(Google.Protobuf.CodedOutputStream output) { }
+            }
+        }
+    }
+}
+namespace Akka.Cluster.Tools.Client
+{
+    public sealed class ClusterClient : Akka.Actor.ActorBase
+    {
+        public ClusterClient(Akka.Cluster.Tools.Client.ClusterClientSettings settings) { }
+        protected override void PostStop() { }
+        public static Akka.Actor.Props Props(Akka.Cluster.Tools.Client.ClusterClientSettings settings) { }
+        protected override bool Receive(object message) { }
+        public sealed class Publish
+        {
+            public Publish(string topic, object message) { }
+            public object Message { get; }
+            public string Topic { get; }
+        }
+        public sealed class Send
+        {
+            public Send(string path, object message, bool localAffinity = False) { }
+            public bool LocalAffinity { get; }
+            public object Message { get; }
+            public string Path { get; }
+        }
+        public sealed class SendToAll
+        {
+            public SendToAll(string path, object message) { }
+            public object Message { get; }
+            public string Path { get; }
+        }
+    }
+    public sealed class ClusterClientReceptionist : Akka.Actor.IExtension
+    {
+        public ClusterClientReceptionist(Akka.Actor.ExtendedActorSystem system) { }
+        public bool IsTerminated { get; }
+        public Akka.Actor.IActorRef Underlying { get; }
+        public static Akka.Configuration.Config DefaultConfig() { }
+        public static Akka.Cluster.Tools.Client.ClusterClientReceptionist Get(Akka.Actor.ActorSystem system) { }
+        public void RegisterService(Akka.Actor.IActorRef actorRef) { }
+        public void RegisterSubscriber(string topic, Akka.Actor.IActorRef actorRef) { }
+        public void UnregisterService(Akka.Actor.IActorRef actorRef) { }
+        public void UnregisterSubscriber(string topic, Akka.Actor.IActorRef actorRef) { }
+    }
+    public class ClusterClientReceptionistExtensionProvider : Akka.Actor.ExtensionIdProvider<Akka.Cluster.Tools.Client.ClusterClientReceptionist>
+    {
+        public ClusterClientReceptionistExtensionProvider() { }
+        public override Akka.Cluster.Tools.Client.ClusterClientReceptionist CreateExtension(Akka.Actor.ExtendedActorSystem system) { }
+    }
+    public sealed class ClusterClients
+    {
+        public ClusterClients(System.Collections.Immutable.ImmutableHashSet<Akka.Actor.IActorRef> clusterClientsList) { }
+        public System.Collections.Immutable.ImmutableHashSet<Akka.Actor.IActorRef> ClusterClientsList { get; }
+    }
+    public sealed class ClusterClientSettings : Akka.Actor.INoSerializationVerificationNeeded
+    {
+        public readonly System.TimeSpan AcceptableHeartbeatPause;
+        public readonly int BufferSize;
+        public readonly System.TimeSpan EstablishingGetContactsInterval;
+        public readonly System.TimeSpan HeartbeatInterval;
+        public readonly System.Collections.Immutable.IImmutableSet<Akka.Actor.ActorPath> InitialContacts;
+        public readonly System.Nullable<System.TimeSpan> ReconnectTimeout;
+        public readonly System.TimeSpan RefreshContactsInterval;
+        public ClusterClientSettings(System.Collections.Immutable.IImmutableSet<Akka.Actor.ActorPath> initialContacts, System.TimeSpan establishingGetContactsInterval, System.TimeSpan refreshContactsInterval, System.TimeSpan heartbeatInterval, System.TimeSpan acceptableHeartbeatPause, int bufferSize, System.Nullable<System.TimeSpan> reconnectTimeout = null) { }
+        public static Akka.Cluster.Tools.Client.ClusterClientSettings Create(Akka.Actor.ActorSystem system) { }
+        public static Akka.Cluster.Tools.Client.ClusterClientSettings Create(Akka.Configuration.Config config) { }
+        public Akka.Cluster.Tools.Client.ClusterClientSettings WithBufferSize(int bufferSize) { }
+        public Akka.Cluster.Tools.Client.ClusterClientSettings WithEstablishingGetContactsInterval(System.TimeSpan value) { }
+        public Akka.Cluster.Tools.Client.ClusterClientSettings WithHeartbeatInterval(System.TimeSpan value) { }
+        public Akka.Cluster.Tools.Client.ClusterClientSettings WithInitialContacts(System.Collections.Immutable.IImmutableSet<Akka.Actor.ActorPath> initialContacts) { }
+        [System.ObsoleteAttribute("Use WithInitialContacts(IImmutableSet<ActorPath> initialContacts) instead")]
+        public Akka.Cluster.Tools.Client.ClusterClientSettings WithInitialContacts(System.Collections.Generic.IEnumerable<Akka.Actor.ActorPath> initialContacts) { }
+        public Akka.Cluster.Tools.Client.ClusterClientSettings WithReconnectTimeout(System.Nullable<System.TimeSpan> reconnectTimeout) { }
+        public Akka.Cluster.Tools.Client.ClusterClientSettings WithRefreshContactsInterval(System.TimeSpan value) { }
+    }
+    public sealed class ClusterClientUnreachable : Akka.Cluster.Tools.Client.IClusterClientInteraction
+    {
+        public ClusterClientUnreachable(Akka.Actor.IActorRef clusterClient) { }
+        public Akka.Actor.IActorRef ClusterClient { get; }
+    }
+    public sealed class ClusterClientUp : Akka.Cluster.Tools.Client.IClusterClientInteraction
+    {
+        public ClusterClientUp(Akka.Actor.IActorRef clusterClient) { }
+        public Akka.Actor.IActorRef ClusterClient { get; }
+    }
+    public sealed class ClusterReceptionist : Akka.Actor.ActorBase
+    {
+        public ClusterReceptionist(Akka.Actor.IActorRef pubSubMediator, Akka.Cluster.Tools.Client.ClusterReceptionistSettings settings) { }
+        protected override void PostStop() { }
+        protected override void PreStart() { }
+        public static Akka.Actor.Props Props(Akka.Actor.IActorRef pubSubMediator, Akka.Cluster.Tools.Client.ClusterReceptionistSettings settings) { }
+        protected override bool Receive(object message) { }
+    }
+    public sealed class ClusterReceptionistSettings : Akka.Actor.INoSerializationVerificationNeeded
+    {
+        public readonly System.TimeSpan AcceptableHeartbeatPause;
+        public readonly System.TimeSpan FailureDetectionInterval;
+        public readonly System.TimeSpan HeartbeatInterval;
+        public readonly int NumberOfContacts;
+        public readonly System.TimeSpan ResponseTunnelReceiveTimeout;
+        public readonly string Role;
+        public ClusterReceptionistSettings(string role, int numberOfContacts, System.TimeSpan responseTunnelReceiveTimeout, System.TimeSpan heartbeatInterval, System.TimeSpan acceptableHeartbeatPause, System.TimeSpan failureDetectionInterval) { }
+        public static Akka.Cluster.Tools.Client.ClusterReceptionistSettings Create(Akka.Actor.ActorSystem system) { }
+        public static Akka.Cluster.Tools.Client.ClusterReceptionistSettings Create(Akka.Configuration.Config config) { }
+        public Akka.Cluster.Tools.Client.ClusterReceptionistSettings WithHeartbeat(System.TimeSpan heartbeatInterval, System.TimeSpan acceptableHeartbeatPause, System.TimeSpan failureDetectionInterval) { }
+        public Akka.Cluster.Tools.Client.ClusterReceptionistSettings WithNumberOfContacts(int numberOfContacts) { }
+        public Akka.Cluster.Tools.Client.ClusterReceptionistSettings WithoutRole() { }
+        public Akka.Cluster.Tools.Client.ClusterReceptionistSettings WithResponseTunnelReceiveTimeout(System.TimeSpan responseTunnelReceiveTimeout) { }
+        public Akka.Cluster.Tools.Client.ClusterReceptionistSettings WithRole(string role) { }
+    }
+    public sealed class ContactPointAdded : Akka.Cluster.Tools.Client.IContactPointChange
+    {
+        public ContactPointAdded(Akka.Actor.ActorPath contactPoint) { }
+        public Akka.Actor.ActorPath ContactPoint { get; }
+    }
+    public sealed class ContactPointRemoved : Akka.Cluster.Tools.Client.IContactPointChange
+    {
+        public ContactPointRemoved(Akka.Actor.ActorPath contactPoint) { }
+        public Akka.Actor.ActorPath ContactPoint { get; }
+    }
+    public sealed class ContactPoints
+    {
+        public ContactPoints(System.Collections.Immutable.ImmutableHashSet<Akka.Actor.ActorPath> contactPoints) { }
+        public System.Collections.Immutable.ImmutableHashSet<Akka.Actor.ActorPath> ContactPointsList { get; }
+    }
+    public sealed class GetClusterClients
+    {
+        public static readonly Akka.Cluster.Tools.Client.GetClusterClients Instance;
+    }
+    public sealed class GetContactPoints : Akka.Cluster.Tools.Client.IGetContactPoints
+    {
+        public static readonly Akka.Cluster.Tools.Client.GetContactPoints Instance;
+    }
+    public interface IClusterClientInteraction
+    {
+        Akka.Actor.IActorRef ClusterClient { get; }
+    }
+    public interface IClusterClientMessage { }
+    public interface IContactPointChange
+    {
+        Akka.Actor.ActorPath ContactPoint { get; }
+    }
+    public interface IGetContactPoints { }
+    public interface ISubscribeContactPoints { }
+    public interface IUnsubscribeContactPoints { }
+    public sealed class SubscribeClusterClients
+    {
+        public static readonly Akka.Cluster.Tools.Client.SubscribeClusterClients Instance;
+    }
+    public sealed class SubscribeContactPoints : Akka.Cluster.Tools.Client.ISubscribeContactPoints
+    {
+        public static readonly Akka.Cluster.Tools.Client.SubscribeContactPoints Instance;
+    }
+    public sealed class UnsubscribeClusterClients
+    {
+        public static readonly Akka.Cluster.Tools.Client.UnsubscribeClusterClients Instance;
+    }
+    public sealed class UnsubscribeContactPoints : Akka.Cluster.Tools.Client.IUnsubscribeContactPoints
+    {
+        public static readonly Akka.Cluster.Tools.Client.UnsubscribeContactPoints Instance;
+    }
+}
+namespace Akka.Cluster.Tools.PublishSubscribe
+{
+    public sealed class CurrentTopics : System.IEquatable<Akka.Cluster.Tools.PublishSubscribe.CurrentTopics>
+    {
+        public readonly string[] Topics;
+        public CurrentTopics(string[] topics) { }
+        public bool Equals(Akka.Cluster.Tools.PublishSubscribe.CurrentTopics other) { }
+        public override bool Equals(object obj) { }
+        public override int GetHashCode() { }
+        public override string ToString() { }
+    }
+    public class DistributedPubSub : Akka.Actor.IExtension
+    {
+        public DistributedPubSub(Akka.Actor.ExtendedActorSystem system) { }
+        public bool IsTerminated { get; }
+        public Akka.Actor.IActorRef Mediator { get; }
+        public static Akka.Configuration.Config DefaultConfig() { }
+        public static Akka.Cluster.Tools.PublishSubscribe.DistributedPubSub Get(Akka.Actor.ActorSystem system) { }
+    }
+    public class DistributedPubSubExtensionProvider : Akka.Actor.ExtensionIdProvider<Akka.Cluster.Tools.PublishSubscribe.DistributedPubSub>
+    {
+        public DistributedPubSubExtensionProvider() { }
+        public override Akka.Cluster.Tools.PublishSubscribe.DistributedPubSub CreateExtension(Akka.Actor.ExtendedActorSystem system) { }
+    }
+    public class DistributedPubSubMediator : Akka.Actor.ReceiveActor
+    {
+        public DistributedPubSubMediator(Akka.Cluster.Tools.PublishSubscribe.DistributedPubSubSettings settings) { }
+        public Akka.Event.ILoggingAdapter Log { get; }
+        public System.Collections.Generic.IDictionary<Akka.Actor.Address, long> OwnVersions { get; }
+        protected override void PostStop() { }
+        protected override void PreStart() { }
+        public static Akka.Actor.Props Props(Akka.Cluster.Tools.PublishSubscribe.DistributedPubSubSettings settings) { }
+    }
+    public class DistributedPubSubSettings
+    {
+        public readonly System.TimeSpan GossipInterval;
+        public readonly int MaxDeltaElements;
+        public readonly System.TimeSpan RemovedTimeToLive;
+        public readonly string Role;
+        public readonly Akka.Routing.RoutingLogic RoutingLogic;
+        public DistributedPubSubSettings(string role, Akka.Routing.RoutingLogic routingLogic, System.TimeSpan gossipInterval, System.TimeSpan removedTimeToLive, int maxDeltaElements) { }
+        public static Akka.Cluster.Tools.PublishSubscribe.DistributedPubSubSettings Create(Akka.Actor.ActorSystem system) { }
+        public static Akka.Cluster.Tools.PublishSubscribe.DistributedPubSubSettings Create(Akka.Configuration.Config config) { }
+        public Akka.Cluster.Tools.PublishSubscribe.DistributedPubSubSettings WithGossipInterval(System.TimeSpan gossipInterval) { }
+        public Akka.Cluster.Tools.PublishSubscribe.DistributedPubSubSettings WithMaxDeltaElements(int maxDeltaElements) { }
+        public Akka.Cluster.Tools.PublishSubscribe.DistributedPubSubSettings WithRemovedTimeToLive(System.TimeSpan removedTtl) { }
+        public Akka.Cluster.Tools.PublishSubscribe.DistributedPubSubSettings WithRole(string role) { }
+        public Akka.Cluster.Tools.PublishSubscribe.DistributedPubSubSettings WithRoutingLogic(Akka.Routing.RoutingLogic routingLogic) { }
+    }
+    public sealed class GetTopics : System.IEquatable<Akka.Cluster.Tools.PublishSubscribe.GetTopics>
+    {
+        public static readonly Akka.Cluster.Tools.PublishSubscribe.GetTopics Instance;
+        public bool Equals(Akka.Cluster.Tools.PublishSubscribe.GetTopics other) { }
+        public override bool Equals(object obj) { }
+        public override string ToString() { }
+    }
+    public interface IDistributedPubSubMessage { }
+    public sealed class Publish : Akka.Cluster.Tools.PublishSubscribe.IDistributedPubSubMessage, System.IEquatable<Akka.Cluster.Tools.PublishSubscribe.Publish>
+    {
+        public readonly object Message;
+        public readonly bool SendOneMessageToEachGroup;
+        public readonly string Topic;
+        public Publish(string topic, object message, bool sendOneMessageToEachGroup = False) { }
+        public bool Equals(Akka.Cluster.Tools.PublishSubscribe.Publish other) { }
+        public override bool Equals(object obj) { }
+        public override int GetHashCode() { }
+        public override string ToString() { }
+    }
+    public sealed class Put : System.IEquatable<Akka.Cluster.Tools.PublishSubscribe.Put>
+    {
+        public readonly Akka.Actor.IActorRef Ref;
+        public Put(Akka.Actor.IActorRef @ref) { }
+        public bool Equals(Akka.Cluster.Tools.PublishSubscribe.Put other) { }
+        public override bool Equals(object obj) { }
+        public override int GetHashCode() { }
+        public override string ToString() { }
+    }
+    public sealed class Remove : System.IEquatable<Akka.Cluster.Tools.PublishSubscribe.Remove>
+    {
+        public readonly string Path;
+        public Remove(string path) { }
+        public bool Equals(Akka.Cluster.Tools.PublishSubscribe.Remove other) { }
+        public override bool Equals(object obj) { }
+        public override int GetHashCode() { }
+        public override string ToString() { }
+    }
+    public sealed class Send : Akka.Cluster.Tools.PublishSubscribe.IDistributedPubSubMessage, System.IEquatable<Akka.Cluster.Tools.PublishSubscribe.Send>
+    {
+        public readonly bool LocalAffinity;
+        public readonly object Message;
+        public readonly string Path;
+        public Send(string path, object message, bool localAffinity = False) { }
+        public bool Equals(Akka.Cluster.Tools.PublishSubscribe.Send other) { }
+        public override bool Equals(object obj) { }
+        public override int GetHashCode() { }
+        public override string ToString() { }
+    }
+    public sealed class SendToAll : Akka.Cluster.Tools.PublishSubscribe.IDistributedPubSubMessage, System.IEquatable<Akka.Cluster.Tools.PublishSubscribe.SendToAll>
+    {
+        public readonly bool ExcludeSelf;
+        public readonly object Message;
+        public readonly string Path;
+        public SendToAll(string path, object message, bool excludeSelf = False) { }
+        public bool Equals(Akka.Cluster.Tools.PublishSubscribe.SendToAll other) { }
+        public override bool Equals(object obj) { }
+        public override int GetHashCode() { }
+        public override string ToString() { }
+    }
+    public sealed class Subscribe : System.IEquatable<Akka.Cluster.Tools.PublishSubscribe.Subscribe>
+    {
+        public readonly string Group;
+        public readonly Akka.Actor.IActorRef Ref;
+        public readonly string Topic;
+        public Subscribe(string topic, Akka.Actor.IActorRef @ref, string group = null) { }
+        public bool Equals(Akka.Cluster.Tools.PublishSubscribe.Subscribe other) { }
+        public override bool Equals(object obj) { }
+        public override int GetHashCode() { }
+        public override string ToString() { }
+    }
+    public sealed class SubscribeAck : Akka.Event.IDeadLetterSuppression, System.IEquatable<Akka.Cluster.Tools.PublishSubscribe.SubscribeAck>
+    {
+        public readonly Akka.Cluster.Tools.PublishSubscribe.Subscribe Subscribe;
+        public SubscribeAck(Akka.Cluster.Tools.PublishSubscribe.Subscribe subscribe) { }
+        public bool Equals(Akka.Cluster.Tools.PublishSubscribe.SubscribeAck other) { }
+        public override bool Equals(object obj) { }
+        public override int GetHashCode() { }
+        public override string ToString() { }
+    }
+    public sealed class Unsubscribe : System.IEquatable<Akka.Cluster.Tools.PublishSubscribe.Unsubscribe>
+    {
+        public readonly string Group;
+        public readonly Akka.Actor.IActorRef Ref;
+        public readonly string Topic;
+        public Unsubscribe(string topic, Akka.Actor.IActorRef @ref, string group = null) { }
+        public bool Equals(Akka.Cluster.Tools.PublishSubscribe.Unsubscribe other) { }
+        public override bool Equals(object obj) { }
+        public override int GetHashCode() { }
+        public override string ToString() { }
+    }
+    public sealed class UnsubscribeAck : System.IEquatable<Akka.Cluster.Tools.PublishSubscribe.UnsubscribeAck>
+    {
+        public readonly Akka.Cluster.Tools.PublishSubscribe.Unsubscribe Unsubscribe;
+        public UnsubscribeAck(Akka.Cluster.Tools.PublishSubscribe.Unsubscribe unsubscribe) { }
+        public bool Equals(Akka.Cluster.Tools.PublishSubscribe.UnsubscribeAck other) { }
+        public override bool Equals(object obj) { }
+        public override int GetHashCode() { }
+        public override string ToString() { }
+    }
+}
+namespace Akka.Cluster.Tools.PublishSubscribe.Serialization
+{
+    public class DistributedPubSubMessageSerializer : Akka.Serialization.SerializerWithStringManifest
+    {
+        public const int BufferSize = 4096;
+        public const string DeltaManifest = "B";
+        public const string PublishManifest = "E";
+        public const string SendManifest = "C";
+        public const string SendToAllManifest = "D";
+        public const string StatusManifest = "A";
+        public DistributedPubSubMessageSerializer(Akka.Actor.ExtendedActorSystem system) { }
+        public override int Identifier { get; }
+        public override object FromBinary(byte[] bytes, string manifestString) { }
+        public override string Manifest(object o) { }
+        public override byte[] ToBinary(object obj) { }
+    }
+}
+namespace Akka.Cluster.Tools.Singleton
+{
+    public sealed class ClusterSingletonManager : Akka.Actor.FSM<Akka.Cluster.Tools.Singleton.ClusterSingletonState, Akka.Cluster.Tools.Singleton.IClusterSingletonData>
+    {
+        public ClusterSingletonManager(Akka.Actor.Props singletonProps, object terminationMessage, Akka.Cluster.Tools.Singleton.ClusterSingletonManagerSettings settings) { }
+        public static Akka.Configuration.Config DefaultConfig() { }
+        protected override void PostStop() { }
+        protected override void PreStart() { }
+        public static Akka.Actor.Props Props(Akka.Actor.Props singletonProps, Akka.Cluster.Tools.Singleton.ClusterSingletonManagerSettings settings) { }
+        public static Akka.Actor.Props Props(Akka.Actor.Props singletonProps, object terminationMessage, Akka.Cluster.Tools.Singleton.ClusterSingletonManagerSettings settings) { }
+    }
+    public sealed class ClusterSingletonManagerIsStuck : Akka.Actor.AkkaException
+    {
+        public ClusterSingletonManagerIsStuck(string message) { }
+        public ClusterSingletonManagerIsStuck(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) { }
+    }
+    public sealed class ClusterSingletonManagerSettings : Akka.Actor.INoSerializationVerificationNeeded
+    {
+        public readonly System.TimeSpan HandOverRetryInterval;
+        public readonly System.TimeSpan RemovalMargin;
+        public readonly string Role;
+        public readonly string SingletonName;
+        public ClusterSingletonManagerSettings(string singletonName, string role, System.TimeSpan removalMargin, System.TimeSpan handOverRetryInterval) { }
+        public static Akka.Cluster.Tools.Singleton.ClusterSingletonManagerSettings Create(Akka.Actor.ActorSystem system) { }
+        public static Akka.Cluster.Tools.Singleton.ClusterSingletonManagerSettings Create(Akka.Configuration.Config config) { }
+        public Akka.Cluster.Tools.Singleton.ClusterSingletonManagerSettings WithHandOverRetryInterval(System.TimeSpan handOverRetryInterval) { }
+        public Akka.Cluster.Tools.Singleton.ClusterSingletonManagerSettings WithRemovalMargin(System.TimeSpan removalMargin) { }
+        public Akka.Cluster.Tools.Singleton.ClusterSingletonManagerSettings WithRole(string role) { }
+        public Akka.Cluster.Tools.Singleton.ClusterSingletonManagerSettings WithSingletonName(string singletonName) { }
+    }
+    public sealed class ClusterSingletonProxy : Akka.Actor.ReceiveActor
+    {
+        public ClusterSingletonProxy(string singletonManagerPath, Akka.Cluster.Tools.Singleton.ClusterSingletonProxySettings settings) { }
+        public static Akka.Configuration.Config DefaultConfig() { }
+        protected override void PostStop() { }
+        protected override void PreStart() { }
+        public static Akka.Actor.Props Props(string singletonManagerPath, Akka.Cluster.Tools.Singleton.ClusterSingletonProxySettings settings) { }
+    }
+    public sealed class ClusterSingletonProxySettings
+    {
+        public readonly int BufferSize;
+        public readonly string Role;
+        public readonly System.TimeSpan SingletonIdentificationInterval;
+        public readonly string SingletonName;
+        public ClusterSingletonProxySettings(string singletonName, string role, System.TimeSpan singletonIdentificationInterval, int bufferSize) { }
+        public Akka.Cluster.Tools.Singleton.ClusterSingletonProxySettings Copy(string singletonName = null, string role = null, System.Nullable<System.TimeSpan> singletonIdentificationInterval = null, System.Nullable<int> bufferSize = null) { }
+        public static Akka.Cluster.Tools.Singleton.ClusterSingletonProxySettings Create(Akka.Actor.ActorSystem system) { }
+        public static Akka.Cluster.Tools.Singleton.ClusterSingletonProxySettings Create(Akka.Configuration.Config config) { }
+        public Akka.Cluster.Tools.Singleton.ClusterSingletonProxySettings WithBufferSize(int bufferSize) { }
+        public Akka.Cluster.Tools.Singleton.ClusterSingletonProxySettings WithRole(string role) { }
+        public Akka.Cluster.Tools.Singleton.ClusterSingletonProxySettings WithSingletonIdentificationInterval(string singletonIdentificationInterval) { }
+        public Akka.Cluster.Tools.Singleton.ClusterSingletonProxySettings WithSingletonName(string singletonName) { }
+    }
+    public enum ClusterSingletonState
+    {
+        Start = 0,
+        Oldest = 1,
+        Younger = 2,
+        BecomingOldest = 3,
+        WasOldest = 4,
+        HandingOver = 5,
+        TakeOver = 6,
+        Stopping = 7,
+        End = 8,
+    }
+    public interface IClusterSingletonData { }
+    public interface IClusterSingletonMessage { }
+}
+namespace Akka.Cluster.Tools.Singleton.Serialization
+{
+    public class ClusterSingletonMessageSerializer : Akka.Serialization.SerializerWithStringManifest
+    {
+        public ClusterSingletonMessageSerializer(Akka.Actor.ExtendedActorSystem system) { }
+        public override int Identifier { get; }
+        public override object FromBinary(byte[] binary, string manifest) { }
+        public override string Manifest(object o) { }
+        public override byte[] ToBinary(object obj) { }
+    }
+}

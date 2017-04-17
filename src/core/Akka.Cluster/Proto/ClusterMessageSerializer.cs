@@ -14,7 +14,7 @@ using System.Linq;
 using Akka.Actor;
 using Akka.Serialization;
 using Akka.Util.Internal;
-using Google.ProtocolBuffers;
+using Google.Protobuf;
 
 namespace Akka.Cluster.Proto
 {
@@ -62,7 +62,7 @@ namespace Akka.Cluster.Proto
             }
             if (obj is ClusterUserAction.Leave) return AddressToProtoByteArray(((ClusterUserAction.Leave) obj).Address);
             if (obj is ClusterUserAction.Down) return AddressToProtoByteArray(((ClusterUserAction.Down)obj).Address);
-            if (obj is InternalClusterAction.InitJoin) return Msg.Empty.DefaultInstance.ToByteArray();
+            if (obj is InternalClusterAction.InitJoin) return new Msg.Empty().ToByteArray();
             if (obj is InternalClusterAction.InitJoinAck) return AddressToProtoByteArray(((InternalClusterAction.InitJoinAck)obj).Address);
             if (obj is InternalClusterAction.InitJoinNack) return AddressToProtoByteArray(((InternalClusterAction.InitJoinNack)obj).Address);
             if(obj is InternalClusterAction.ExitingConfirmed) return UniqueAddressToProtoByteArray(((InternalClusterAction.ExitingConfirmed)obj).Address);
@@ -73,14 +73,14 @@ namespace Akka.Cluster.Proto
         {
             if (type == typeof (InternalClusterAction.Join))
             {
-                var m = Msg.Join.ParseFrom(bytes);
+                var m = Msg.Join.Parser.ParseFrom(bytes);
                 return new InternalClusterAction.Join(UniqueAddressFromProto(m.Node),
-                    ImmutableHashSet.Create<string>(m.RolesList.ToArray()));
+                    ImmutableHashSet.Create<string>(m.Roles.ToArray()));
             }
 
             if (type == typeof(InternalClusterAction.Welcome))
             {
-                var m = Msg.Welcome.ParseFrom(Decompress(bytes));
+                var m = Msg.Welcome.Parser.ParseFrom(Decompress(bytes));
                 return new InternalClusterAction.Welcome(UniqueAddressFromProto(m.From), GossipFromProto(m.Gossip));
             }
 
@@ -101,7 +101,7 @@ namespace Akka.Cluster.Proto
         /// <summary>
         /// Compresses the protobuf message using GZIP compression
         /// </summary>
-        public byte[] Compress(IMessageLite message)
+        public byte[] Compress(IMessage message)
         {
             using (var bos = new MemoryStream(BufferSize))
             using (var gzipStream = new GZipStream(bos, CompressionMode.Compress))
@@ -139,12 +139,12 @@ namespace Akka.Cluster.Proto
 
         private Address AddressFromBinary(byte[] bytes)
         {
-            return AddressFromProto(Msg.Address.ParseFrom(bytes));
+            return AddressFromProto(Msg.Address.Parser.ParseFrom(bytes));
         }
 
         private UniqueAddress UniqueAddressFromBinary(byte[] bytes)
         {
-            return UniqueAddressFromProto(Msg.UniqueAddress.ParseFrom(bytes));
+            return UniqueAddressFromProto(Msg.UniqueAddress.Parser.ParseFrom(bytes));
         }
 
         private Address AddressFromProto(Msg.Address address)
@@ -152,21 +152,23 @@ namespace Akka.Cluster.Proto
             return new Address(GetProtocol(address), GetSystem(address), address.Hostname, GetPort(address));
         }
 
-        private Msg.Address.Builder AddressToProto(Address address)
+        private Msg.Address AddressToProto(Address address)
         {
             if(string.IsNullOrEmpty(address.Host) || !address.Port.HasValue) 
                 throw new ArgumentException(string.Format("Address [{0}] could not be serialized: host or port missing.", address), "address");
             return
-                Msg.Address.CreateBuilder()
-                    .SetSystem(address.System)
-                    .SetProtocol(address.Protocol)
-                    .SetHostname(address.Host)
-                    .SetPort((uint)address.Port.Value);
+                new Msg.Address
+                {
+                    System = address.System,
+                    Protocol = address.Protocol,
+                    Hostname = address.Host,
+                    Port = (uint)address.Port.Value
+                };
         }
 
         private byte[] AddressToProtoByteArray(Address address)
         {
-            return AddressToProto(address).Build().ToByteArray();
+            return AddressToProto(address).ToByteArray();
         }
 
         private UniqueAddress UniqueAddressFromProto(Msg.UniqueAddress uniqueAddress)
@@ -174,17 +176,19 @@ namespace Akka.Cluster.Proto
             return new UniqueAddress(AddressFromProto(uniqueAddress.Address), (int)uniqueAddress.Uid);
         }
 
-        private Msg.UniqueAddress.Builder UniqueAddressToProto(UniqueAddress uniqueAddress)
+        private Msg.UniqueAddress UniqueAddressToProto(UniqueAddress uniqueAddress)
         {
-            return
-                Msg.UniqueAddress.CreateBuilder()
-                    .SetAddress(AddressToProto(uniqueAddress.Address))
-                    .SetUid((uint) uniqueAddress.Uid);
+            return new
+                Msg.UniqueAddress
+            {
+                Address = AddressToProto(uniqueAddress.Address),
+                Uid = (uint)uniqueAddress.Uid
+            };
         }
 
         private byte[] UniqueAddressToProtoByteArray(UniqueAddress uniqueAddress)
         {
-            return UniqueAddressToProto(uniqueAddress).Build().ToByteArray();
+            return UniqueAddressToProto(uniqueAddress).ToByteArray();
         }
 
         private string GetProtocol(Msg.Address address)
@@ -209,7 +213,7 @@ namespace Akka.Cluster.Proto
 
         private int? GetPort(Msg.Address address)
         {
-            if (!address.HasPort) return null;
+            if (address.Port==0) return null;
             return (int)address.Port;
         }
 
@@ -265,16 +269,21 @@ namespace Akka.Cluster.Proto
 
         private Msg.Join JoinToProto(UniqueAddress node, ImmutableHashSet<string> roles)
         {
-            return Msg.Join.CreateBuilder().SetNode(UniqueAddressToProto(node)).AddRangeRoles(roles).Build();
+            var join = new Msg.Join{ Node = UniqueAddressToProto(node)};
+            join.Roles.AddRange(roles);
+            return join;
         }
 
         private Msg.Welcome WelcomeToProto(UniqueAddress node, Gossip gossip)
         {
-            return Msg.Welcome.CreateBuilder().SetFrom(UniqueAddressToProto(node))
-                .SetGossip(GossipToProto(gossip)).Build();
+            return new Msg.Welcome
+            {
+                From = UniqueAddressToProto(node),
+                Gossip = GossipToProto(gossip)
+            };
         }
 
-        private Msg.Gossip.Builder GossipToProto(Gossip gossip)
+        private Msg.Gossip GossipToProto(Gossip gossip)
         {
             var allMembers = gossip.Members.ToList();
             var allAddresses = gossip.Members.Select(x => x.UniqueAddress).ToList();
@@ -290,22 +299,41 @@ namespace Akka.Cluster.Proto
 
             Func<string, int> mapRole = s => MapWithErrorMessage(roleMapping, s, "role");
 
-            Func<Member, Msg.Member.Builder> memberToProto = member => Msg.Member.CreateBuilder().SetAddressIndex(mapUniqueAddress(member.UniqueAddress))
-                .SetUpNumber(member.UpNumber)
-                .SetStatus(MemberStatusToProto[member.Status])
-                .AddRangeRolesIndexes(member.Roles.Select(mapRole));
+            Func<Member, Msg.Member> memberToProto = member =>
+            {
+                var mem = new Msg.Member
+                {
+                    AddressIndex = mapUniqueAddress(member.UniqueAddress),
+                    UpNumber = member.UpNumber,
+                    Status = MemberStatusToProto[member.Status]
+                };
+                mem.RolesIndexes.AddRange(member.Roles.Select(mapRole));
+                return mem;
+            };
 
             Func<Reachability, IEnumerable<Msg.ObserverReachability>> reachabilityToProto = reachability =>
             {
                 var builderList = new List<Msg.ObserverReachability>();
                 foreach (var version in reachability.Versions)
                 {
-                    var subjectReachability = reachability.RecordsFrom(version.Key).Select(
-                        r => Msg.SubjectReachability.CreateBuilder().SetAddressIndex(mapUniqueAddress(r.Subject))
-                            .SetStatus(ReachabilityStatusToProto[r.Status]).SetVersion(r.Version).Build());
-                    builderList.Add(Msg.ObserverReachability.CreateBuilder()
-                        .SetAddressIndex(mapUniqueAddress(version.Key))
-                        .SetVersion(version.Value).AddRangeSubjectReachability(subjectReachability).Build());
+                var subjectReachability = reachability.RecordsFrom(version.Key).Select(
+                    r =>
+                    {
+                        return new Msg.SubjectReachability
+                        {
+                            AddressIndex = mapUniqueAddress(r.Subject),
+                            Version = r.Version,
+                            Status = ReachabilityStatusToProto[r.Status]
+                        };
+                    });
+
+                    var reach = new Msg.ObserverReachability
+                    {
+                        AddressIndex = mapUniqueAddress(version.Key),
+                        Version = version.Value
+                    };
+                    reach.SubjectReachability.AddRange(subjectReachability);
+                    builderList.Add(reach);
                 }
                 return builderList;
             };
@@ -314,34 +342,44 @@ namespace Akka.Cluster.Proto
             var membersProto = gossip.Members.Select(memberToProto);
             var seenProto = gossip.Overview.Seen.Select(mapUniqueAddress);
 
-            var overview = Msg.GossipOverview.CreateBuilder().AddRangeSeen(seenProto)
-                .AddRangeObserverReachability(reachabilityProto);
+            var overview = new Msg.GossipOverview();
+            overview.Seen.AddRange(seenProto);
+            overview.ObserverReachability.AddRange(reachabilityProto);
 
-            return Msg.Gossip.CreateBuilder()
-                .AddRangeAllAddresses(allAddresses.Select(x => UniqueAddressToProto(x).Build()))
-                .AddRangeAllRoles(allRoles)
-                .AddRangeAllHashes(allHashes.Select(y => y))
-                .AddRangeMembers(membersProto.Select(x => x.Build()))
-                .SetOverview(overview).SetVersion(VectorClockToProto(gossip.Version, hashMapping));
+            var g = new Msg.Gossip
+            {
+                Overview = overview,
+                Version = VectorClockToProto(gossip.Version, hashMapping)
+            };
+            g.AllAddresses.AddRange(allAddresses.Select(x => UniqueAddressToProto(x)));
+            g.AllRoles.AddRange(allRoles);
+            g.AllHashes.AddRange(allHashes);
+            g.Members.AddRange(membersProto);
+            return g;
         }
 
-        private Msg.VectorClock.Builder VectorClockToProto(VectorClock version, Dictionary<string, int> hashMapping)
+        private Msg.VectorClock VectorClockToProto(VectorClock version, Dictionary<string, int> hashMapping)
         {
             var versions = version.Versions.Select(pair =>
-                Msg.VectorClock.Types.Version.CreateBuilder()
-                    .SetHashIndex(MapWithErrorMessage(hashMapping, pair.Key.ToString(), "hash"))
-                    .SetTimestamp(pair.Value).Build());
+                new Msg.VectorClock.Types.Version
+                {
+                    HashIndex = MapWithErrorMessage(hashMapping, pair.Key.ToString(), "hash"),
+                    Timestamp = pair.Value
+                });
 
-            return Msg.VectorClock.CreateBuilder().SetTimestamp(0).AddRangeVersions(versions);
+            var vclock = new Msg.VectorClock { Timestamp = 0 };
+            vclock.Versions.AddRange(versions);
+            return vclock;
         }
 
         private Msg.GossipEnvelope GossipEnvelopeToProto(GossipEnvelope gossipEnvelope)
         {
-            return Msg.GossipEnvelope.CreateBuilder()
-                .SetFrom(UniqueAddressToProto(gossipEnvelope.From))
-                .SetTo(UniqueAddressToProto(gossipEnvelope.To))
-                .SetSerializedGossip(ByteString.CopyFrom(Compress(GossipToProto(gossipEnvelope.Gossip).Build())))
-                .Build();
+            return new Msg.GossipEnvelope
+            {
+                From = UniqueAddressToProto(gossipEnvelope.From),
+                To = UniqueAddressToProto(gossipEnvelope.To),
+                SerializedGossip = ByteString.CopyFrom(Compress(GossipToProto(gossipEnvelope.Gossip)))
+            };
         }
 
         private GossipEnvelope GossipEnvelopeFromProto(Msg.GossipEnvelope gossipEnvelope)
@@ -349,22 +387,27 @@ namespace Akka.Cluster.Proto
             var serializedGossip = gossipEnvelope.SerializedGossip;
             return new GossipEnvelope(UniqueAddressFromProto(gossipEnvelope.From), 
                 UniqueAddressFromProto(gossipEnvelope.To),
-                GossipFromProto(Msg.Gossip.ParseFrom(Decompress(serializedGossip.ToByteArray()))));
+                GossipFromProto(Msg.Gossip.Parser.ParseFrom(Decompress(serializedGossip.ToByteArray()))));
         }
 
         private Msg.GossipStatus GossipStatusToProto(GossipStatus gossipStatus)
         {
             var allHashes = gossipStatus.Version.Versions.Keys.Select(x => x.ToString()).ToList();
             var hashMapping = allHashes.ZipWithIndex();
-            return Msg.GossipStatus.CreateBuilder().SetFrom(UniqueAddressToProto(gossipStatus.From))
-                .AddRangeAllHashes(allHashes).SetVersion(VectorClockToProto(gossipStatus.Version, hashMapping)).Build();
+            var status = new Msg.GossipStatus
+            {
+                From = UniqueAddressToProto(gossipStatus.From),
+                Version = VectorClockToProto(gossipStatus.Version, hashMapping)
+            };
+            status.AllHashes.AddRange(allHashes);
+            return status;
         }
 
         private Gossip GossipFromProto(Msg.Gossip gossip)
         {
-            var addressMapping = gossip.AllAddressesList.Select(UniqueAddressFromProto).ToList();
-            var roleMapping = gossip.AllRolesList.ToList();
-            var hashMapping = gossip.AllHashesList.ToList();
+            var addressMapping = gossip.AllAddresses.Select(UniqueAddressFromProto).ToList();
+            var roleMapping = gossip.AllRoles.ToList();
+            var hashMapping = gossip.AllHashes.ToList();
 
             Func<IEnumerable<Msg.ObserverReachability>, Reachability> reachabilityFromProto = reachabilityProto =>
             {
@@ -374,7 +417,7 @@ namespace Akka.Cluster.Proto
                 {
                     var observer = addressMapping[o.AddressIndex];
                     versionsBuilder.Add(observer, o.Version);
-                    foreach (var s in o.SubjectReachabilityList)
+                    foreach (var s in o.SubjectReachability)
                     {
                         var subject = addressMapping[s.AddressIndex];
                         var record = new Reachability.Record(observer, subject, ReachabilityStatusFromProto[s.Status],
@@ -386,12 +429,12 @@ namespace Akka.Cluster.Proto
                 return new Reachability(recordBuilder.ToImmutable(), versionsBuilder.ToImmutable());
             };
 
-            Func<Msg.Member, Member> memberFromProto = member => Member.Create(addressMapping[member.AddressIndex], member.HasUpNumber ? member.UpNumber : 0, MemberStatusFromProto[member.Status],
-                member.RolesIndexesList.Select(x => roleMapping[x]).ToImmutableHashSet());
+            Func<Msg.Member, Member> memberFromProto = member => Member.Create(addressMapping[member.AddressIndex], member.UpNumber>0 ? member.UpNumber : 0, MemberStatusFromProto[member.Status],
+                member.RolesIndexes.Select(x => roleMapping[x]).ToImmutableHashSet());
 
-            var members = gossip.MembersList.Select(memberFromProto).ToImmutableSortedSet(Member.Ordering);
-            var reachability = reachabilityFromProto(gossip.Overview.ObserverReachabilityList);
-            var seen = gossip.Overview.SeenList.Select(x => addressMapping[x]).ToImmutableHashSet();
+            var members = gossip.Members.Select(memberFromProto).ToImmutableSortedSet(Member.Ordering);
+            var reachability = reachabilityFromProto(gossip.Overview.ObserverReachability);
+            var seen = gossip.Overview.Seen.Select(x => addressMapping[x]).ToImmutableHashSet();
             var overview = new GossipOverview(seen, reachability);
 
             return new Gossip(members, overview, VectorClockFromProto(gossip.Version, hashMapping));
@@ -399,25 +442,25 @@ namespace Akka.Cluster.Proto
 
         private GossipStatus GossipStatusFromProto(Msg.GossipStatus status)
         {
-            return new GossipStatus(UniqueAddressFromProto(status.From), VectorClockFromProto(status.Version, status.AllHashesList));
+            return new GossipStatus(UniqueAddressFromProto(status.From), VectorClockFromProto(status.Version, status.AllHashes));
         }
 
         private VectorClock VectorClockFromProto(Msg.VectorClock version, IList<string> hashMapping)
         {
             return
                 VectorClock.Create(
-                    version.VersionsList.ToImmutableSortedDictionary(version1 => VectorClock.Node.FromHash(hashMapping[version1.HashIndex]),
+                    version.Versions.ToImmutableSortedDictionary(version1 => VectorClock.Node.FromHash(hashMapping[version1.HashIndex]),
                         version1 => version1.Timestamp));
         }
 
         private GossipEnvelope GossipEnvelopeFromBinary(byte[] bytes)
         {
-            return GossipEnvelopeFromProto(Msg.GossipEnvelope.ParseFrom(bytes));
+            return GossipEnvelopeFromProto(Msg.GossipEnvelope.Parser.ParseFrom(bytes));
         }
 
         private GossipStatus GossipStatusFromBinary(byte[] bytes)
         {
-            return GossipStatusFromProto(Msg.GossipStatus.ParseFrom(bytes));
+            return GossipStatusFromProto(Msg.GossipStatus.Parser.ParseFrom(bytes));
         }
 
         #endregion

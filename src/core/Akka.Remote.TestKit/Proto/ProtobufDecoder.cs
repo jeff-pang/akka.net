@@ -7,12 +7,13 @@
 
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using Google.ProtocolBuffers;
+using Google.Protobuf;
 using Helios.Buffers;
 using Helios.Channels;
 using Helios.Codecs;
 using Helios.Logging;
 using Helios.Util;
+using Google.Protobuf.Reflection;
 
 namespace Akka.Remote.TestKit.Proto
 {
@@ -22,18 +23,11 @@ namespace Akka.Remote.TestKit.Proto
     public class ProtobufDecoder : ByteToMessageDecoder
     {
         private readonly ILogger _logger = LoggingFactory.GetLogger<ProtobufDecoder>();
-        private readonly IMessageLite _prototype;
-        private readonly ExtensionRegistry _extensions;
-
-        public ProtobufDecoder(IMessageLite prototype)
-            : this(prototype, null)
-        {
-        }
-
-        public ProtobufDecoder(IMessageLite prototype, ExtensionRegistry extensions)
+        private readonly IMessage _prototype;
+        
+        public ProtobufDecoder(IMessage prototype)
         {
             _prototype = prototype;
-            _extensions = extensions;
         }
 
         protected override void Decode(IChannelHandlerContext context, IByteBuf input, List<object> output)
@@ -44,11 +38,8 @@ namespace Akka.Remote.TestKit.Proto
             var buf = new byte[readable];
             input.ReadBytes(buf);
             var bs = ByteString.CopyFrom(buf);
-            var result = _extensions == null
-                ? _prototype.WeakCreateBuilderForType().WeakMergeFrom(bs).WeakBuild()
-                : _prototype.WeakCreateBuilderForType().WeakMergeFrom(bs, _extensions).WeakBuild();
-            output.Add(result);
+            _prototype.MergeFrom(bs);
+            output.Add(_prototype);
         }
     }
 }
-

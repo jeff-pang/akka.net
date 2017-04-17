@@ -11,7 +11,7 @@ using System.Collections.Immutable;
 using System.Linq;
 using Akka.Actor;
 using Akka.Serialization;
-using Google.ProtocolBuffers;
+using Google.Protobuf;
 
 namespace Akka.Persistence.Serialization
 {
@@ -63,9 +63,9 @@ namespace Akka.Persistence.Serialization
         /// <returns>TBD</returns>
         public override byte[] ToBinary(object obj)
         {
-            if (obj is IPersistentRepresentation) return PersistentToProto(obj as IPersistentRepresentation).Build().ToByteArray();
-            if (obj is AtomicWrite) return AtomicWriteToProto(obj as AtomicWrite).Build().ToByteArray();
-            if (obj is AtLeastOnceDeliverySnapshot) return SnapshotToProto(obj as AtLeastOnceDeliverySnapshot).Build().ToByteArray();
+            if (obj is IPersistentRepresentation) return PersistentToProto(obj as IPersistentRepresentation).ToByteArray();
+            if (obj is AtomicWrite) return AtomicWriteToProto(obj as AtomicWrite).ToByteArray();
+            if (obj is AtLeastOnceDeliverySnapshot) return SnapshotToProto(obj as AtLeastOnceDeliverySnapshot).ToByteArray();
             // TODO StateChangeEvent
 
             throw new ArgumentException(typeof(MessageSerializer) + " cannot serialize object of type " + obj.GetType());
@@ -91,12 +91,12 @@ namespace Akka.Persistence.Serialization
 
         private AtLeastOnceDeliverySnapshot SnapshotFrom(byte[] bytes)
         {
-            var snap = global::AtLeastOnceDeliverySnapshot.ParseFrom(bytes);
-            var unconfirmedDeliveries = new UnconfirmedDelivery[snap.UnconfirmedDeliveriesCount];
+            var snap = global::AtLeastOnceDeliverySnapshot.Parser.ParseFrom(bytes);
+            var unconfirmedDeliveries = new UnconfirmedDelivery[snap.UnconfirmedDeliveries.Count];
 
-            for (int i = 0; i < snap.UnconfirmedDeliveriesCount; i++)
+            for (int i = 0; i < snap.UnconfirmedDeliveries.Count; i++)
             {
-                var unconfirmed = snap.UnconfirmedDeliveriesList[i];
+                var unconfirmed = snap.UnconfirmedDeliveries[i];
                 var unconfirmedDelivery = new UnconfirmedDelivery(
                     deliveryId: unconfirmed.DeliveryId,
                     destination: ActorPath.Parse(unconfirmed.Destination),
@@ -109,7 +109,7 @@ namespace Akka.Persistence.Serialization
 
         private IPersistentRepresentation PersistentMessageFrom(byte[] bytes)
         {
-            var persistentMessage = PersistentMessage.ParseFrom(bytes);
+            var persistentMessage = PersistentMessage.Parser.ParseFrom(bytes);
 
             return PersistentMessageFrom(persistentMessage);
         }
@@ -119,66 +119,64 @@ namespace Akka.Persistence.Serialization
             return new Persistent(
                 payload: PayloadFromProto(persistentMessage.Payload),
                 sequenceNr: persistentMessage.SequenceNr,
-                persistenceId: persistentMessage.HasPersistenceId ? persistentMessage.PersistenceId : null,
-                manifest: persistentMessage.HasManifest ? persistentMessage.Manifest : null,
+                persistenceId:persistentMessage.PersistenceId,
+                manifest: persistentMessage.Manifest,
                 // isDeleted is not used in new records from 1.5
-                sender: persistentMessage.HasSender ? system.Provider.ResolveActorRef(persistentMessage.Sender) : null,
-                writerGuid: persistentMessage.HasWriterUuid ? persistentMessage.WriterUuid : null);
+                sender: !string.IsNullOrEmpty(persistentMessage.Sender) ? system.Provider.ResolveActorRef(persistentMessage.Sender) : null,
+                writerGuid: persistentMessage.WriterUuid);
         }
 
         private object PayloadFromProto(PersistentPayload persistentPayload)
         {
-            var manifest = persistentPayload.HasPayloadManifest
-                ? persistentPayload.PayloadManifest.ToStringUtf8()
-                : string.Empty;
-
+            var manifest = persistentPayload.PayloadManifest?.ToStringUtf8() ?? string.Empty; 
             return system.Serialization.Deserialize(persistentPayload.Payload.ToByteArray(), persistentPayload.SerializerId, manifest);
         }
 
         private AtomicWrite AtomicWriteFrom(byte[] bytes)
         {
-            var atomicWrite = global::AtomicWrite.ParseFrom(bytes);
+            var atomicWrite = global::AtomicWrite.Parser.ParseFrom(bytes);
 
-            return new AtomicWrite(atomicWrite.PayloadList.Select(PersistentMessageFrom).ToImmutableList());
+            return new AtomicWrite(atomicWrite.Payload.Select(PersistentMessageFrom).ToImmutableList());
         }
 
-        private global::AtLeastOnceDeliverySnapshot.Builder SnapshotToProto(AtLeastOnceDeliverySnapshot snap)
+        private global::AtLeastOnceDeliverySnapshot SnapshotToProto(AtLeastOnceDeliverySnapshot snap)
         {
-            var builder = global::AtLeastOnceDeliverySnapshot.CreateBuilder();
-            builder.SetCurrentDeliveryId(snap.CurrentDeliveryId);
+            var builder = new global::AtLeastOnceDeliverySnapshot
+            {
+                CurrentDeliveryId = snap.CurrentDeliveryId
+            };
 
             foreach (var unconfirmed in snap.UnconfirmedDeliveries)
             {
-                var unconfirmedBuilder = global::AtLeastOnceDeliverySnapshot.Types.UnconfirmedDelivery.CreateBuilder()
-                    .SetDeliveryId(unconfirmed.DeliveryId)
-                    .SetDestination(unconfirmed.Destination.ToString())
-                    .SetPayload(PersistentPayloadToProto(unconfirmed.Message));
+                var unconfirmedBuilder = new global::AtLeastOnceDeliverySnapshot.Types.UnconfirmedDelivery { 
+                    DeliveryId=unconfirmed.DeliveryId,
+                    Destination=unconfirmed.Destination.ToString(),
+                    Payload=PersistentPayloadToProto(unconfirmed.Message) };
 
-                builder.AddUnconfirmedDeliveries(unconfirmedBuilder);
+                builder.UnconfirmedDeliveries.Add(unconfirmedBuilder);
             }
 
             return builder;
         }
 
-        private PersistentMessage.Builder PersistentToProto(IPersistentRepresentation p)
+        private PersistentMessage PersistentToProto(IPersistentRepresentation p)
         {
-            var builder = PersistentMessage.CreateBuilder();
+            var builder = new PersistentMessage();
 
-            if (p.PersistenceId != null) builder.SetPersistenceId(p.PersistenceId);
-            if (p.Sender != null) builder.SetSender(Akka.Serialization.Serialization.SerializedActorPath(p.Sender));
-            if (p.Manifest != null) builder.SetManifest(p.Manifest);
+            if (p.PersistenceId != null) builder.PersistenceId = p.PersistenceId;
+            if (p.Sender != null) builder.Sender=Akka.Serialization.Serialization.SerializedActorPath(p.Sender);
+            if (p.Manifest != null) builder.Manifest=p.Manifest;
 
-            builder
-                .SetPayload(PersistentPayloadToProto(p.Payload))
-                .SetSequenceNr(p.SequenceNr);
-                // deleted is not used in new records
+            builder.Payload = PersistentPayloadToProto(p.Payload);
+            builder.SequenceNr=p.SequenceNr;
+            // deleted is not used in new records
 
-           if (p.WriterGuid != null) builder.SetWriterUuid(p.WriterGuid);
+            if (p.WriterGuid != null) builder.WriterUuid = p.WriterGuid;
 
             return builder;
         }
 
-        private PersistentPayload.Builder PersistentPayloadToProto(object payload)
+        private PersistentPayload PersistentPayloadToProto(object payload)
         {
             return TransportInformation != null
                 ? Akka.Serialization.Serialization.SerializeWithTransport(TransportInformation.System,
@@ -186,39 +184,37 @@ namespace Akka.Persistence.Serialization
                 : PayloadBuilder(payload);
         }
 
-        private PersistentPayload.Builder PayloadBuilder(object payload)
+        private PersistentPayload PayloadBuilder(object payload)
         {
             var serializer = system.Serialization.FindSerializerFor(payload);
-            var builder = PersistentPayload.CreateBuilder();
+            var builder = new PersistentPayload();
 
             if (serializer is SerializerWithStringManifest)
             {
-                var manifest = ((SerializerWithStringManifest) serializer).Manifest(payload);
+                var manifest = ((SerializerWithStringManifest)serializer).Manifest(payload);
                 if (manifest != null)
-                    builder.SetPayloadManifest(ByteString.CopyFromUtf8(manifest));
+                    builder.PayloadManifest = ByteString.CopyFromUtf8(manifest);
             }
             else if (serializer.IncludeManifest)
-                builder.SetPayloadManifest(ByteString.CopyFromUtf8(TypeQualifiedNameForManifest(payload.GetType())));
+                builder.PayloadManifest = ByteString.CopyFromUtf8(TypeQualifiedNameForManifest(payload.GetType()));
 
             var bytes = serializer.ToBinary(payload);
 
-            builder
-                .SetPayload(ByteString.CopyFrom(bytes))
-                .SetSerializerId(serializer.Identifier);
+            builder.Payload = ByteString.CopyFrom(bytes);
+            builder.SerializerId = serializer.Identifier;
 
             return builder;
         }
 
-        private global::AtomicWrite.Builder AtomicWriteToProto(AtomicWrite aw)
+        private global::AtomicWrite AtomicWriteToProto(AtomicWrite aw)
         {
-            var builder = global::AtomicWrite.CreateBuilder();
+            var builder = new global::AtomicWrite();
 
             foreach (var p in (IEnumerable<IPersistentRepresentation>)aw.Payload)
             {
-                builder.AddPayload(PersistentToProto(p));
+                builder.Payload.Add(PersistentToProto(p));
             }
             
-
             return builder;
         }
 

@@ -2,14 +2,16 @@
  * Copyright (C) 2015 Lightbend Inc. <http://www.lightbend.com>
  */
 
+syntax = "proto3";
+//option csharp_namespace = Akka.Cluster.Sharding.Serialization.Proto";
 option java_package = "akka.cluster.sharding.protobuf.msg";
 option optimize_for = SPEED;
 
 message CoordinatorState {
 
   message ShardEntry {
-    required string shardId = 1;
-    required string regionRef = 2;
+    string shardId = 1;
+    string regionRef = 2;
   }
   
   repeated ShardEntry shards = 1;
@@ -19,21 +21,21 @@ message CoordinatorState {
 }
 
 message ActorRefMessage {
-  required string ref = 1;
+  string ref = 1;
 }
 
 message ShardIdMessage {
-  required string shard = 1;
+  string shard = 1;
 }
 
 message ShardHomeAllocated {
-  required string shard = 1;
-  required string region = 2;
+  string shard = 1;
+  string region = 2;
 }
 
 message ShardHome {
-  required string shard = 1;
-  required string region = 2;
+  string shard = 1;
+  string region = 2;
 }
 
 message EntityState {
@@ -41,14 +43,14 @@ message EntityState {
 }
 
 message EntityStarted {
-  required string entityId = 1;
+  string entityId = 1;
 }
 
 message EntityStopped {
-  required string entityId = 1;
+  string entityId = 1;
 }
 
 message ShardStats {
-    required string shard = 1;
-    required int32 entityCount = 2;
+    string shard = 1;
+    int32 entityCount = 2;
 }

@@ -13,7 +13,7 @@ using System.IO.Compression;
 using System.Linq;
 using Akka.Actor;
 using Akka.Serialization;
-using Google.ProtocolBuffers;
+using Google.Protobuf;
 
 namespace Akka.Cluster.Sharding.Serialization
 {
@@ -202,69 +202,75 @@ namespace Akka.Cluster.Sharding.Serialization
 
         private ShardStats ShardStatsToProto(Shard.ShardStats o)
         {
-            return ShardStats.CreateBuilder().SetShard(o.ShardId).SetEntityCount(o.EntityCount).Build();
+            return new ShardStats { Shard = o.ShardId, EntityCount = o.EntityCount };
         }
 
         private EntityStopped EntityStoppedToProto(Shard.EntityStopped entityStopped)
         {
-            return EntityStopped.CreateBuilder().SetEntityId(entityStopped.EntityId).Build();
+            return new EntityStopped { EntityId = entityStopped.EntityId };
         }
 
         private EntityStarted EntityStartedToProto(Shard.EntityStarted entityStarted)
         {
-            return EntityStarted.CreateBuilder().SetEntityId(entityStarted.EntityId).Build();
+            return new EntityStarted { EntityId = entityStarted.EntityId };
         }
 
         private EntityState EntityStateToProto(Shard.ShardState entityState)
         {
-            return EntityState.CreateBuilder().AddRangeEntities(entityState.Entries).Build();
+            var entity = new EntityState();
+            entity.Entities.AddRange(entityState.Entries);
+            return entity;
         }
 
         private ShardHome ShardHomeToProto(PersistentShardCoordinator.ShardHome shardHome)
         {
-            return ShardHome.CreateBuilder()
-                .SetShard(shardHome.Shard)
-                .SetRegion(Akka.Serialization.Serialization.SerializedActorPath(shardHome.Ref))
-                .Build();
+            return new ShardHome
+            {
+                Shard = shardHome.Shard,
+                Region = Akka.Serialization.Serialization.SerializedActorPath(shardHome.Ref)
+            };  
         }
 
         private ShardHomeAllocated ShardHomeAllocatedToProto(PersistentShardCoordinator.ShardHomeAllocated shardHomeAllocated)
         {
-            return ShardHomeAllocated.CreateBuilder()
-                .SetShard(shardHomeAllocated.Shard)
-                .SetRegion(Akka.Serialization.Serialization.SerializedActorPath(shardHomeAllocated.Region))
-                .Build();
+            return new ShardHomeAllocated
+            {
+                Shard = shardHomeAllocated.Shard,
+                Region = Akka.Serialization.Serialization.SerializedActorPath(shardHomeAllocated.Region)
+            };
         }
 
         private ShardIdMessage ShardIdMessageToProto(string shard)
         {
-            return ShardIdMessage.CreateBuilder().SetShard(shard).Build();
+            return new ShardIdMessage { Shard = shard };
         }
 
         private ActorRefMessage ActorRefMessageToProto(IActorRef actorRef)
         {
-            return ActorRefMessage.CreateBuilder().SetRef(Akka.Serialization.Serialization.SerializedActorPath(actorRef)).Build();
+            return new ActorRefMessage { Ref = Akka.Serialization.Serialization.SerializedActorPath(actorRef) };
         }
 
         private CoordinatorState CoordinatorStateToProto(PersistentShardCoordinator.State state)
         {
-            var builder = CoordinatorState.CreateBuilder()
-                .AddRangeShards(state.Shards.Select(entry => CoordinatorState.Types.ShardEntry.CreateBuilder()
-                    .SetShardId(entry.Key)
-                    .SetRegionRef(Akka.Serialization.Serialization.SerializedActorPath(entry.Value))
-                    .Build()))
-                .AddRangeRegions(state.Regions.Keys.Select(Akka.Serialization.Serialization.SerializedActorPath))
-                .AddRangeRegionProxies(state.RegionProxies.Select(Akka.Serialization.Serialization.SerializedActorPath))
-                .AddRangeUnallocatedShards(state.UnallocatedShards);
+            var builder = new CoordinatorState();
+            builder.Shards.AddRange(
+                state.Shards.Select(entry => new CoordinatorState.Types.ShardEntry
+                {
+                    ShardId = entry.Key,
+                    RegionRef = Akka.Serialization.Serialization.SerializedActorPath(entry.Value)
+                }));
+            builder.Regions.AddRange(state.Regions.Keys.Select(Akka.Serialization.Serialization.SerializedActorPath));
+            builder.RegionProxies.AddRange(state.RegionProxies.Select(Akka.Serialization.Serialization.SerializedActorPath));
+            builder.UnallocatedShards.AddRange(state.UnallocatedShards);
 
-            return builder.Build();
+            return builder;
         }
 
         private string ShardIdMessageFromBinary(byte[] binary)
         {
             using (var stream = new MemoryStream(binary, false))
             {
-                return ShardIdMessage.ParseFrom(stream).Shard;
+                return ShardIdMessage.Parser.ParseFrom(stream).Shard;
             }
         }
 
@@ -272,7 +278,7 @@ namespace Akka.Cluster.Sharding.Serialization
         {
             using (var stream = new MemoryStream(binary, false))
             {
-                return ResolveActorRef(ActorRefMessage.ParseFrom(stream).Ref);
+                return ResolveActorRef(ActorRefMessage.Parser.ParseFrom(stream).Ref);
             }
         }
 
@@ -280,7 +286,7 @@ namespace Akka.Cluster.Sharding.Serialization
         {
             using (var stream = new MemoryStream(binary, false))
             {
-                var msg = ShardStats.ParseFrom(stream);
+                var msg = ShardStats.Parser.ParseFrom(stream);
                 return new Shard.ShardStats(msg.Shard, msg.EntityCount);
             }
         }
@@ -289,7 +295,7 @@ namespace Akka.Cluster.Sharding.Serialization
         {
             using (var stream = new MemoryStream(binary, false))
             {
-                var msg = ShardHome.ParseFrom(stream);
+                var msg = ShardHome.Parser.ParseFrom(stream);
                 return new PersistentShardCoordinator.ShardHome(msg.Shard, ResolveActorRef(msg.Region));
             }
         }
@@ -298,7 +304,7 @@ namespace Akka.Cluster.Sharding.Serialization
         {
             using (var stream = new MemoryStream(binary, false))
             {
-                var msg = ShardHomeAllocated.ParseFrom(stream);
+                var msg = ShardHomeAllocated.Parser.ParseFrom(stream);
                 return new PersistentShardCoordinator.ShardHomeAllocated(msg.Shard, ResolveActorRef(msg.Region));
             }
         }
@@ -307,7 +313,7 @@ namespace Akka.Cluster.Sharding.Serialization
         {
             using (var stream = new MemoryStream(binary, false))
             {
-                var msg = EntityStopped.ParseFrom(stream);
+                var msg = EntityStopped.Parser.ParseFrom(stream);
                 return new Shard.EntityStopped(msg.EntityId);
             }
         }
@@ -316,7 +322,7 @@ namespace Akka.Cluster.Sharding.Serialization
         {
             using (var stream = new MemoryStream(binary, false))
             {
-                var msg = EntityStarted.ParseFrom(stream);
+                var msg = EntityStarted.Parser.ParseFrom(stream);
                 return new Shard.EntityStarted(msg.EntityId);
             }
         }
@@ -325,8 +331,8 @@ namespace Akka.Cluster.Sharding.Serialization
         {
             using (var stream = new MemoryStream(binary, false))
             {
-                var msg = EntityState.ParseFrom(stream);
-                return new Shard.ShardState(ImmutableHashSet.CreateRange(msg.EntitiesList));
+                var msg = EntityState.Parser.ParseFrom(stream);
+                return new Shard.ShardState(ImmutableHashSet.CreateRange(msg.Entities));
             }
         }
 
@@ -334,12 +340,12 @@ namespace Akka.Cluster.Sharding.Serialization
         {
             using (var stream = Decompress(binary))
             {
-                var state = CoordinatorState.ParseFrom(stream);
-                var shards = ImmutableDictionary.CreateRange(state.ShardsList.Select(entry => new KeyValuePair<string, IActorRef>(entry.ShardId, ResolveActorRef(entry.RegionRef))));
-                var regionsZero = ImmutableDictionary.CreateRange(state.RegionsList.Select(region => new KeyValuePair<IActorRef, IImmutableList<string>>(ResolveActorRef(region), ImmutableList<string>.Empty)));
+                var state = CoordinatorState.Parser.ParseFrom(stream);
+                var shards = ImmutableDictionary.CreateRange(state.Shards.Select(entry => new KeyValuePair<string, IActorRef>(entry.ShardId, ResolveActorRef(entry.RegionRef))));
+                var regionsZero = ImmutableDictionary.CreateRange(state.Regions.Select(region => new KeyValuePair<IActorRef, IImmutableList<string>>(ResolveActorRef(region), ImmutableList<string>.Empty)));
                 var regions = shards.Aggregate(regionsZero, (acc, entry) => acc.SetItem(entry.Value, acc[entry.Value].Add(entry.Key)));
-                var proxies = state.RegionProxiesList.Select(ResolveActorRef).ToImmutableHashSet();
-                var unallocatedShards = state.UnallocatedShardsList.ToImmutableHashSet();
+                var proxies = state.RegionProxies.Select(ResolveActorRef).ToImmutableHashSet();
+                var unallocatedShards = state.UnallocatedShards.ToImmutableHashSet();
 
                 return new PersistentShardCoordinator.State(
                     shards: shards,
@@ -352,7 +358,7 @@ namespace Akka.Cluster.Sharding.Serialization
         /// <summary>
         /// Compresses the protobuf message using GZIP compression
         /// </summary>
-        private static byte[] Compress(IMessageLite message)
+        private static byte[] Compress(IMessage message)
         {
             using (var bos = new MemoryStream(BufferSize))
             using (var gzipStream = new GZipStream(bos, CompressionMode.Compress))

@@ -15,7 +15,7 @@ using Akka.Actor;
 using Akka.Cluster.PubSub.Serializers.Proto;
 using Akka.Cluster.Tools.PublishSubscribe.Internal;
 using Akka.Serialization;
-using Google.ProtocolBuffers;
+using Google.Protobuf;
 using Address = Akka.Cluster.PubSub.Serializers.Proto.Address;
 using Delta = Akka.Cluster.Tools.PublishSubscribe.Internal.Delta;
 using Status = Akka.Cluster.PubSub.Serializers.Proto.Status;
@@ -134,7 +134,7 @@ namespace Akka.Cluster.Tools.PublishSubscribe.Serialization
             throw new ArgumentException(string.Format("Serializer {0} cannot serialize message of type {1}", this.GetType(), o.GetType()));
         }
 
-        private byte[] Compress(IMessageLite message)
+        private byte[] Compress(IMessage message)
         {
             using (var bos = new MemoryStream(BufferSize))
             using (var gzipStream = new GZipStream(bos, CompressionMode.Compress))
@@ -161,16 +161,18 @@ namespace Akka.Cluster.Tools.PublishSubscribe.Serialization
             }
         }
 
-        private Address.Builder AddressToProto(Actor.Address address)
+        private Address AddressToProto(Actor.Address address)
         {
             if (string.IsNullOrEmpty(address.Host) || !address.Port.HasValue)
                 throw new ArgumentException(string.Format("Address [{0}] could not be serialized: host or port missing", address));
 
-            return Address.CreateBuilder()
-                .SetSystem(address.System)
-                .SetHostname(address.Host)
-                .SetPort((uint)address.Port.Value)
-                .SetProtocol(address.Protocol);
+            return new Address
+            {
+                System = address.System,
+                Hostname = address.Host,
+                Port = (uint)address.Port.Value,
+                Protocol = address.Protocol
+            };
         }
 
         private Actor.Address AddressFromProto(Address address)
@@ -184,37 +186,42 @@ namespace Akka.Cluster.Tools.PublishSubscribe.Serialization
             {
                 var entries = b.Content.Select(c =>
                 {
-                    var bb = Akka.Cluster.PubSub.Serializers.Proto.Delta.Types.Entry.CreateBuilder()
-                        .SetKey(c.Key).SetVersion(c.Value.Version);
+                    var bb = new Akka.Cluster.PubSub.Serializers.Proto.Delta.Types.Entry
+                    {
+                        Key = c.Key,
+                        Version = c.Value.Version
+                    };
+
                     if (c.Value.Ref != null)
                     {
-                        bb.SetRef(Akka.Serialization.Serialization.SerializedActorPath(c.Value.Ref));
+                        bb.Ref = Akka.Serialization.Serialization.SerializedActorPath(c.Value.Ref);
                     }
-                    return bb.Build();
+                    return bb;
                 });
-                return Akka.Cluster.PubSub.Serializers.Proto.Delta.Types.Bucket.CreateBuilder()
-                    .SetOwner(AddressToProto(b.Owner))
-                    .SetVersion(b.Version)
-                    .AddRangeContent(entries)
-                    .Build();
+                var buck = new Akka.Cluster.PubSub.Serializers.Proto.Delta.Types.Bucket{
+                    Owner=AddressToProto(b.Owner),
+                    Version=b.Version                    
+                    };
+                buck.Content.AddRange(entries);
+                return buck;
             }).ToArray();
 
-            return Akka.Cluster.PubSub.Serializers.Proto.Delta.CreateBuilder()
-                .AddRangeBuckets(buckets)
-                .Build();
+            var d = new Akka.Cluster.PubSub.Serializers.Proto.Delta();
+            d.Buckets.AddRange(buckets);
+            return d;
         }
 
         private Delta DeltaFromBinary(byte[] binary)
         {
-            return DeltaFromProto(Akka.Cluster.PubSub.Serializers.Proto.Delta.ParseFrom(Decompress(binary)));
+            return DeltaFromProto(Akka.Cluster.PubSub.Serializers.Proto.Delta.Parser.ParseFrom(Decompress(binary)));
         }
 
         private Delta DeltaFromProto(Akka.Cluster.PubSub.Serializers.Proto.Delta delta)
         {
-            return new Delta(delta.BucketsList.Select(b =>
+            return new Delta(delta.Buckets.Select(b =>
             {
-                var content = b.ContentList.Aggregate(ImmutableDictionary<string, ValueHolder>.Empty, (map, entry) =>
-                     map.Add(entry.Key, new ValueHolder(entry.Version, entry.HasRef ? ResolveActorRef(entry.Ref) : null)));
+                var content = b.Content.Aggregate(ImmutableDictionary<string, ValueHolder>.Empty, (map, entry) =>
+                     map.Add(entry.Key, new ValueHolder(entry.Version, entry.Ref !=null ? ResolveActorRef(entry.Ref) : null)));
                 return new Bucket(AddressFromProto(b.Owner), b.Version, content);
             }).ToArray());
         }
@@ -227,27 +234,26 @@ namespace Akka.Cluster.Tools.PublishSubscribe.Serialization
         private Status StatusToProto(Internal.Status status)
         {
             var versions = status.Versions.Select(v =>
-                Status.Types.Version.CreateBuilder()
-                    .SetAddress(AddressToProto(v.Key))
-                    .SetTimestamp(v.Value)
-                    .Build())
+                new Status.Types.Version { 
+                    Address=AddressToProto(v.Key),
+                    Timestamp=v.Value }
+                    )
                 .ToArray();
 
-            return Status.CreateBuilder()
-                .AddRangeVersions(versions)
-                .SetReplyToStatus(status.IsReplyToStatus)
-                .Build();
+            var s = new Status { ReplyToStatus = status.IsReplyToStatus };
+            s.Versions.AddRange(versions);
+            return s;
         }
 
         private Internal.Status StatusFromBinary(byte[] binary)
         {
-            return StatusFromProto(Status.ParseFrom(Decompress(binary)));
+            return StatusFromProto(Status.Parser.ParseFrom(Decompress(binary)));
         }
 
         private Internal.Status StatusFromProto(Status status)
         {
-            var isReplyToStatus = status.HasReplyToStatus ? status.ReplyToStatus : false;
-            return new Internal.Status(status.VersionsList
+            var isReplyToStatus = status.ReplyToStatus ? status.ReplyToStatus : false;
+            return new Internal.Status(status.Versions
                 .ToDictionary(
                     v => AddressFromProto(v.Address),
                     v => v.Timestamp), isReplyToStatus);
@@ -255,16 +261,16 @@ namespace Akka.Cluster.Tools.PublishSubscribe.Serialization
 
         private Akka.Cluster.PubSub.Serializers.Proto.Send SendToProto(Send send)
         {
-            return Akka.Cluster.PubSub.Serializers.Proto.Send.CreateBuilder()
-                .SetPath(send.Path)
-                .SetLocalAffinity(send.LocalAffinity)
-                .SetPayload(PayloadToProto(send.Message))
-                .Build();
+            return new Akka.Cluster.PubSub.Serializers.Proto.Send{
+                Path=send.Path,
+                LocalAffinity=send.LocalAffinity,
+                Payload=PayloadToProto(send.Message)
+            };
         }
 
         private Send SendFromBinary(byte[] binary)
         {
-            return SendFromProto(Akka.Cluster.PubSub.Serializers.Proto.Send.ParseFrom(binary));
+            return SendFromProto(Akka.Cluster.PubSub.Serializers.Proto.Send.Parser.ParseFrom(binary));
         }
 
         private Send SendFromProto(Akka.Cluster.PubSub.Serializers.Proto.Send send)
@@ -274,16 +280,16 @@ namespace Akka.Cluster.Tools.PublishSubscribe.Serialization
 
         private Akka.Cluster.PubSub.Serializers.Proto.SendToAll SendToAllToProto(SendToAll sendToAll)
         {
-            return Akka.Cluster.PubSub.Serializers.Proto.SendToAll.CreateBuilder()
-                .SetPath(sendToAll.Path)
-                .SetAllButSelf(sendToAll.ExcludeSelf)
-                .SetPayload(PayloadToProto(sendToAll.Message))
-                .Build();
+            return new Akka.Cluster.PubSub.Serializers.Proto.SendToAll { 
+                Path =sendToAll.Path,
+                AllButSelf=sendToAll.ExcludeSelf,
+                Payload=PayloadToProto(sendToAll.Message)
+            };
         }
 
         private SendToAll SendToAllFromBinary(byte[] binary)
         {
-            return SendToAllFromProto(Akka.Cluster.PubSub.Serializers.Proto.SendToAll.ParseFrom(binary));
+            return SendToAllFromProto(Akka.Cluster.PubSub.Serializers.Proto.SendToAll.Parser.ParseFrom(binary));
         }
 
         private SendToAll SendToAllFromProto(Akka.Cluster.PubSub.Serializers.Proto.SendToAll send)
@@ -293,15 +299,16 @@ namespace Akka.Cluster.Tools.PublishSubscribe.Serialization
 
         private Akka.Cluster.PubSub.Serializers.Proto.Publish PublishToProto(Publish publish)
         {
-            return Akka.Cluster.PubSub.Serializers.Proto.Publish.CreateBuilder()
-                .SetTopic(publish.Topic)
-                .SetPayload(PayloadToProto(publish.Message))
-                .Build();
+            return new Akka.Cluster.PubSub.Serializers.Proto.Publish
+            {
+                Topic = publish.Topic,
+                Payload = PayloadToProto(publish.Message)
+            };
         }
 
         private Publish PublishFromBinary(byte[] binary)
         {
-            return PublishFromProto(Akka.Cluster.PubSub.Serializers.Proto.Publish.ParseFrom(binary));
+            return PublishFromProto(Akka.Cluster.PubSub.Serializers.Proto.Publish.Parser.ParseFrom(binary));
         }
 
         private Publish PublishFromProto(Akka.Cluster.PubSub.Serializers.Proto.Publish publish)
@@ -312,29 +319,31 @@ namespace Akka.Cluster.Tools.PublishSubscribe.Serialization
         private Payload PayloadToProto(object message)
         {
             var serializer = system.Serialization.FindSerializerFor(message);
-            var builder = Payload.CreateBuilder()
-                .SetEnclosedMessage(ByteString.CopyFrom(serializer.ToBinary(message)))
-                .SetSerializerId(serializer.Identifier);
+            var builder = new Payload
+            {
+                EnclosedMessage = ByteString.CopyFrom(serializer.ToBinary(message)),
+                SerializerId = serializer.Identifier
+            };
 
             SerializerWithStringManifest serializerWithManifest;
             if ((serializerWithManifest = serializer as SerializerWithStringManifest) != null)
             {
                 var manifest = serializerWithManifest.Manifest(message);
                 if (!string.IsNullOrEmpty(manifest))
-                    builder.SetMessageManifest(ByteString.CopyFromUtf8(manifest));
+                    builder.MessageManifest = ByteString.CopyFromUtf8(manifest);
             }
             else
             {
                 if (serializer.IncludeManifest)
-                    builder.SetMessageManifest(ByteString.CopyFromUtf8(TypeQualifiedNameForManifest(message.GetType())));
+                    builder.MessageManifest = ByteString.CopyFromUtf8(TypeQualifiedNameForManifest(message.GetType()));
             }
 
-            return builder.Build();
+            return builder;
         }
 
         private object PayloadFromProto(Payload payload)
         {
-            var type = payload.HasMessageManifest ? Type.GetType(payload.MessageManifest.ToStringUtf8()) : null;
+            var type = !payload.MessageManifest.IsEmpty ? Type.GetType(payload.MessageManifest.ToStringUtf8()) : null;
             return system.Serialization.Deserialize(
                 payload.EnclosedMessage.ToByteArray(),
                 payload.SerializerId,

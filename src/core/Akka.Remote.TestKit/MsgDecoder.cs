@@ -6,6 +6,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using Akka.Remote.Transport;
 using Akka.Util;
@@ -46,14 +47,15 @@ namespace Akka.Remote.TestKit
         {
             _logger.Debug("Decoding {0}", message);
             var w = message as TCP.Wrapper;
-            if (w != null && w.AllFields.Count == 1)
+            
+            if (w != null)
             {
-                if (w.HasHello)
+                if (w.Hello!=null)
                 {
                     var h = w.Hello;
                     return new Hello(h.Name, Proto2Address(h.Address));
                 }
-                else if (w.HasBarrier)
+                else if (w.Barrier!=null)
                 {
                     var barrier = w.Barrier;
                     switch (barrier.Op)
@@ -62,10 +64,10 @@ namespace Akka.Remote.TestKit
                         case BarrierOp.Failed: return (new BarrierResult(barrier.Name, false));
                         case BarrierOp.Fail: return (new FailBarrier(barrier.Name));
                         case BarrierOp.Enter:
-                            return (new EnterBarrier(barrier.Name, barrier.HasTimeout ? (TimeSpan?)TimeSpan.FromTicks(barrier.Timeout) : null));
+                            return (new EnterBarrier(barrier.Name, barrier.Timeout>0 ? (TimeSpan?)TimeSpan.FromTicks(barrier.Timeout) : null));
                     }
                 }
-                else if (w.HasFailure)
+                else if (w.Failure!=null)
                 {
                     var f = w.Failure;
                     switch (f.Failure)
@@ -84,16 +86,16 @@ namespace Akka.Remote.TestKit
                             return (new TerminateMsg(new Left<bool, int>(true)));
                     }
                 }
-                else if (w.HasAddr)
+                else if (w.Addr!=null)
                 {
                     var a = w.Addr;
-                    if (a.HasAddr)
+                    if (a.Addr!=null)
                     {
                         return (new AddressReply(new RoleName(a.Node), Proto2Address(a.Addr)));
                     }
                     return (new GetAddress(new RoleName(a.Node)));
                 }
-                else if (w.HasDone)
+                else if (string.IsNullOrEmpty(w.Done))
                 {
                     return (Done.Instance);
                 }

@@ -2,6 +2,8 @@
  * Copyright (C) 2009-2015 Typesafe Inc. <http://www.typesafe.com>
  */
 
+syntax = "proto3";
+option csharp_namespace = "Akka.Cluster.Client.Serializers.Proto";
 option java_package = "akka.cluster.client.protobuf.msg";
 option optimize_for = SPEED;
 
