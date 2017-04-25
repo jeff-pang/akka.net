@@ -5,7 +5,6 @@
   </PropertyGroup>
  
   <ItemGroup>
-    <ProjectReference Include="..\Akka.Serialization.Hyperion\Akka.Serialization.Hyperion.csproj" />
     <ProjectReference Include="..\Akka.Serialization.TestKit\Akka.Serialization.TestKit.csproj" />
     <ProjectReference Include="..\..\..\core\Akka.Tests.Shared.Internals\Akka.Tests.Shared.Internals.csproj" />
   </ItemGroup>

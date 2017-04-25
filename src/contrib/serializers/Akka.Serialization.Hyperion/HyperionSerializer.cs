@@ -12,6 +12,7 @@ using Akka.Actor;
 using Akka.Configuration;
 using Akka.Util;
 using Hyperion;
+using System.Reflection;
 
 // ReSharper disable once CheckNamespace
 namespace Akka.Serialization
