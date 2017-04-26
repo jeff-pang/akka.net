@@ -4,6 +4,7 @@ before_build:
   - nuget restore .\src
 on_success:
   - ps: .\publish_nuget.ps1 -apikey %myget_apikey%
+test: off
 nuget:
   account_feed: false
   project_feed: true
