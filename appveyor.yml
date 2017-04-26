@@ -3,7 +3,7 @@ image: Visual Studio 2017
 before_build:
   - nuget restore .\src
 after_build:
-  - ps: publish_nuget.ps1
+  - ps: .\publish_nuget.ps1
 nuget:
   account_feed: false
   project_feed: true  
