@@ -6,7 +6,7 @@
     <Copyright>Copyright © 2013-2017 Akka.NET Team</Copyright>
     <VersionPrefix>1.5.0</VersionPrefix>
     <VersionSuffix>beta</VersionSuffix>
-    <TargetFrameworks>net45;netstandard1.6</TargetFrameworks>
+    <TargetFrameworks>netstandard1.6</TargetFrameworks>
     <PackageTags>akka;actors;actor model;Akka;concurrency;network;cluster;crdt;replication</PackageTags>
     <PackageIconUrl>http://getakka.net/images/AkkaNetLogo.Normal.png</PackageIconUrl>
     <PackageProjectUrl>https://github.com/akkadotnet/akka.net</PackageProjectUrl>
@@ -20,12 +20,14 @@
     <ProjectReference Include="..\..\..\core\Akka.Cluster\Akka.Cluster.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Hyperion" version="0.9.5" />
-  </ItemGroup>
-
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.6' ">
     <PackageReference Include="Microsoft.NETCore.Portable.Compatibility" version="1.0.1" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard1.6'">
+    <PackageReference Include="Hyperion">
+      <Version>1.0.0</Version>
+    </PackageReference>
   </ItemGroup>
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'net45' ">
