@@ -2,8 +2,8 @@ version: 0.1.0-{build}
 image: Visual Studio 2017
 before_build:
   - nuget restore .\src
-after_build:
-  - ps: .\publish_nuget.ps1
+on_success:
+  - ps: .\publish_nuget.ps1 -apikey %myget_apikey%
 nuget:
   account_feed: false
-  project_feed: true  
+  project_feed: true
